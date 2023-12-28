@@ -72,3 +72,12 @@ public class ClassTest : Node {
   }
 }
 ```
+With the `IYieldVolatile` interface you can switch coroutine execution between `_Process(float)` and `_PhysicsProcess(float)`.
+### Stop coroutines
+Now to stop a coroutine.
+```c#
+public static void StopCoroutine(Coroutine Coroutine);
+public static void StopAllCoroutines();
+```
+## Other classes
+`InputKeyBoard` `Physics2D` `SceneManager` `GDDirectory`
