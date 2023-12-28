@@ -1,6 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/3.3.0">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Cobilas.GodotEngine.Utility</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <Authors>BélicusBr</Authors>
@@ -9,7 +10,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.cs.lib.core.net4x</RepositoryUrl>
+    <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageTags>CSharp;C#;net472;godotengine</PackageTags>
   </PropertyGroup>
