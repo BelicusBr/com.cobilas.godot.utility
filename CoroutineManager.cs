@@ -9,7 +9,6 @@ namespace Cobilas.GodotEngine.Utility {
     [RunTimeInitializationClass(nameof(CoroutineManager))]
     public class CoroutineManager : Node {
         private CoroutineItem[] waits;
-        private CoroutineItem[] f_waits;
 
         private static CoroutineManager _Coroutine;
         private static readonly char[] chars = { 'a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -22,39 +21,32 @@ namespace Cobilas.GodotEngine.Utility {
 
         public override void _Process(float delta) {
             for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++)
-                if (!waits[I].Run()) {
-                    ArrayManipulation.Remove(I, ref waits);
-                    --I;
-                }
+                if (!waits[I].IsPhysicsProcess)
+                    if (!waits[I].Run()) {
+                        ArrayManipulation.Remove(I, ref waits);
+                        --I;
+                    }
         }
 
         public override void _PhysicsProcess(float delta) {
-            for (int I = 0; I < ArrayManipulation.ArrayLength(f_waits); I++)
-                if (!f_waits[I].Run()) {
-                    ArrayManipulation.Remove(I, ref f_waits);
-                    --I;
-                }
+            for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++)
+                if (waits[I].IsPhysicsProcess)
+                    if (!waits[I].Run()) {
+                        ArrayManipulation.Remove(I, ref waits);
+                        --I;
+                    }
         }
 
         public static Coroutine StartCoroutine(IEnumerator enumerator) {
-            IYieldCoroutine wait = (IYieldCoroutine)enumerator.Current;
             Coroutine Coroutine = new Coroutine(enumerator, GenID());
 
-            if (wait is IYieldUpdate)
-                ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.waits);
-            else if (wait is IYieldFixedUpdate)
-                ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.f_waits);
-            else if (wait is IYieldVolatile @volatile) {
-                if (@volatile.IsPhysicsProcess)
-                    ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.f_waits);
-                else ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.waits);
-            } else ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.waits);
+            ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine.waits);
 
             return Coroutine;
         }
 
         public static void StopCoroutine(Coroutine Coroutine) {
-            foreach (var item in ArrayManipulation.Add(_Coroutine.f_waits, _Coroutine.waits))
+            foreach (var item in _Coroutine.waits)
                 if (item.ID == Coroutine.ID) {
                     item.Cancel();
                     break;
@@ -62,7 +54,7 @@ namespace Cobilas.GodotEngine.Utility {
         }
 
         public static void StopAllCoroutines() {
-            foreach (var item in ArrayManipulation.Add(_Coroutine.f_waits, _Coroutine.waits))
+            foreach (var item in _Coroutine.waits)
                 item.Cancel();
         }
 
@@ -77,25 +69,31 @@ namespace Cobilas.GodotEngine.Utility {
         private sealed class CoroutineItem {
             private bool init;
             private DateTime time;
-            private Coroutine Coroutine;
+            private Coroutine coroutine;
 
-            public string ID => Coroutine.ID;
+            public string ID => coroutine.ID;
+            public bool IsPhysicsProcess {
+                get {
+                    object obj = (coroutine as IEnumerable).GetEnumerator().Current;
+                    return obj is IYieldFixedUpdate || (obj is IYieldVolatile @volatile && @volatile.IsPhysicsProcess);
+                }
+            }
 
-            public CoroutineItem(Coroutine Coroutine) {
-                this.Coroutine = Coroutine;
+            public CoroutineItem(Coroutine coroutine) {
+                this.coroutine = coroutine;
                 time = DateTime.Now;
             }
 
             public void Cancel()
-                => Coroutine.Cancel();
+                => coroutine.Cancel();
 
             public bool Run() {
-                if (Coroutine.IsCancellationRequested) {
-                    Coroutine.SetStatus(false);
-                    return Coroutine.IsRunning;
+                if (coroutine.IsCancellationRequested) {
+                    coroutine.SetStatus(false);
+                    return coroutine.IsRunning;
                 }
                 bool res = true;
-                IEnumerator enumerator = (Coroutine as IEnumerable).GetEnumerator();
+                IEnumerator enumerator = (coroutine as IEnumerable).GetEnumerator();
                 TimeSpan delay = !(enumerator.Current is IYieldCoroutine wait) ? TimeSpan.Zero : wait.Delay;
                 if (!init) {
                     res = enumerator.MoveNext();
@@ -103,7 +101,7 @@ namespace Cobilas.GodotEngine.Utility {
                 } else if (DateTime.Now > time + delay)
                     if (res = enumerator.MoveNext())
                         time = DateTime.Now;
-                Coroutine.SetStatus(res);
+                coroutine.SetStatus(res);
                 return res;
             }
         }
