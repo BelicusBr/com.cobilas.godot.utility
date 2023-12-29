@@ -82,8 +82,7 @@ public static void StopAllCoroutines();
 ## Other classes
 `InputKeyBoard` `Physics2D` `SceneManager` `GDDirectory`
 
-## Installation
-##### The [Cobilas Godot Utility](https://www.nuget.org/packages/Cobilas.Godot.Utility/) is on nuget.org
+## The [Cobilas Godot Utility](https://www.nuget.org/packages/Cobilas.Godot.Utility/) is on nuget.org
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
