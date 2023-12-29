@@ -12,8 +12,10 @@
     <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageTags>CSharp;C#;net472;godotengine</PackageTags>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
+	<None Include="README.md" Pack="true" PackagePath="\"/>
     <PackageReference Include="Cobilas.Core.Net4x" Version="1.0.0" />
   </ItemGroup>
 </Project>
