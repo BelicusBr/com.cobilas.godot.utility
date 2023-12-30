@@ -73,6 +73,13 @@ public class ClassTest : Node {
 }
 ```
 With the `IYieldVolatile` interface you can switch coroutine execution between `_Process(float)` and `_PhysicsProcess(float)`.
+### IYield Classes
+- RunTimeSecond is a framework that allows you to delay your coroutine in seconds. This class inherits `IYieldUpdate`.
+- FixedRunTimeSecond is a framework that allows you to delay your coroutine in seconds. This class inherits `IYieldFixedUpdate`.
+- IYieldUpdate is an interface that allows the coroutine to run in the `_Process(float)` function.
+- IYieldFixedUpdate is an interface that allows the coroutine to run in the `_PhysicsProcess(float)` function.
+- IYieldVolatile is an interface that allows the coroutine to run in the `Process(float)` or `_PhysicsProcess(float)` function.
+- IYieldCoroutine is the base interface for Yield interfaces.
 ### Stop coroutines
 Now to stop a coroutine.
 ```c#
