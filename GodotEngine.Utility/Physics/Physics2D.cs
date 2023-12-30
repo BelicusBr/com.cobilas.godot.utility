@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility.Runtime;
@@ -176,11 +177,9 @@ namespace Cobilas.GodotEngine.Utility.Physics {
         }
 
         private static Array CreateExclude(CollisionObject2D[] exclude) {
-            if (ArrayManipulation.EmpytArray(exclude)) return null;
-            arrayTemp.Resize(exclude.Length);
-            for (int I = 0; I < exclude.Length; I++)
-                arrayTemp[I] = exclude[I];
-            return arrayTemp;
+            if (ArrayManipulation.EmpytArray(exclude))
+                return new Array((IEnumerable)new CollisionObject2D[0]);
+            return new Array((IEnumerable)exclude);
         }
     }
 }
