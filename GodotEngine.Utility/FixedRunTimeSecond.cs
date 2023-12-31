@@ -1,13 +1,12 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility {
-    public struct FixedRunTimeSecond : IYieldFixedUpdate {
+namespace Cobilas.GodotEngine.Utility; 
 
-        TimeSpan delay;
-        TimeSpan IYieldCoroutine.Delay { get => delay; }
+public readonly struct FixedRunTimeSecond : IYieldFixedUpdate {
+    private readonly TimeSpan delay;
+    TimeSpan IYieldCoroutine.Delay { get => delay; }
 
-        public FixedRunTimeSecond(double second) {
-            delay = TimeSpan.FromSeconds(second);
-        }
+    public FixedRunTimeSecond(double second) {
+        delay = TimeSpan.FromSeconds(second);
     }
 }

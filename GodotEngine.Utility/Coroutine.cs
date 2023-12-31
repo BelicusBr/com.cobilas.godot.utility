@@ -2,54 +2,54 @@ using System;
 using System.Threading;
 using System.Collections;
 
-namespace Cobilas.GodotEngine.Utility {
-    public sealed class Coroutine : IEnumerable, IDisposable {
-        private bool disposedValue;
-        private IEnumerator enumerator;
-        private CancellationTokenSource source;
+namespace Cobilas.GodotEngine.Utility; 
 
-        public string ID { get; private set; }
-        public bool IsRunning { get; private set; }
-        public bool IsCancellationRequested => source.IsCancellationRequested;
+public sealed class Coroutine : IEnumerable, IDisposable {
+    private bool disposedValue;
+    private IEnumerator enumerator;
+    private CancellationTokenSource source = new();
 
-        public Coroutine(IEnumerator enumerator, string iD) {
-            ID = iD;
-            this.enumerator = enumerator;
-            this.source = new CancellationTokenSource();
-        }
-        
-        ~Coroutine()
-            => Dispose(disposing: false);
+    public string ID { get; private set; }
+    public bool IsRunning { get; private set; }
+    public bool IsCancellationRequested => source!.IsCancellationRequested;
 
-        public void Cancel()
-            => this.source.Cancel();
+    public Coroutine(IEnumerator enumerator, string iD) {
+        this.enumerator = enumerator;
+        ID = iD;
+    }
 
-        public void CancelAfter(TimeSpan delay)
-            => this.source.CancelAfter(delay);
+    ~Coroutine()
+        => Dispose(disposing: false);
 
-        public void CancelAfter(int millisecondsDelay)
-            => this.source.CancelAfter(millisecondsDelay);
+    public void Cancel()
+        => this.source.Cancel();
 
-        public void Dispose() {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void CancelAfter(TimeSpan delay)
+        => this.source.CancelAfter(delay);
 
-        internal void SetStatus(bool status) 
-            => IsRunning = status;
+    public void CancelAfter(int millisecondsDelay)
+        => this.source.CancelAfter(millisecondsDelay);
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => this.enumerator;
+    public void Dispose() {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
-        private void Dispose(bool disposing) {
-            if (!disposedValue) {
-                if (disposing) {
-                    enumerator = null;
-                    ID = null;
-                    source.Dispose();
-                }
-                disposedValue = true;
+    internal void SetStatus(bool status) 
+        => IsRunning = status;
+
+    IEnumerator IEnumerable.GetEnumerator()
+        => this.enumerator;
+
+    private void Dispose(bool disposing) {
+        if (!disposedValue) {
+            if (disposing) {
+                enumerator = null!;
+                ID = null!;
+                source.Dispose();
+                source = null!;
             }
+            disposedValue = true;
         }
     }
 }

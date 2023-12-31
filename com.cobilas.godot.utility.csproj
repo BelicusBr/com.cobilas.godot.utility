@@ -1,21 +1,28 @@
 ﻿<Project Sdk="Godot.NET.Sdk/3.3.0">
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <RootNamespace>Cobilas</RootNamespace>
-    <Authors>BélicusBr</Authors>
-    <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>1.2.0</PackageVersion>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageOutputPath>C:\local.nuget</PackageOutputPath>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageTags>CSharp;C#;net472;godotengine</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <PackageReference Include="Cobilas.Core.Net4x" Version="1.0.0" />
-  </ItemGroup>
+  	<PropertyGroup>
+  	  	<TargetFrameworks>net472;netstandard2.1</TargetFrameworks>
+  	  	<LangVersion>default</LangVersion>
+  	  	<Nullable>enable</Nullable>
+  	  	<RootNamespace>Cobilas</RootNamespace>
+		<NoWarn>IDE0290</NoWarn>
+  	</PropertyGroup>
+	<PropertyGroup>
+  	  	<Authors>BélicusBr</Authors>
+		<Title>Cobilas Godot Utility</Title>
+  	  	<PackageId>Cobilas.Godot.Utility</PackageId>
+  	  	<PackageVersion>1.2.0</PackageVersion>
+  	  	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  	  	<PackageOutputPath>C:\local.nuget</PackageOutputPath>
+  	  	<RepositoryType>git</RepositoryType>
+  	  	<RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
+  	  	<NeutralLanguage>en</NeutralLanguage>
+  	  	<PackageTags>CSharp;C#;net472;netstandard2.1;godotengine</PackageTags>
+  	  	<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  	  	<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+  	<ItemGroup>
+  	  	<None Include="README.md" Pack="true" PackagePath="\" />
+  	  	<None Include="LICENSE.md" Pack="true" PackagePath="\" />
+  	  	<PackageReference Include="Cobilas.Core.Net4x" Version="1.1.0" />
+  	</ItemGroup>
 </Project>
