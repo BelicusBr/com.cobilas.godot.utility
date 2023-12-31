@@ -4,7 +4,7 @@
     <RootNamespace>Cobilas</RootNamespace>
     <Authors>BélicusBr</Authors>
     <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>1.1.2</PackageVersion>
+    <PackageVersion>1.2.0</PackageVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>C:\local.nuget</PackageOutputPath>

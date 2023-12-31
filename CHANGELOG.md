@@ -11,3 +11,7 @@ The com.cobilas.godot.utility.csproj file has been changed.
 - ### Fixed
 O An exception of type `InvalidCastexception` in the explicit operator of the `Hit2D` structure where the `Collision` property could receive an object of another type than `CollisionObject2D` which would inevitably cause `InvalidCastexception`.
 The explicit operator of the `RayHit2D` structure was also changed to avoid the same problem as the explicit operator of the `Hit2D` structure.
+## [31/12/2023]#1.2.0
+- ### Added
+The `Gizmos` class has been added.
+The `Gizmos` class allows you to use drawing functions statically.

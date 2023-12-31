@@ -27,17 +27,17 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             }
         }
 
-        public static bool RayCastCircle(Camera2D camera, Vector2 position, float radius, out Hit2D hit)
-            => RayCastCircle(camera, position, radius, null, 2147483647U, out hit);
+        public static bool RayCastCircle(Camera2D camera, Vector2 mousePosition, float radius, out Hit2D hit)
+            => RayCastCircle(camera, mousePosition, radius, null, 2147483647U, out hit);
 
-        public static bool RayCastCircle(Camera2D camera, Vector2 position, float radius, uint collisionLayer, out Hit2D hit)
-            => RayCastCircle(camera, position, radius, null, collisionLayer, out hit);
+        public static bool RayCastCircle(Camera2D camera, Vector2 mousePosition, float radius, uint collisionLayer, out Hit2D hit)
+            => RayCastCircle(camera, mousePosition, radius, null, collisionLayer, out hit);
 
-        public static bool RayCastCircle(Camera2D camera, Vector2 position, float radius, CollisionObject2D[] exclude, out Hit2D hit)
-            => RayCastCircle(camera, position, radius, exclude, 2147483647U, out hit);
+        public static bool RayCastCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[] exclude, out Hit2D hit)
+            => RayCastCircle(camera, mousePosition, radius, exclude, 2147483647U, out hit);
 
-        public static bool RayCastCircle(Camera2D camera, Vector2 position, float radius, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
-            if (RayCastAllCircle(camera, position, radius, exclude, collisionLayer, out List<Hit2D> list)) {
+        public static bool RayCastCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
+            if (RayCastAllCircle(camera, mousePosition, radius, exclude, collisionLayer, out List<Hit2D> list)) {
                 hit = list[0];
                 return true;
             }
@@ -45,19 +45,19 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             return false;
         }
 
-        public static bool RayCastAllCircle(Camera2D camera, Vector2 position, float radius, out List<Hit2D> list)
-            => RayCastAllCircle(camera, position, radius, null, 2147483647U, out list);
+        public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, out List<Hit2D> list)
+            => RayCastAllCircle(camera, mousePosition, radius, null, 2147483647U, out list);
 
-        public static bool RayCastAllCircle(Camera2D camera, Vector2 position, float radius, uint collisionLayer, out List<Hit2D> list)
-            => RayCastAllCircle(camera, position, radius, null, collisionLayer, out list);
+        public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, uint collisionLayer, out List<Hit2D> list)
+            => RayCastAllCircle(camera, mousePosition, radius, null, collisionLayer, out list);
 
-        public static bool RayCastAllCircle(Camera2D camera, Vector2 position, float radius, CollisionObject2D[] exclude, out List<Hit2D> list)
-            => RayCastAllCircle(camera, position, radius, exclude, 2147483647U, out list);
+        public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[] exclude, out List<Hit2D> list)
+            => RayCastAllCircle(camera, mousePosition, radius, exclude, 2147483647U, out list);
 
-        public static bool RayCastAllCircle(Camera2D camera, Vector2 position, float radius, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
+        public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
             float zoom = (camera.Zoom.x + camera.Zoom.y) * .5f;
             rayCast.circleShape2D.Radius = radius * zoom;
-            rayCast.parameters.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(position));
+            rayCast.parameters.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(mousePosition));
             rayCast.parameters.SetShape(rayCast.circleShape2D);
             rayCast.parameters.Exclude = CreateExclude(exclude);
             rayCast.parameters.CollisionLayer = collisionLayer;
@@ -72,17 +72,17 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             return true;            
         }
 
-        public static bool RayCastBox(Camera2D camera, Vector2 position, Vector2 size, out Hit2D hit)
-            => RayCastBox(camera, position, size, null, 2147483647U, out hit);
+        public static bool RayCastBox(Camera2D camera, Vector2 mousePosition, Vector2 size, out Hit2D hit)
+            => RayCastBox(camera, mousePosition, size, null, 2147483647U, out hit);
 
-        public static bool RayCastBox(Camera2D camera, Vector2 position, Vector2 size, uint collisionLayer, out Hit2D hit)
-            => RayCastBox(camera, position, size, null, collisionLayer, out hit);
+        public static bool RayCastBox(Camera2D camera, Vector2 mousePosition, Vector2 size, uint collisionLayer, out Hit2D hit)
+            => RayCastBox(camera, mousePosition, size, null, collisionLayer, out hit);
 
-        public static bool RayCastBox(Camera2D camera, Vector2 position, Vector2 size, CollisionObject2D[] exclude, out Hit2D hit)
-            => RayCastBox(camera, position, size, exclude, 2147483647U, out hit);
+        public static bool RayCastBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[] exclude, out Hit2D hit)
+            => RayCastBox(camera, mousePosition, size, exclude, 2147483647U, out hit);
 
-        public static bool RayCastBox(Camera2D camera, Vector2 position, Vector2 size, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
-            if (RayCastAllBox(camera, position, size, exclude, collisionLayer, out List<Hit2D> list)) {
+        public static bool RayCastBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
+            if (RayCastAllBox(camera, mousePosition, size, exclude, collisionLayer, out List<Hit2D> list)) {
                 hit = list[0];
                 return true;
             }
@@ -90,18 +90,18 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             return false;
         }
 
-        public static bool RayCastAllBox(Camera2D camera, Vector2 position, Vector2 size, out List<Hit2D> list)
-            => RayCastAllBox(camera, position, size, null, 2147483647U, out list);
+        public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, out List<Hit2D> list)
+            => RayCastAllBox(camera, mousePosition, size, null, 2147483647U, out list);
 
-        public static bool RayCastAllBox(Camera2D camera, Vector2 position, Vector2 size, uint collisionLayer, out List<Hit2D> list)
-            => RayCastAllBox(camera, position, size, null, collisionLayer, out list);
+        public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, uint collisionLayer, out List<Hit2D> list)
+            => RayCastAllBox(camera, mousePosition, size, null, collisionLayer, out list);
 
-        public static bool RayCastAllBox(Camera2D camera, Vector2 position, Vector2 size, CollisionObject2D[] exclude, out List<Hit2D> list)
-            => RayCastAllBox(camera, position, size, exclude, 2147483647U, out list);
+        public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[] exclude, out List<Hit2D> list)
+            => RayCastAllBox(camera, mousePosition, size, exclude, 2147483647U, out list);
 
-        public static bool RayCastAllBox(Camera2D camera, Vector2 position, Vector2 size, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
+        public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
             rayCast.rectangleShape2D.Extents = size * camera.Zoom;
-            rayCast.parameters.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(position));
+            rayCast.parameters.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(mousePosition));
             rayCast.parameters.SetShape(rayCast.rectangleShape2D);
             rayCast.parameters.Exclude = CreateExclude(exclude);
             rayCast.parameters.CollisionLayer = collisionLayer;
@@ -116,17 +116,17 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             return true;
         }
 
-        public static bool RayCastHit(Camera2D camera, Vector2 position, out Hit2D hit)
-            => RayCastHit(camera, position, null, 2147483647U, out hit);
+        public static bool RayCastHit(Camera2D camera, Vector2 mousePosition, out Hit2D hit)
+            => RayCastHit(camera, mousePosition, null, 2147483647U, out hit);
 
-        public static bool RayCastHit(Camera2D camera, Vector2 position, uint collisionLayer, out Hit2D hit)
-            => RayCastHit(camera, position, null, collisionLayer, out hit);
+        public static bool RayCastHit(Camera2D camera, Vector2 mousePosition, uint collisionLayer, out Hit2D hit)
+            => RayCastHit(camera, mousePosition, null, collisionLayer, out hit);
 
-        public static bool RayCastHit(Camera2D camera, Vector2 position, CollisionObject2D[] exclude, out Hit2D hit)
-            => RayCastHit(camera, position, exclude, 2147483647U, out hit);
+        public static bool RayCastHit(Camera2D camera, Vector2 mousePosition, CollisionObject2D[] exclude, out Hit2D hit)
+            => RayCastHit(camera, mousePosition, exclude, 2147483647U, out hit);
 
-        public static bool RayCastHit(Camera2D camera, Vector2 position, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
-            if (RayCastHitAll(camera, position, exclude, collisionLayer, out List<Hit2D> list)) {
+        public static bool RayCastHit(Camera2D camera, Vector2 mousePosition, CollisionObject2D[] exclude, uint collisionLayer, out Hit2D hit) {
+            if (RayCastHitAll(camera, mousePosition, exclude, collisionLayer, out List<Hit2D> list)) {
                 hit = list[0];
                 return true;
             }
@@ -134,17 +134,17 @@ namespace Cobilas.GodotEngine.Utility.Physics {
             return false;
         }
 //2147483647
-        public static bool RayCastHitAll(Camera2D camera, Vector2 position, out List<Hit2D> list)
-            => RayCastHitAll(camera, position, null, 2147483647U, out list);
+        public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, out List<Hit2D> list)
+            => RayCastHitAll(camera, mousePosition, null, 2147483647U, out list);
 
-        public static bool RayCastHitAll(Camera2D camera, Vector2 position, uint collisionLayer, out List<Hit2D> list)
-            => RayCastHitAll(camera, position, null, collisionLayer, out list);
+        public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, uint collisionLayer, out List<Hit2D> list)
+            => RayCastHitAll(camera, mousePosition, null, collisionLayer, out list);
 
-        public static bool RayCastHitAll(Camera2D camera, Vector2 position, CollisionObject2D[] exclude, out List<Hit2D> list)
-            => RayCastHitAll(camera, position, exclude, 2147483647U, out list);
+        public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, CollisionObject2D[] exclude, out List<Hit2D> list)
+            => RayCastHitAll(camera, mousePosition, exclude, 2147483647U, out list);
 
-        public static bool RayCastHitAll(Camera2D camera, Vector2 position, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
-            Array array = rayCast.GetWorld2d().DirectSpaceState.IntersectPoint(camera.ScreenToWorldPoint(position),
+        public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, CollisionObject2D[] exclude, uint collisionLayer, out List<Hit2D> list) {
+            Array array = rayCast.GetWorld2d().DirectSpaceState.IntersectPoint(camera.ScreenToWorldPoint(mousePosition),
              1024, CreateExclude(exclude), collisionLayer, collideWithAreas:true);
             if (array.Count == 0) {
                 list = null;
