@@ -7,11 +7,11 @@ namespace Cobilas.GodotEngine.Utility.Physics {
         public RID RID { get; private set; }
         public string Name => Collision.Name;
         public Vector2 Normal { get; private set; }
+        public Node Collision { get; private set; }
         public object MetaData { get; private set; }
         public Vector2 Position { get; private set; }
-        public CollisionObject2D Collision { get; private set; }
 
-        private RayHit2D(int iD, RID rID, Vector2 normal, object metaData, Vector2 position, CollisionObject2D collision) : this() {
+        private RayHit2D(int iD, RID rID, Vector2 normal, object metaData, Vector2 position, Node collision) : this() {
             ID = iD;
             RID = rID;
             Normal = normal;
@@ -27,7 +27,7 @@ namespace Cobilas.GodotEngine.Utility.Physics {
                 (Vector2)D["normal"],
                 D["metadata"],
                 (Vector2)D["position"],
-                (CollisionObject2D)D["collider"]
+                (Node)D["collider"]
             );
     }
 }
