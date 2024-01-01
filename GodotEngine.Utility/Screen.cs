@@ -37,10 +37,16 @@ public static class Screen {
     }
 
     static Screen() {
-        using GDDirectory directory = GDDirectory.GetGDDirectory()!;
-        using GDFile file = directory.GetFile("AddResolution.json")!;
-        if (file != null)
-            resolutions = Json.Deserialize<ResolutionItem[]>(file.Read());
+        using (GDDirectory directory = GDDirectory.GetGDDirectory()!) {
+            using GDFile file = directory.GetFile("AddResolution.json")!;
+            if (file != null)
+                resolutions = Json.Deserialize<ResolutionItem[]>(file.Read());
+        }
+        using (GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!) {
+            using GDFile file = directory.GetFile("AddResolution.json")!;
+            if (file != null)
+                resolutions = ArrayManipulation.Add(Json.Deserialize<ResolutionItem[]>(file.Read()), resolutions);
+        }
     }
 
     public static void AddResolution(int width, int height) {

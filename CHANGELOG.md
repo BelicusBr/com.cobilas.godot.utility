@@ -15,3 +15,6 @@ The explicit operator of the `RayHit2D` structure was also changed to avoid the 
 - ### Added
 The `Gizmos` class has been added.
 The `Gizmos` class allows you to use drawing functions statically.
+## [01/01/2024]#1.2.1
+- ### Fixed
+In the static constructor of the `Screen` class it only obtained the resolutions saved in the <kbd>res://AddResolution.json</kbd> file but with the correction the <kbd>projectrootfolder://AddResolution.json</kbd> file in the root folder of the already compiled project is also obtained.
