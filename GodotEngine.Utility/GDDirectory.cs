@@ -13,11 +13,11 @@ public sealed class GDDirectory : GDFileBase {
     private GDFileBase[] subDir = Array.Empty<GDFileBase>();
 
     public override string Path { get; protected set; }
+    public override string NameWithoutExtension => Name;
     public override string Name => SYSPath.GetFileName(Path);
     public int Count => ArrayManipulation.ArrayLength(subDir);
     public override GDFileBase Parent { get; protected set; }
     public override GDFileAttributes Attribute { get; protected set; }
-    public override string NameWithoutExtension => SYSPath.GetFileNameWithoutExtension(Path);
 
     internal GDDirectory(GDFileBase parent, string path, GDFileAttributes attributes) {
         Path = path;
