@@ -1,3 +1,3 @@
-namespace Cobilas.GodotEngine.Utility {
-    public interface IYieldUpdate : IYieldCoroutine { }
-}
+namespace Cobilas.GodotEngine.Utility; 
+
+public interface IYieldUpdate : IYieldCoroutine { }
