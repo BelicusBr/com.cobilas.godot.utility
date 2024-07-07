@@ -42,7 +42,9 @@ public static class Screen {
             if (file != null)
                 resolutions = Json.Deserialize<ResolutionItem[]>(file.Read());
         }
-        using (GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!) {
+
+        if (GDFeature.HasRelease) {
+            using GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!;
             using GDFile file = directory.GetFile("AddResolution.json")!;
             if (file != null)
                 resolutions = ArrayManipulation.Add(Json.Deserialize<ResolutionItem[]>(file.Read()), resolutions);
