@@ -156,7 +156,7 @@ public sealed class GDDirectory : GDFileBase {
     /// <br>path of the user filesystem (e.g. <c>/tmp/folder</c> or <c>C:\tmp\folder</c>).</br>
     /// </summary>
     public static GDDirectory? GetGDDirectory(string path)
-        => GetGDDirectory(path, null);
+        => GetGDDirectory(SYSPath.IsPathRooted(path) ? $"{path}/" : path, null);
 
     private static GDDirectory? GetGDDirectory(string relativePath, GDDirectory? parent) {
         using Directory directory = new();

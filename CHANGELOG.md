@@ -1,3 +1,7 @@
+# [1.3.0] (07/07/2024)
+## Add
+The static class `GDFeature` was added to address the lack of specific <kbd>preprocessing definitions</kbd>.
+
 # [1.2.2] (06/07/2024)
 ## Changed
 Dependency `Cobilas.Core.Net4x@1.1.0` has been updated to version `1.6.1`.
