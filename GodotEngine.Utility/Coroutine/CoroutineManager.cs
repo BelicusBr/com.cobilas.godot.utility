@@ -36,14 +36,16 @@ public class CoroutineManager : Node {
                 }
     }
 
+    /// <summary>Starts a collating process from an <seealso cref="IEnumerator"/>.</summary>
     public static Coroutine StartCoroutine(IEnumerator enumerator) {
-        Coroutine Coroutine = new Coroutine(enumerator, GenID());
+        Coroutine Coroutine = new(enumerator, GenID());
 
         ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine!.waits);
 
         return Coroutine;
     }
 
+    /// <summary>Ends all open Coroutines.</summary>
     public static void StopCoroutine(Coroutine Coroutine) {
         foreach (var item in _Coroutine!.waits)
             if (item.ID == Coroutine.ID) {
@@ -52,14 +54,16 @@ public class CoroutineManager : Node {
             }
     }
 
+    /// <summary>Ends all open Coroutines.</summary>
     public static void StopAllCoroutines() {
         foreach (var item in _Coroutine!.waits)
             item.Cancel();
     }
 
+    /// <summary>Generates an ID to be used in a coroutine.</summary>
     public static string GenID() {
-        StringBuilder builder = new StringBuilder();
-        Random random = new Random();
+        StringBuilder builder = new();
+        Random random = new();
         for (int I = 0; I < 64; I++)
             builder.Append(random.Next(0, 50) > 25 ? char.ToUpper(chars[random.Next(0, 15)]) : chars[random.Next(0, 15)]);
         return builder.ToString();
@@ -68,7 +72,7 @@ public class CoroutineManager : Node {
     private sealed class CoroutineItem {
         private bool init;
         private DateTime time;
-        private Coroutine coroutine;
+        private readonly Coroutine coroutine;
 
         public string ID => coroutine.ID;
         public bool IsPhysicsProcess {
@@ -93,7 +97,7 @@ public class CoroutineManager : Node {
             }
             bool res = true;
             IEnumerator enumerator = (coroutine as IEnumerable).GetEnumerator();
-            TimeSpan delay = !(enumerator.Current is IYieldCoroutine wait) ? TimeSpan.Zero : wait.Delay;
+            TimeSpan delay = enumerator.Current is not IYieldCoroutine wait ? TimeSpan.Zero : wait.Delay;
             if (!init) {
                 res = enumerator.MoveNext();
                 init = true;

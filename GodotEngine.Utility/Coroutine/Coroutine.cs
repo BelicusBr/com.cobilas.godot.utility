@@ -30,6 +30,7 @@ public sealed class Coroutine : IEnumerable, IDisposable {
     public void CancelAfter(int millisecondsDelay)
         => this.source.CancelAfter(millisecondsDelay);
 
+    /// <inheritdoc/>
     public void Dispose() {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
@@ -38,6 +39,7 @@ public sealed class Coroutine : IEnumerable, IDisposable {
     internal void SetStatus(bool status) 
         => IsRunning = status;
 
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
         => this.enumerator;
 
