@@ -27,16 +27,21 @@ public class GDFile : GDFileBase {
         => Dispose(disposing: false);
 
     public string Read() {
-        using (GDTFile file = new GDTFile())
-            if (file.Open(Path, GDTFile.ModeFlags.Read) == Error.Ok)
-                return file.GetAsText();
-        return string.Empty;
+        string result = string.Empty;
+        using (GDTFile file = new())
+            if (file.Open(Path, GDTFile.ModeFlags.Read) == Error.Ok) {
+                result = file.GetAsText();
+                file.Close();
+            }
+        return result;
     }
 
     public void Write(byte[] buffer) {
-        using (GDTFile file = new GDTFile())
-            if (file.Open(Path, GDTFile.ModeFlags.Write) == Error.Ok)
-                file.StoreBuffer(buffer);
+        using GDTFile file = new();
+        if (file.Open(Path, GDTFile.ModeFlags.Write) == Error.Ok) {
+            file.StoreBuffer(buffer);
+            file.Close();
+        }
     }
 
     public Resource Load()

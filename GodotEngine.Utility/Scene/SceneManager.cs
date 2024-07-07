@@ -3,7 +3,7 @@ using System;
 using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.Runtime;
 
-namespace Cobilas.GodotEngine.Utility.Scene; 
+namespace Cobilas.GodotEngine.Utility.Scene;
 
 [RunTimeInitializationClass(nameof(SceneManager))]
 public class SceneManager : Node {
