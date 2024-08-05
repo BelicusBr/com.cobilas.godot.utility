@@ -15,28 +15,32 @@ public class GDFile : GDFileBase {
     public override GDFileAttributes Attribute { get; protected set; }
     public override string NameWithoutExtension => IOPath.GetFileNameWithoutExtension(Path);
 
-    internal GDFile(GDFileBase parent, string path, GDFileAttributes attributes) {
+    internal GDFile(GDFileBase? parent, string? path, GDFileAttributes attributes) {
+        if (parent is null) throw new ArgumentNullException(nameof(parent));
+        if (path is null) throw new ArgumentNullException(nameof(path));
         this.Path = path;
         this.Parent = parent;
         this.Attribute = attributes;
     }
 
-    internal GDFile(GDFileBase parent, string path) : this(parent, path, GDFileAttributes.File) {}
+    internal GDFile(GDFileBase? parent, string? path) : this(parent, path, GDFileAttributes.File) {}
 
     ~GDFile()
         => Dispose(disposing: false);
 
     public string Read() {
         string result = string.Empty;
-        using (GDTFile file = new())
-            if (file.Open(Path, GDTFile.ModeFlags.Read) == Error.Ok) {
-                result = file.GetAsText();
-                file.Close();
-            }
+        using GDTFile file = new();
+        if (file.Open(Path, GDTFile.ModeFlags.Read) == Error.Ok) {
+            result = file.GetAsText();
+            file.Close();
+        }
         return result;
     }
 
-    public void Write(byte[] buffer) {
+    public void Write(byte[]? buffer) {
+        if (buffer is null) throw new ArgumentNullException(nameof(buffer));
+
         using GDTFile file = new();
         if (file.Open(Path, GDTFile.ModeFlags.Write) == Error.Ok) {
             file.StoreBuffer(buffer);

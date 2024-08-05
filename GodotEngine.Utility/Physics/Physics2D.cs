@@ -57,7 +57,9 @@ public class Physics2D : Node2D {
     public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[] exclude, List<Hit2D> list)
         => RayCastAllCircle(camera, mousePosition, radius, exclude, 2147483647U, list);
 
-    public static bool RayCastAllCircle(Camera2D camera, Vector2 mousePosition, float radius, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+    public static bool RayCastAllCircle(Camera2D? camera, Vector2 mousePosition, float radius, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+        if (camera is null) throw new System.ArgumentNullException(nameof(camera));
+        
         float zoom = (camera.Zoom.x + camera.Zoom.y) * .5f;
         rayCast!.circleShape2D!.Radius = radius * zoom;
         rayCast.parameters!.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(mousePosition));
@@ -101,7 +103,9 @@ public class Physics2D : Node2D {
     public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[] exclude, List<Hit2D> list)
         => RayCastAllBox(camera, mousePosition, size, exclude, 2147483647U, list);
 
-    public static bool RayCastAllBox(Camera2D camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+    public static bool RayCastAllBox(Camera2D? camera, Vector2 mousePosition, Vector2 size, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+        if (camera is null) throw new System.ArgumentNullException(nameof(camera));
+        
         rayCast!.rectangleShape2D!.Extents = size * camera.Zoom;
         rayCast.parameters!.Transform = new Transform2D(0f, camera.ScreenToWorldPoint(mousePosition));
         rayCast.parameters.SetShape(rayCast.rectangleShape2D);
@@ -144,7 +148,9 @@ public class Physics2D : Node2D {
     public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, CollisionObject2D[] exclude, List<Hit2D> list)
         => RayCastHitAll(camera, mousePosition, exclude, 2147483647U, list);
 
-    public static bool RayCastHitAll(Camera2D camera, Vector2 mousePosition, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+    public static bool RayCastHitAll(Camera2D? camera, Vector2 mousePosition, CollisionObject2D[]? exclude, uint collisionLayer, List<Hit2D> list) {
+        if (camera is null) throw new System.ArgumentNullException(nameof(camera));
+        
         Array array = rayCast!.GetWorld2d().DirectSpaceState.IntersectPoint(camera.ScreenToWorldPoint(mousePosition),
          1024, CreateExclude(exclude), collisionLayer, collideWithAreas:true);
         if (array.Count == 0) {
@@ -164,7 +170,9 @@ public class Physics2D : Node2D {
     public static bool RayCast(Camera2D camera, Vector2 from, Vector2 to, CollisionObject2D[] exclude, out RayHit2D hit)
         => RayCast(camera, from, to, exclude, 2147483647U, out hit);
 
-    public static bool RayCast(Camera2D camera, Vector2 from, Vector2 to, CollisionObject2D[]? exclude, uint collisionLayer, out RayHit2D hit) {
+    public static bool RayCast(Camera2D? camera, Vector2 from, Vector2 to, CollisionObject2D[]? exclude, uint collisionLayer, out RayHit2D hit) {
+        if (camera is null) throw new System.ArgumentNullException(nameof(camera));
+
         Dictionary dictionary = rayCast!.GetWorld2d().DirectSpaceState.IntersectRay(
             camera.ScreenToWorldPoint(from), camera.ScreenToWorldPoint(to), CreateExclude(exclude), collisionLayer, collideWithAreas:true);
         if (dictionary.Count == 0) {
