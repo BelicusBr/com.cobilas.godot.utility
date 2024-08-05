@@ -9,5 +9,7 @@ public abstract class GDFileBase : IDisposable {
     public abstract GDFileBase Parent { get; protected set; }
     public abstract GDFileAttributes Attribute { get; protected set; }
 
+    public static GDFileBase Null => new GDIONull();
+
     public abstract void Dispose();
 }

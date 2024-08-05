@@ -13,7 +13,9 @@ public sealed class Coroutine : IEnumerable, IDisposable {
     public bool IsRunning { get; private set; }
     public bool IsCancellationRequested => source!.IsCancellationRequested;
 
-    public Coroutine(IEnumerator enumerator, string iD) {
+    public Coroutine(IEnumerator? enumerator, string? iD) {
+        if (enumerator is null) throw new ArgumentNullException(nameof(enumerator));
+        if (iD is null) throw new ArgumentNullException(nameof(iD));
         this.enumerator = enumerator;
         ID = iD;
     }

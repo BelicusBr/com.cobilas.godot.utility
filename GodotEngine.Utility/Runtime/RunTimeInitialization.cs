@@ -40,7 +40,7 @@ public class RunTimeInitialization : Node {
             return this;
         }
 
-        public void Run(Node root) {
+        public readonly void Run(Node root) {
             if (!ArrayManipulation.EmpytArray(nodes))
                 foreach (var item in nodes)
                     if (item != null)
