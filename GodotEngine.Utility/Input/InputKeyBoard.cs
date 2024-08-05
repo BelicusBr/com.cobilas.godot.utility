@@ -19,9 +19,7 @@ public class InputKeyBoard : Node {
     public static Vector2 MouseGlobalPosition { get; private set;}
 
     public override void _Ready() {
-        if (keyBoard == null) {
-            keyBoard = this;
-        }
+        keyBoard ??= this;
     }
 
     public override void _Input(InputEvent @event) {

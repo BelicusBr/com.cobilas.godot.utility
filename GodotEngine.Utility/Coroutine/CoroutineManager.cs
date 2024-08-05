@@ -37,7 +37,7 @@ public class CoroutineManager : Node {
     }
 
     /// <summary>Starts a collating process from an <seealso cref="IEnumerator"/>.</summary>
-    public static Coroutine StartCoroutine(IEnumerator enumerator) {
+    public static Coroutine StartCoroutine(IEnumerator? enumerator) {
         Coroutine Coroutine = new(enumerator, GenID());
 
         ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine!.waits);
@@ -46,7 +46,9 @@ public class CoroutineManager : Node {
     }
 
     /// <summary>Ends all open Coroutines.</summary>
-    public static void StopCoroutine(Coroutine Coroutine) {
+    public static void StopCoroutine(Coroutine? Coroutine) {
+        if (Coroutine is null) throw new ArgumentNullException(nameof(Coroutine));
+
         foreach (var item in _Coroutine!.waits)
             if (item.ID == Coroutine.ID) {
                 item.Cancel();

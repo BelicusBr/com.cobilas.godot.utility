@@ -19,13 +19,16 @@ public sealed class GDDirectory : GDFileBase {
     public override GDFileBase Parent { get; protected set; }
     public override GDFileAttributes Attribute { get; protected set; }
 
-    internal GDDirectory(GDFileBase parent, string path, GDFileAttributes attributes) {
+    internal GDDirectory(GDFileBase? parent, string? path, GDFileAttributes attributes) {
+        if (parent is null) throw new ArgumentNullException(nameof(parent));
+        if (path is null) throw new ArgumentNullException(nameof(path));
+
         Path = path;
         Parent = parent;
         this.Attribute = attributes;
     }
 
-    internal GDDirectory(GDFileBase parent, string path) : this(parent, path, GDFileAttributes.Directory) {}
+    internal GDDirectory(GDFileBase? parent, string? path) : this(parent, path, GDFileAttributes.Directory) {}
 
     ~GDDirectory() => Dispose(disposing: false);
 
@@ -34,7 +37,9 @@ public sealed class GDDirectory : GDFileBase {
         GC.SuppressFinalize(this);
     }
 
-    public GDDirectory? GetDirectory(string relativePath, bool isSubdirectory = false) {
+    public GDDirectory? GetDirectory(string? relativePath, bool isSubdirectory = false) {
+        if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
+
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++) {
             if (subDir[I].Attribute == GDFileAttributes.Directory &&
             (subDir[I].Path == relativePath || subDir[I].Path.TrimEnd('/') == relativePath))
@@ -48,18 +53,20 @@ public sealed class GDDirectory : GDFileBase {
         return null;
     }
 
-    public bool CreateDirectory(string directoryName) {
-        using (Directory directory = new Directory())
-            if (directory.Open(Path) == Error.Ok)
-                if (directory.MakeDir(directoryName) == Error.Ok) {
-                    ArrayManipulation.Add(new GDDirectory(this, $"{Path}{directoryName}/"), ref subDir);
-                    return true;
-                }
+    public bool CreateDirectory(string? directoryName) {
+        if (directoryName is null) throw new ArgumentNullException(nameof(directoryName));
+        using Directory directory = new();
+        if (directory.Open(Path) == Error.Ok)
+            if (directory.MakeDir(directoryName) == Error.Ok) {
+                ArrayManipulation.Add(new GDDirectory(this, $"{Path}{directoryName}/"), ref subDir);
+                return true;
+            }
         return false;
     } 
 
-    public bool RemoveDirectory(string directoryName) {
-        using Directory directory = new Directory();
+    public bool RemoveDirectory(string? directoryName) {
+        if (directoryName is null) throw new ArgumentNullException(nameof(directoryName));
+        using Directory directory = new();
         if (directory.Open(Path) == Error.Ok)
             if (directory.Remove(directoryName) == Error.Ok) {
                 for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
@@ -72,18 +79,19 @@ public sealed class GDDirectory : GDFileBase {
         return false;
     }
     
-    public bool RemoveFile(string fileName) {
-        using (Directory directory = new Directory())
-            if (directory.Open(Path) == Error.Ok)
-                if (directory.Remove(fileName) == Error.Ok) {
-                    for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-                        if (subDir[I].Attribute == GDFileAttributes.File && 
-                        (subDir[I].Name == fileName || subDir[I].NameWithoutExtension == fileName)) {
-                            ArrayManipulation.Remove(I, ref subDir);
-                            break;
-                        }
-                    return true;
-                }
+    public bool RemoveFile(string? fileName) {
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        using Directory directory = new();
+        if (directory.Open(Path) == Error.Ok)
+            if (directory.Remove(fileName) == Error.Ok) {
+                for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
+                    if (subDir[I].Attribute == GDFileAttributes.File &&
+                    (subDir[I].Name == fileName || subDir[I].NameWithoutExtension == fileName)) {
+                        ArrayManipulation.Remove(I, ref subDir);
+                        break;
+                    }
+                return true;
+            }
         return false;
     }
 
@@ -109,7 +117,8 @@ public sealed class GDDirectory : GDFileBase {
         return res;
     }
 
-    public GDFile? GetFile(string name, bool isSubdirectory = false) {
+    public GDFile? GetFile(string? name, bool isSubdirectory = false) {
+        if (name is null) throw new ArgumentNullException(nameof(name));
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
             switch (subDir[I].Attribute) {
                 case GDFileAttributes.File:
@@ -126,7 +135,7 @@ public sealed class GDDirectory : GDFileBase {
     }
 
     public override string ToString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new();
         builder.AppendFormat("[{0}]{1}\r\n", Attribute, Path);
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
             builder.Append(subDir[I].ToString());
@@ -155,13 +164,15 @@ public sealed class GDDirectory : GDFileBase {
     /// <br>the project tree (<c>res://folder</c>), the user directory (<c>user://folder</c>) or an absolute</br>
     /// <br>path of the user filesystem (e.g. <c>/tmp/folder</c> or <c>C:\tmp\folder</c>).</br>
     /// </summary>
-    public static GDDirectory? GetGDDirectory(string path)
-        => GetGDDirectory(SYSPath.IsPathRooted(path) ? $"{path}/" : path, null);
+    public static GDDirectory? GetGDDirectory(string? path)
+        => GetGDDirectory(SYSPath.IsPathRooted(path) ? $"{path}/" : path, GDFileBase.Null);
 
-    private static GDDirectory? GetGDDirectory(string relativePath, GDDirectory? parent) {
+    private static GDDirectory? GetGDDirectory(string? relativePath, GDFileBase? parent) {
+        if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
+
         using Directory directory = new();
         if (directory.Open(relativePath) == Error.Ok) {
-            GDDirectory gDDirectory = new(parent!, relativePath);
+            GDDirectory gDDirectory = new(parent, relativePath);
             directory.ListDirBegin(false, true);
             string filename = directory.GetNext();
             while (!string.IsNullOrEmpty(filename)) {
