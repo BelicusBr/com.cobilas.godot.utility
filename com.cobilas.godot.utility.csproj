@@ -4,7 +4,7 @@
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>Cobilas</RootNamespace>
-<NoWarn>IDE0290</NoWarn>
+    <NoWarn>IDE0290;IDE0300;IDE0301;IDE0130</NoWarn>
 </PropertyGroup>
 <PropertyGroup>
     <Authors>BélicusBr</Authors>
