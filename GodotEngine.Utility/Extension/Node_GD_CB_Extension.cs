@@ -1,5 +1,6 @@
 using System;
 using Cobilas.Collections;
+using Cobilas.GodotEngine.Utility.Numerics;
 
 namespace Godot; 
 
@@ -7,6 +8,45 @@ public static class Node_GD_CB_Extension {
 
     public static void Print(this Node N, params object[] args)
         => GD.Print(args);
+
+    public static void SetNodePosition(this Node N, Vector3D position) {
+        if (N is Node2D node2D) node2D.Position = position;
+        else if (N is Spatial node3D) node3D.Translation = position;
+    }
+
+    public static void SetNodeRotation(this Node N, Vector3D rotation) {
+        if (N is Node2D node2D) node2D.Rotation = rotation.z;
+        else if (N is Spatial node3D) node3D.Rotation = rotation;
+    }
+
+    public static void SetNodeScale(this Node N, Vector3D scale) {
+        if (N is Node2D node2D) node2D.Scale = new(scale.x, scale.y);
+        else if (N is Spatial node3D) node3D.Scale = scale;
+    }
+
+    public static Vector3D GetNodePosition(this Node N) {
+        if (N is Node2D node2D) {
+            Vector2 vector = node2D.Position;
+            return new(vector.x, vector.y, 0f);
+        } else if (N is Spatial node3D) return node3D.Translation;
+        return Vector3.Zero;
+    }
+
+    public static Vector3D GetNodeRotation(this Node N) {
+        if (N is Node2D node2D) {
+            float rot = node2D.Rotation;
+            return Vector3.Back * rot;
+        } else if (N is Spatial node3D) return node3D.Rotation;
+        return Vector3.Zero;
+    }
+
+    public static Vector3D GetNodeScale(this Node N)  {
+        if (N is Node2D node2D) {
+            Vector2 vector = node2D.Scale;
+            return new(vector.x, vector.y, 0f);
+        } else if (N is Spatial node3D) return node3D.Scale;
+        return Vector3.Zero;
+    }
 
     /// <summary>
     /// Get the nodes from a type.
