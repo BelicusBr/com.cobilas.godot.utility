@@ -1,7 +1,8 @@
 using Godot;
 using System;
 
-namespace Cobilas.GodotEngine.Utility.Numerics; 
+namespace Cobilas.GodotEngine.Utility.Numerics;
+[Serializable]
 public struct Quaternion {
     public float x;
     public float y;

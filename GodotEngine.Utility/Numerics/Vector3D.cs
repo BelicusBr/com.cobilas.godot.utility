@@ -1,6 +1,8 @@
 using Godot;
+using System;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
+[Serializable]
 public struct Vector3D {
     public float x;
     public float y;

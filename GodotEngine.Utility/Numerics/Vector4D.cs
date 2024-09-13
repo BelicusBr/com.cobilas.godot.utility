@@ -1,11 +1,15 @@
 using Godot;
+using System;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
+[Serializable]
 public struct Vector4D {
     public float x;
     public float y;
     public float z;
     public float w;
+
+    public const float KEpsilon = 1E-06f;
 
     private static readonly Vector4D _zero = new(0f, 0f);
     private static readonly Vector4D _one = new(1f, 1f, 1f, 1f);
@@ -27,6 +31,9 @@ public struct Vector4D {
     public Vector4D(Vector4D vector) : this(vector.x, vector.y, vector.z, vector.w) {}
 
     public Vector4D(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
+
+    public static bool IsNormalized(IVector a)
+        => Mathf.Abs(a.magnitude - 1f) < KEpsilon;
 
     public static Vector4D operator +(Vector4D a, Vector4D b) {
         Vector4D result = Vector4D._zero;

@@ -157,7 +157,7 @@ public sealed class GDDirectory : GDFileBase {
     }
 
     public static GDDirectory? GetGDDirectory()
-        => GetGDDirectory("res://", null);
+        => GetGDDirectory("res://");
 
     /// <summary>
     /// <br>Opens an existing directory of the filesystem. The path argument can be within</br>

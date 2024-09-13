@@ -10,7 +10,7 @@
     <Authors>BélicusBr</Authors>
     <Title>Cobilas Godot Utility</Title>
     <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>1.4.0</PackageVersion>
+    <PackageVersion>1.5.0</PackageVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>C:\local.nuget</PackageOutputPath>
     <RepositoryType>git</RepositoryType>
@@ -24,5 +24,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     <PackageReference Include="Cobilas.Core.Net4x" Version="1.6.1" />
+    <Reference Include="D:\Git Repos\Godot Dev\com.cobilas.godot.utility\.mono\assemblies\Debug\GodotSharp.dll" />
+    <Reference Include="D:\Git Repos\Godot Dev\com.cobilas.godot.utility\.mono\assemblies\Debug\GodotSharpEditor.dll" />
 </ItemGroup>
 </Project>
