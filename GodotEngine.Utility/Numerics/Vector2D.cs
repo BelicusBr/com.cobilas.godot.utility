@@ -9,11 +9,12 @@ public struct Vector2D : IVector<Vector2D> {
     public float y;
 
     public readonly float magnitude => Magnitude(this);
-    public readonly float sqrtMagnitude => SqrtMagnitude(this);
+    public readonly float sqrMagnitude => SqrMagnitude(this);
     public readonly Vector2D Normalized => Normalize(this);
     public readonly Vector2D floor => Floor(this);
     public readonly Vector2D ceil => Ceil(this);
     public readonly float aspect => Aspect(this);
+    public readonly int AxisCount => 2;
 
     readonly IVector IVector.Normalized => Normalize(this);
     readonly IVector IVector.floor => Floor(this);
@@ -74,10 +75,7 @@ public struct Vector2D : IVector<Vector2D> {
 
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
 
-    public readonly Vector2D Abs(bool absX = true, bool absY = true)
-        => (Vector2D)(this as IVector).Abs(absX, absY);
-
-    readonly IVector IVector.Abs(bool absX, bool absY) {
+    public readonly Vector2D Abs(bool absX = true, bool absY = true) {
         Vector2D abs = Abs(this);
         abs[0] = absX ? abs[0] : this[0];
         abs[1] = absY ? abs[1] : this[1];
@@ -86,14 +84,14 @@ public struct Vector2D : IVector<Vector2D> {
     #endregion
 
     #region Static methods
-    public static float Distance(in Vector2D a, in Vector2D b) => SqrtMagnitude(a - b);
+    public static float Distance(in Vector2D a, in Vector2D b) => Magnitude(a - b);
 
     public static float Dot(in Vector2D lhs, in Vector2D rhs)
         => (float) (lhs.x * (double)rhs.x + lhs.y * (double)rhs.y);
 
-    public static float Magnitude(in Vector2D a) => (float)(a.x * (double)a.x + a.y * (double)a.y);
+    public static float SqrMagnitude(in Vector2D a) => (float)(a.x * (double)a.x + a.y * (double)a.y);
 
-    public static float SqrtMagnitude(in Vector2D a) => Mathf.Sqrt(Magnitude(a));
+    public static float Magnitude(in Vector2D a) => Mathf.Sqrt(Magnitude(a));
 
     public static float Cross(in Vector2D lhs, in Vector2D rhs)
         => lhs.x * rhs.y - lhs.y * rhs.x;
@@ -121,7 +119,7 @@ public struct Vector2D : IVector<Vector2D> {
     public static float Aspect(in Vector2D a) => a.x / a.y;
 
     public static Vector2D Normalize(in Vector2D a) {
-        float num1 = Magnitude(a);
+        float num1 = SqrMagnitude(a);
         if (num1 == 0) return Vector2.Zero;
         float num2 = Mathf.Sqrt(num1);
         return new(a[0] / num2, a[1] / num2);
@@ -130,10 +128,8 @@ public struct Vector2D : IVector<Vector2D> {
     public static Vector2D Abs(in Vector2D a) 
         => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]));
 
-    public static void MaxAxisX(Vector2D a, out bool axisX, out float value) {
-        if (axisX = a.x > a.y) value = a.x;
-        else value = a.y;
-    }
+    public static Vector2D Min(Vector2D lhs, Vector2D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y));
+    public static Vector2D Max(Vector2D lhs, Vector2D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));
 
     public static void MinAxisX(Vector2D a, out bool axisX, out float value) {
         if (axisX = a.x < a.y) value = a.x;
@@ -182,6 +178,9 @@ public struct Vector2D : IVector<Vector2D> {
         result.y = a.y * b;
         return result;
     }
+
+    public static bool operator ==(in Vector2D lhs, in Vector2D rhs) => lhs.Equals(rhs);
+    public static bool operator !=(in Vector2D lhs, in Vector2D rhs) => !lhs.Equals(rhs);
 
     public static implicit operator Vector2D(Vector2 v) => new (v.x, v.y);
     public static implicit operator Vector2(Vector2D v) => new (v.x, v.y);

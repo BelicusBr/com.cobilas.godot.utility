@@ -3,7 +3,7 @@ using System;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
-public struct Vector4D {
+public struct Vector4D : IVector<Vector4D> {
     public float x;
     public float y;
     public float z;
@@ -16,6 +16,28 @@ public struct Vector4D {
 
     public static Vector4D Zero => _zero;
     public static Vector4D One => _one;
+
+    public Vector4D Normalized => throw new NotImplementedException();
+
+    public Vector4D floor => throw new NotImplementedException();
+
+    public Vector4D ceil => throw new NotImplementedException();
+
+    public float magnitude => throw new NotImplementedException();
+
+    public float sqrMagnitude => throw new NotImplementedException();
+
+    IVector IVector.floor => throw new NotImplementedException();
+
+    IVector IVector.ceil => throw new NotImplementedException();
+
+    public float aspect => throw new NotImplementedException();
+
+    public int AxisCount => throw new NotImplementedException();
+
+    IVector IVector.Normalized => throw new NotImplementedException();
+
+    public float this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public Vector4D(float x, float y) : this(x, y, 0f, 0f) {}
 
@@ -33,7 +55,39 @@ public struct Vector4D {
     public Vector4D(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
 
     public static bool IsNormalized(IVector a)
-        => Mathf.Abs(a.magnitude - 1f) < KEpsilon;
+        => Mathf.Abs(a.sqrMagnitude - 1f) < KEpsilon;
+
+    public static float Dot(Vector4D a, Vector4D b) 
+        => (float)(a.x * (double)b.x + a.y * (double)b.y + a.z * (double)b.z + a.w * (double)b.w);
+
+    public static float SqrMagnitude(Vector4D a) => Vector4D.Dot(a, a);
+
+    public static float Magnitude(Vector4D a) => (float)Math.Sqrt((double)Vector4D.Dot(a, a));
+
+    public static Vector4D Normalize(Vector4D a) {
+        float num = Vector4D.Magnitude(a);
+        return (double)num > 9.99999974737875E-06 ? a / num : Vector4D.Zero;
+    }
+
+    public static float Distance(Vector4D a, Vector4D b) => Vector4D.Magnitude(a - b);
+
+    public static Vector4D Min(Vector4D lhs, Vector4D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z), Mathf.Min(lhs.w, rhs.w));
+    public static Vector4D Max(Vector4D lhs, Vector4D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z), Mathf.Max(lhs.w, rhs.w));
+
+    public bool Equals(Vector4D other)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string ToString(string format)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string ToString(string format, IFormatProvider formatProvider)
+    {
+        throw new NotImplementedException();
+    }
 
     public static Vector4D operator +(Vector4D a, Vector4D b) {
         Vector4D result = Vector4D._zero;
