@@ -1,3 +1,21 @@
+# [1.5.1] (12/09/2024)
+## Add
+Vector Structure.
+### Detalhes
+Vector structures such as 2d, 3d, 4d, and quaternion vectors have been added.
+
+## Fixed
+`ArgumentNullException` in `GDDirectory.GetGDDirectory()` method.
+### Detalhes
+The `GDDirectory.GetGDDirectory()` method always raised an `ArgumentNullException` due to the fact that the `GDDirectory.GetGDDirectory()` method uses the private `GDDirectory.GetGDDirectory(string, GDFileBase)` method, which received a null value in the parent parameter, but that, as of version `1.4.0`, the parent parameter of the GDDirectory class constructor is now checked if it is null, which caused the `GDDirectory.GetGDDirectory()` method to break.
+
+# [1.4.0] (04/08/2024)
+## Add
+The `Randomico` and `GDIONull` classes.
+### Detalhes
+The `Randomico` class was added for pseudorandom value generation. \
+The `GDIONull` class was created to represent a null `GDFileBase` object.
+
 # [1.3.0] (07/07/2024)
 ## Add
 The static class `GDFeature` was added to address the lack of specific <kbd>preprocessing definitions</kbd>.
