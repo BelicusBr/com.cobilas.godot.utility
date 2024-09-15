@@ -1,13 +1,18 @@
 using Godot;
 using System;
+using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
-public struct Quaternion {
+public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     public float x;
     public float y;
     public float z;
     public float w;
+
+    public const float KEpsilon = 1E-06f;
+    public const double Rad2Deg = 360d / (Math.PI * 2d);
+    public const double Deg2Rad = (Math.PI * 2d) / 360d;
 
     public readonly Vector3D Euler => ToEuler(this);
     public readonly Quaternion Normalized => Normalize(this);
@@ -30,14 +35,38 @@ public struct Quaternion {
     public Quaternion(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
 
     public Quaternion(Vector4D vector) : this(vector.x, vector.y, vector.z, vector.w) {}
+#region Methods
+    public readonly bool Equals(Quaternion other)
+        => other.x == this.x && other.y == this.y && other.z == this.z && other.w == this.w;
 
+    public override readonly bool Equals(object obj)
+        => obj is Quaternion quat && Equals(quat);
+
+    public override readonly int GetHashCode() 
+        => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2 ^ w.GetHashCode();
+
+    public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{3:N3})");
+
+    public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+
+    public readonly string ToString(string format, IFormatProvider formatProvider)
+        => string.Format(formatProvider, format, this.x, this.y, this.z, this.w);
+#endregion
+#region static methods
     public static Quaternion Normalize(Quaternion q) {
         float num1 = Mathf.Sqrt(Dot(q, q));
         return num1 < (double)Mathf.Epsilon ? identityQuaternion : new(q.x / num1, q.y / num1, q.z / num1, q.w / num1);
     }
 
+    public static float Angle(Quaternion a, Quaternion b) {
+      float num = Quaternion.Dot(a, b);
+      return Quaternion.IsEqualUsingDot(num) ? 0.0f : (float)((double)Mathf.Acos(Mathf.Min(Mathf.Abs(num), 1f)) * 2.0d * Rad2Deg);
+    }
+
     public static float Dot(Quaternion a, Quaternion b)
-        => (float) (a.x * (double)b.x + a.y * (double)b.y + a.z * (double)b.z + a.w * (double)b.w);
+        => (float)(a.x * (double)b.x + a.y * (double)b.y + a.z * (double)b.z + a.w * (double)b.w);
+
+    private static bool IsEqualUsingDot(float dot) => dot > 0.999998986721039d;
     
     public static Quaternion ToQuaternion(Vector3D vector) {
         float cX = Mathf.Cos(vector.x * .5f);
@@ -75,7 +104,8 @@ public struct Quaternion {
 
         return angles;
     }
-
+#endregion
+#region operator
     public static Vector3D operator *(Quaternion rotation, Vector3D point) {
         float num1 = rotation.x * 2f;
         float num2 = rotation.y * 2f;
@@ -101,4 +131,8 @@ public struct Quaternion {
             (float) (lhs.w * (double)rhs.y + lhs.y * (double)rhs.w + lhs.z * (double)rhs.x - lhs.x * (double)rhs.z),
             (float) (lhs.w * (double)rhs.z + lhs.z * (double)rhs.w + lhs.x * (double)rhs.y - lhs.y * (double)rhs.x),
             (float) (lhs.w * (double)rhs.w - lhs.x * (double)rhs.x - lhs.y * (double)rhs.y - lhs.z * (double)rhs.z));
+    
+    public static bool operator ==(Quaternion lhs, Quaternion rhs) => lhs.Equals(rhs);
+    public static bool operator !=(Quaternion lhs, Quaternion rhs) => !lhs.Equals(rhs);
 }
+#endregion

@@ -68,7 +68,7 @@ public struct Vector2D : IVector<Vector2D> {
     public readonly string ToString(string format)
         => ToString(format, CultureInfo.InvariantCulture);
 
-    public override readonly string ToString() => ToString("(x:{0:N3} x:{1:N3})");
+    public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3})");
 
     public override readonly bool Equals(object obj)
         => obj is Vector2D other && Equals(other);
@@ -97,14 +97,14 @@ public struct Vector2D : IVector<Vector2D> {
         => lhs.x * rhs.y - lhs.y * rhs.x;
 
     public static Vector2D Floor(in Vector2D a) {
-        Vector2 result = a;
+        Vector2D result = a;
         result[0] = Mathf.Floor(result[0]);
         result[1] = Mathf.Floor(result[1]);
         return result;
     }
 
     public static Vector2D Ceil(in Vector2D a) {
-        Vector2 result = a;
+        Vector2D result = a;
         result[0] = Mathf.Ceil(result[0]);
         result[1] = Mathf.Ceil(result[1]);
         return result;
@@ -119,10 +119,8 @@ public struct Vector2D : IVector<Vector2D> {
     public static float Aspect(in Vector2D a) => a.x / a.y;
 
     public static Vector2D Normalize(in Vector2D a) {
-        float num1 = SqrMagnitude(a);
-        if (num1 == 0) return Vector2.Zero;
-        float num2 = Mathf.Sqrt(num1);
-        return new(a[0] / num2, a[1] / num2);
+        float num = Vector2D.Magnitude(a);
+        return (double)num > 9.99999974737875E-06 ? a / num : Vector2D.Zero;
     }
 
     public static Vector2D Abs(in Vector2D a) 
@@ -130,11 +128,6 @@ public struct Vector2D : IVector<Vector2D> {
 
     public static Vector2D Min(Vector2D lhs, Vector2D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y));
     public static Vector2D Max(Vector2D lhs, Vector2D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));
-
-    public static void MinAxisX(Vector2D a, out bool axisX, out float value) {
-        if (axisX = a.x < a.y) value = a.x;
-        else value = a.y;
-    }
     #endregion
 
     public static Vector2D operator +(Vector2D a, Vector2D b) {

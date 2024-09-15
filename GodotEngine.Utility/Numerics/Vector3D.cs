@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
@@ -73,17 +74,19 @@ public struct Vector3D : IVector<Vector3D> {
         Vector2D abs = Abs(this);
         abs[0] = absX ? abs[0] : this[0];
         abs[1] = absY ? abs[1] : this[1];
-        abs[1] = absZ ? abs[1] : this[1];
+        abs[2] = absZ ? abs[2] : this[2];
         return abs;
     }
 
     public readonly bool Equals(Vector3D other)
         => other.x == this.x && other.y == this.y && other.z == this.z;
 
-    public readonly string ToString(string format) => ToString("(x:{0:N3} x:{1:N3} x:{2:N3})");
-
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y, this.z);
+
+    public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+
+    public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3})");
 
     public override readonly bool Equals(object obj)
         => obj is Vector3D other && Equals(other);
@@ -97,14 +100,12 @@ public struct Vector3D : IVector<Vector3D> {
     public static float Magnitude(in Vector3D a) => Mathf.Sqrt(SqrMagnitude(a));
 
     public static Vector3D Normalize(in Vector3D a) {
-        float num1 = SqrMagnitude(a);
-        if (num1 == 0) return Vector2.Zero;
-        float num2 = Mathf.Sqrt(num1);
-        return new(a[0] / num2, a[1] / num2, a[2] / num2);
+        float num = Vector3D.Magnitude(a);
+        return (double)num > 9.99999974737875E-06 ? a / num : Vector3D.Zero;
     }
 
     public static Vector3D Ceil(in Vector3D a) {
-        Vector2 result = a;
+        Vector3D result = a;
         result[0] = Mathf.Ceil(result[0]);
         result[1] = Mathf.Ceil(result[1]);
         result[2] = Mathf.Ceil(result[2]);
@@ -112,7 +113,7 @@ public struct Vector3D : IVector<Vector3D> {
     }
     
     public static Vector3D Floor(in Vector3D a) {
-        Vector2 result = a;
+        Vector3D result = a;
         result[0] = Mathf.Floor(result[0]);
         result[1] = Mathf.Floor(result[1]);
         result[2] = Mathf.Floor(result[2]);
