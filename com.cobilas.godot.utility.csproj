@@ -25,7 +25,5 @@
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
     <PackageReference Include="Cobilas.Core.Net4x" Version="1.6.1" />
-    <Reference Include="D:\Git Repos\Godot Dev\com.cobilas.godot.utility\.mono\assemblies\Debug\GodotSharp.dll" />
-    <Reference Include="D:\Git Repos\Godot Dev\com.cobilas.godot.utility\.mono\assemblies\Debug\GodotSharpEditor.dll" />
 </ItemGroup>
 </Project>
