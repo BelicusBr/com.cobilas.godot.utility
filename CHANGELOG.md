@@ -1,3 +1,9 @@
+# [1.5.2] (17/09/2024)
+## Fixed
+`StackOverflowException` in `Vector2D.Magnitude(in Vector2D)`
+### Detalhes
+The `Vector2D.Magnitude(in Vector2D)` method raised `StackOverflowException` by calling itself.
+
 # [1.5.1] (12/09/2024)
 ## Add
 Vector Structure.

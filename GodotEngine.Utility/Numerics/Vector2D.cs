@@ -91,7 +91,7 @@ public struct Vector2D : IVector<Vector2D> {
 
     public static float SqrMagnitude(in Vector2D a) => (float)(a.x * (double)a.x + a.y * (double)a.y);
 
-    public static float Magnitude(in Vector2D a) => Mathf.Sqrt(Magnitude(a));
+    public static float Magnitude(in Vector2D a) => Mathf.Sqrt(SqrMagnitude(a));
 
     public static float Cross(in Vector2D lhs, in Vector2D rhs)
         => lhs.x * rhs.y - lhs.y * rhs.x;
