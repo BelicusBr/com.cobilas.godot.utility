@@ -6,7 +6,7 @@ public static class Randomico {
     private static Random random = new();
     
     /// <summary>Returns a random number between 0.0 [inclusive] and 1.0 [inclusive] (Read Only).</summary>
-    public static double value = random.NextDouble();
+    public static double value => random.NextDouble();
     /// <summary>Less than <c>0.5f</c> is false, greater than <c>0.5f</c> is true.(<c><seealso cref="Randomico"/>.value > 0.5f</c>)</summary>
     public static bool BooleanRandom => value > .5f;
 

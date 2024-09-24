@@ -1,3 +1,9 @@
+# [1.5.3] (24/09/2024)
+## Fixed
+`Randomico.value` is now a property.
+### Detalhes
+Since `Randomico.value` was of field type, this made the return of pseudorandom methods static.
+
 # [1.5.2] (17/09/2024)
 ## Fixed
 `StackOverflowException` in `Vector2D.Magnitude(in Vector2D)`
