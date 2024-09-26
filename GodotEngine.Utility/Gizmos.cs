@@ -6,6 +6,7 @@ using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility; 
 
+/// <summary>Gizmos are used to give visual debugging or setup aids in the Scene view.</summary>
 [RunTimeInitializationClass(Priority.StartLater, nameof(Gizmos))]
 public class Gizmos : CanvasLayer {
     private Node2D? canvasItem = null;
@@ -14,8 +15,11 @@ public class Gizmos : CanvasLayer {
     private static Gizmos? gizmos = null;
     private static event Action? drawFunc = null;
 
+    /// <summary>Sets the Color of the gizmos that are drawn next.</summary>
+    /// <value>Returns or sets the color of the next gizmo.</value>
     public static Color Color { get; set; }
 
+    /// <inheritdoc/>
     public override void _Ready() {
         if (gizmos == null) {
             gizmos = this;
@@ -41,6 +45,7 @@ public class Gizmos : CanvasLayer {
         }
     }
 
+    /// <inheritdoc/>
     public override void _Process(float delta) {
         if (movingToNextScene) return;
         canvasItem!.Update();
