@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
-public struct Vector2D : IVector<Vector2D> {
+public struct Vector2D : IVectorGeneric<Vector2D> {
     public float x;
     public float y;
 
@@ -81,20 +81,26 @@ public struct Vector2D : IVector<Vector2D> {
         abs[1] = absY ? abs[1] : this[1];
         return abs;
     }
+
+    public readonly Vector2D Neg(bool negX = true, bool negY = true) {
+        Vector2D neg = Neg(this);
+        neg[0] = negX ? neg[0] : this[0];
+        neg[1] = negY ? neg[1] : this[1];
+        return neg;
+    }
+    
+    public readonly Vector2D Round() => Round(this);
+    readonly IVector IVector.Round() => Round(this);
     #endregion
 
     #region Static methods
-    public static float Distance(in Vector2D a, in Vector2D b) => Magnitude(a - b);
-
-    public static float Dot(in Vector2D lhs, in Vector2D rhs)
-        => (float) (lhs.x * (double)rhs.x + lhs.y * (double)rhs.y);
-
-    public static float SqrMagnitude(in Vector2D a) => (float)(a.x * (double)a.x + a.y * (double)a.y);
 
     public static float Magnitude(in Vector2D a) => Mathf.Sqrt(SqrMagnitude(a));
-
-    public static float Cross(in Vector2D lhs, in Vector2D rhs)
-        => lhs.x * rhs.y - lhs.y * rhs.x;
+    public static float Distance(in Vector2D a, in Vector2D b) => Magnitude(a - b);
+    public static Vector2D Round(in Vector2D a) => new(Mathf.Round(a.x), Mathf.Round(a.y));
+    public static float Cross(in Vector2D lhs, in Vector2D rhs) => lhs.x * rhs.y - lhs.y * rhs.x;
+    public static float SqrMagnitude(in Vector2D a) => (float)(a.x * (double)a.x + a.y * (double)a.y);
+    public static float Dot(in Vector2D lhs, in Vector2D rhs) => (float) (lhs.x * (double)rhs.x + lhs.y * (double)rhs.y);
 
     public static Vector2D Floor(in Vector2D a) {
         Vector2D result = a;
@@ -123,8 +129,8 @@ public struct Vector2D : IVector<Vector2D> {
         return (double)num > 9.99999974737875E-06 ? a / num : Vector2D.Zero;
     }
 
-    public static Vector2D Abs(in Vector2D a) 
-        => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]));
+    public static Vector2D Neg(in Vector2D a) => new(-a[0], -a[1]);
+    public static Vector2D Abs(in Vector2D a) => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]));
 
     public static Vector2D Min(Vector2D lhs, Vector2D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y));
     public static Vector2D Max(Vector2D lhs, Vector2D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
-public struct Vector3D : IVector<Vector3D> {
+public struct Vector3D : IVectorGeneric<Vector3D> {
     public float x;
     public float y;
     public float z;
@@ -78,6 +78,14 @@ public struct Vector3D : IVector<Vector3D> {
         return abs;
     }
 
+    public readonly Vector3D Neg(bool negX = true, bool negY = true, bool negZ = true) {
+        Vector2D abs = Neg(this);
+        abs[0] = negX ? abs[0] : this[0];
+        abs[1] = negY ? abs[1] : this[1];
+        abs[2] = negZ ? abs[2] : this[2];
+        return abs;
+    }
+
     public readonly bool Equals(Vector3D other)
         => other.x == this.x && other.y == this.y && other.z == this.z;
 
@@ -92,12 +100,22 @@ public struct Vector3D : IVector<Vector3D> {
         => obj is Vector3D other && Equals(other);
 
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode();
+
+    public readonly Vector3D Round() => Round(this);
+    readonly IVector IVector.Round() => Round(this);
 #endregion
 #region Static Methods
-    public static float SqrMagnitude(in Vector3D a)
-        => (float)(a.x * (double)a.x + a.y * (double)a.y + a.z * (double)a.z);
-
+    public static Vector3D Neg(in Vector3D a) => new(-a.x, -a.y, -a.z);
     public static float Magnitude(in Vector3D a) => Mathf.Sqrt(SqrMagnitude(a));
+    public static float Distance(in Vector3D a, in Vector3D b) => Magnitude(a - b);
+    public static Vector3D Abs(in Vector3D a) => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]), Mathf.Abs(a[2]));
+    public static Vector3D Round(in Vector3D a) => new(Mathf.Round(a.x), Mathf.Round(a.y), Mathf.Round(a.z));
+    public static float Dot(in Vector3D lhs, in Vector3D rhs) => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+    public static float SqrMagnitude(in Vector3D a) => (float)(a.x * (double)a.x + a.y * (double)a.y + a.z * (double)a.z);
+    public static float AngleTo(in Vector2D lhs, in Vector2D rhs) => Mathf.Atan2(Magnitude(Cross(lhs, rhs)), Dot(lhs, rhs));
+    public static Vector3D Min(Vector3D lhs, Vector3D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
+    public static Vector3D Max(Vector3D lhs, Vector3D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
+    public static Vector3D Cross(in Vector3D lhs, in Vector3D rhs) => new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
 
     public static Vector3D Normalize(in Vector3D a) {
         float num = Vector3D.Magnitude(a);
@@ -119,23 +137,6 @@ public struct Vector3D : IVector<Vector3D> {
         result[2] = Mathf.Floor(result[2]);
         return result;
     }
-
-    public static float Dot(in Vector3D lhs, in Vector3D rhs)
-        => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
-
-    public static float AngleTo(in Vector2D lhs, in Vector2D rhs)
-        => Mathf.Atan2(Magnitude(Cross(lhs, rhs)), Dot(lhs, rhs));
-
-    public static Vector3D Cross(in Vector3D lhs, in Vector3D rhs)
-        => new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
-
-    public static Vector3D Abs(in Vector3D a)
-        => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]), Mathf.Abs(a[2]));
-
-    public static float Distance(in Vector3D a, in Vector3D b) => Magnitude(a - b);
-
-    public static Vector3D Min(Vector3D lhs, Vector3D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
-    public static Vector3D Max(Vector3D lhs, Vector3D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
 #endregion
 
     public static Vector3D operator +(Vector3D a, Vector3D b) {
