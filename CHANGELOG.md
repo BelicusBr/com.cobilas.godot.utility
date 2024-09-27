@@ -1,30 +1,37 @@
+# [1.6.0] (26/09/2024)
+## Added
+New structures and methods.
+### Details
+New vector structures like `Vector2Int` and `Vector3Int` have been added. \
+The `Vector2D`, `Vector3D` and `Vector4D` structures received the `Neg` Method to negate the vector axes and the `Round` method.
+
 # [1.5.3] (24/09/2024)
 ## Fixed
 `Randomico.value` is now a property.
-### Detalhes
+### Details
 Since `Randomico.value` was of field type, this made the return of pseudorandom methods static.
 
 # [1.5.2] (17/09/2024)
 ## Fixed
 `StackOverflowException` in `Vector2D.Magnitude(in Vector2D)`
-### Detalhes
+### Details
 The `Vector2D.Magnitude(in Vector2D)` method raised `StackOverflowException` by calling itself.
 
 # [1.5.1] (12/09/2024)
 ## Add
 Vector Structure.
-### Detalhes
+### Details
 Vector structures such as 2d, 3d, 4d, and quaternion vectors have been added.
 
 ## Fixed
 `ArgumentNullException` in `GDDirectory.GetGDDirectory()` method.
-### Detalhes
+### Details
 The `GDDirectory.GetGDDirectory()` method always raised an `ArgumentNullException` due to the fact that the `GDDirectory.GetGDDirectory()` method uses the private `GDDirectory.GetGDDirectory(string, GDFileBase)` method, which received a null value in the parent parameter, but that, as of version `1.4.0`, the parent parameter of the GDDirectory class constructor is now checked if it is null, which caused the `GDDirectory.GetGDDirectory()` method to break.
 
 # [1.4.0] (04/08/2024)
 ## Add
 The `Randomico` and `GDIONull` classes.
-### Detalhes
+### Details
 The `Randomico` class was added for pseudorandom value generation. \
 The `GDIONull` class was created to represent a null `GDFileBase` object.
 
@@ -37,7 +44,7 @@ The static class `GDFeature` was added to address the lack of specific <kbd>prep
 Dependency `Cobilas.Core.Net4x@1.1.0` has been updated to version `1.6.1`.
 ## Fixed
 Method not found
-### Detalhes
+### Details
 The `Method not found` exception was caused by the `Cobilas.Core.Net4x` dependency not being updated.
 
 # [30/12/2023]#1.1.1

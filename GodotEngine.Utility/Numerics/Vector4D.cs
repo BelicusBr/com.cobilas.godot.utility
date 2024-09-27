@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 [Serializable]
-public struct Vector4D : IVector<Vector4D> {
+public struct Vector4D : IVectorGeneric<Vector4D> {
     public float x;
     public float y;
     public float z;
@@ -63,12 +63,21 @@ public struct Vector4D : IVector<Vector4D> {
 
     public Vector4D(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
     
-    public readonly Vector3D Abs(bool absX = true, bool absY = true, bool absZ = true, bool absW = true) {
+    public readonly Vector4D Abs(bool absX = true, bool absY = true, bool absZ = true, bool absW = true) {
         Vector4D abs = Abs(this);
         abs[0] = absX ? abs[0] : this[0];
         abs[1] = absY ? abs[1] : this[1];
         abs[2] = absZ ? abs[2] : this[2];
         abs[3] = absW ? abs[3] : this[3];
+        return abs;
+    }
+
+    public readonly Vector4D Neg(bool negX = true, bool negY = true, bool negZ = true, bool negW = true) {
+        Vector4D abs = Neg(this);
+        abs[0] = negX ? abs[0] : this[0];
+        abs[1] = negY ? abs[1] : this[1];
+        abs[2] = negZ ? abs[2] : this[2];
+        abs[3] = negW ? abs[3] : this[3];
         return abs;
     }
 
@@ -87,28 +96,25 @@ public struct Vector4D : IVector<Vector4D> {
 
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2 ^ w.GetHashCode();
 
-    public static bool IsNormalized(IVector a)
-        => Mathf.Abs(a.sqrMagnitude - 1f) < Quaternion.KEpsilon;
+    public readonly Vector4D Round() => Round(this);
+    readonly IVector IVector.Round() => Round(this);
 
-    public static Vector4D Abs(Vector4D a)
-        => new(Mathf.Abs(a.x), Mathf.Abs(a.y), Mathf.Abs(a.z), Mathf.Abs(a.w));
+    public static float SqrMagnitude(in Vector4D a) => Vector4D.Dot(a, a);
+    public static Vector4D Neg(in Vector4D a) => new(-a.x, -a.y, -a.z, -a.w);
+    public static float Distance(in Vector4D a, Vector4D b) => Vector4D.Magnitude(a - b);
+    public static float Magnitude(in Vector4D a) => (float)Math.Sqrt((double)Vector4D.Dot(a, a));
+    public static bool IsNormalized(in IVector a) => Mathf.Abs(a.sqrMagnitude - 1f) < Quaternion.KEpsilon;
+    public static Vector4D Abs(in Vector4D a) => new(Mathf.Abs(a.x), Mathf.Abs(a.y), Mathf.Abs(a.z), Mathf.Abs(a.w));
+    public static Vector4D Round(in Vector4D a) => new(Mathf.Round(a.x), Mathf.Round(a.y), Mathf.Round(a.z), Mathf.Round(a.w));
+    public static float Dot(in Vector4D a, in Vector4D b) => (float)(a.x * (double)b.x + a.y * (double)b.y + a.z * (double)b.z + a.w * (double)b.w);
 
-    public static float Dot(Vector4D a, Vector4D b) 
-        => (float)(a.x * (double)b.x + a.y * (double)b.y + a.z * (double)b.z + a.w * (double)b.w);
-
-    public static float SqrMagnitude(Vector4D a) => Vector4D.Dot(a, a);
-
-    public static float Magnitude(Vector4D a) => (float)Math.Sqrt((double)Vector4D.Dot(a, a));
-
-    public static Vector4D Normalize(Vector4D a) {
+    public static Vector4D Normalize(in Vector4D a) {
         float num = Vector4D.Magnitude(a);
         return (double)num > 9.99999974737875E-06 ? a / num : Vector4D.Zero;
     }
 
-    public static float Distance(Vector4D a, Vector4D b) => Vector4D.Magnitude(a - b);
-
-    public static Vector4D Min(Vector4D lhs, Vector4D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z), Mathf.Min(lhs.w, rhs.w));
-    public static Vector4D Max(Vector4D lhs, Vector4D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z), Mathf.Max(lhs.w, rhs.w));
+    public static Vector4D Min(in Vector4D lhs, in Vector4D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z), Mathf.Min(lhs.w, rhs.w));
+    public static Vector4D Max(in Vector4D lhs, in Vector4D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z), Mathf.Max(lhs.w, rhs.w));
 
     public static Vector4D Ceil(in Vector4D a) {
         Vector4D result = a;
