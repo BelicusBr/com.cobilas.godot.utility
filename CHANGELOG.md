@@ -1,3 +1,15 @@
+# [1.7.0] (29/09/2024)
+## Added
+New `RunTime` structure
+### Details
+The `RunTime` structure has been added to provide runtime values ​​and functions.
+
+## Changed
+Changes in `RunTimeInitialization`.
+### Details
+Form changes to the `RunTimeInitialization` class such as placing the `PriorityList` structure outside the `RunTimeInitialization` class, allowing `RunTimeInitialization` to accept negative values ​​as priority. \
+The lower the priority value, the higher its execution level will be.
+
 # [1.6.0] (26/09/2024)
 ## Added
 New structures and methods.
