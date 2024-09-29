@@ -2,16 +2,16 @@
 ### Descripition
 The package contains utility classes in csharp for godot engine(Godot3.5)
 ## RunTimeInitialization
-(namespace: Cobilas.GodotEngine.Utility.Runtime)<br>
-The `RunTimeInitialization` class allows you to automate the <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd> option.<br>
+(namespace: Cobilas.GodotEngine.Utility.Runtime) \
+The `RunTimeInitialization` class allows you to automate the <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd> option. \
 To use the `RunTimeInitialization` class, you must create a class and make it inherit `RunTimeInitialization`.
 ```c#
 using Cobilas.GodotEngine.Utility.Runtime;
 //The name of the class is up to you.
 public class RunTimeProcess : RunTimeInitialization {}
 ```
-And remember to add the class that inherits `RunTimeInitialization` in <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd>.<br>
-Remembering that the `RunTimeInitialization` class uses the virtual method `_Ready()` to perform the initialization of other classes.<br>
+And remember to add the class that inherits `RunTimeInitialization` in <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd>. \
+Remembering that the `RunTimeInitialization` class uses the virtual method `_Ready()` to perform the initialization of other classes. \
 And to initialize other classes along with the `RunTimeInitialization` class, the class must inherit the `Godot.Node` class or some class that inherits `Godot.Node` and use the `RunTimeInitializationClassAttribute` attribute.
 ```c#
 using Godot;
@@ -38,7 +38,7 @@ subPriority: And the execution priority order.
 [RunTimeInitializationClass()]
 ```
 ## CoroutineManager
-The `CoroutineManager` class is responsible for creating and managing coroutines for godot.<br>
+The `CoroutineManager` class is responsible for creating and managing coroutines for godot. \
 How to create a coroutine?
 ```c#
 using Godot;
@@ -93,10 +93,10 @@ public static void StopAllCoroutines();
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
-  <PackageReference Include="Cobilas.Godot.Utility" Version="1.5.3" />
+  <PackageReference Include="Cobilas.Godot.Utility" Version="1.7.0" />
 </ItemGroup>
 ```
 Or use command line.
 ```
-dotnet add package Cobilas.Godot.Utility --version 1.5.3
+dotnet add package Cobilas.Godot.Utility --version 1.7.0
 ```
