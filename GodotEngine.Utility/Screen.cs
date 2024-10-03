@@ -11,9 +11,23 @@ using SYSEnvironment = System.Environment;
 
 namespace Cobilas.GodotEngine.Utility; 
 
+/// <summary>Gets or changes game screen information.</summary>
 public static class Screen {
-    private static ResolutionItem[] resolutions = System.Array.Empty<ResolutionItem>();
 
+    /// <summary>Gets all detected screens.</summary>
+    /// <remarks>This property will only return all screens that were detected from the start of the application,
+    /// if another screen is connected during the execution of the application it will not be detected.</remarks>
+    /// <returns>Returns all screens that were detected.</returns>
+    public static DisplayInfo[] Displays { get; private set; }
+    /// <summary>The current screen.</summary>
+    /// <returns>Returns a <seealso cref="DisplayInfo"/> with the information of the current screen.</returns>
+    public static DisplayInfo CurrentDisplay => GetDisplay(OS.CurrentScreen);
+    /// <summary>Number of screens detected.</summary>
+    /// <returns>Returns the number of screens detected when starting the application.</returns>
+    public static int DisplayCount => ArrayManipulation.ArrayLength(Displays);
+
+    /// <summary>Represents current game screen mode.</summary>
+    /// <value>The current game screen mode.</value>
     public static ScreenMode Mode {
         get {
             if (OS.WindowResizable) return ScreenMode.Resizable;
@@ -26,68 +40,149 @@ public static class Screen {
             OS.WindowFullscreen = value == ScreenMode.Fullscreen;
         }
     }
-    public static Vector2 CurrentResolution => OS.WindowSize;
-    public static Vector2[] Resolutions {
-        get {
-            Vector2[] list = new Vector2[ArrayManipulation.ArrayLength(resolutions)];
-            for (int I = 0; I < list.Length; I++)
-                list[I] = resolutions[I].Size;
-            return list;
-        }
-    }
+    /// <summary>The current resolution of the game screen.</summary>
+    /// <returns>Returns the current resolution of the game screen as Vector2D.</returns>
+    public static Resolution CurrentResolution => CurrentDisplay.CurrentResolution;
+    /// <summary>The current frequency of the game screen.</summary>
+    /// <returns>Returns the current game screen frequency as a floating point.</returns>
+    public static float ScreenRefreshRate => OS.GetScreenRefreshRate();
+    /// <summary>Represents the game screen resolutions.</summary>
+    /// <returns>Returns all stored resolutions.</returns>
+    public static Resolution[] Resolutions => GetDisplay(OS.CurrentScreen).Resolutions;
 
     static Screen() {
+        Displays = Array.Empty<DisplayInfo>();
+
+        for (int I = 0; I < 5; I++) {
+            OpenTK.DisplayDevice display = OpenTK.DisplayDevice.GetDisplay((OpenTK.DisplayIndex)I);
+            if (display is not null) {
+                DisplayInfo[] temp = Displays;
+                ArrayManipulation.Add(new DisplayInfo(I, display), ref temp);
+                Displays = temp;
+            }
+        }
         using (GDDirectory directory = GDDirectory.GetGDDirectory()!) {
             using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file != null)
-                resolutions = Json.Deserialize<ResolutionItem[]>(file.Read());
+            if (file is not null)
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
         }
 
         if (GDFeature.HasRelease) {
             using GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!;
             using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file != null)
-                resolutions = ArrayManipulation.Add(Json.Deserialize<ResolutionItem[]>(file.Read()), resolutions);
+            if (file is not null)
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
         }
     }
-
-    public static void AddResolution(int width, int height) {
-        ArrayManipulation.Add(new ResolutionItem(width, height), ref resolutions);
+    /// <summary>Add a custom resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    public static void AddResolution(in float width, in float height)
+        => AddResolution(width, height, (int)ScreenRefreshRate);
+    /// <summary>Add a custom resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    /// <param name="refreshRate">The refresh rate of the monitor.</param>
+    public static void AddResolution(in float width, in float height, in int refreshRate) {
+        DisplayInfo display = CurrentDisplay;
+        Displays[GetIndexDisplay(OS.CurrentScreen)] = display =
+            DisplayInfo.AddCustonResolution(new(new Numerics.Vector2D(width, height), refreshRate), display);
+        
         string filePath = IOPath.Combine(SYSEnvironment.CurrentDirectory, "AddResolution.json");
         using FileStream stream = IOFile.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write);
         stream.SetLength(0L);
-        stream.Write(Json.Serialize(resolutions), Encoding.UTF8);
+        CustonResolutionList.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), stream);
     }
-
-    public static void SetResolution(Vector2 size, ScreenMode mode) {
+    /// <summary>Defines which screen will be used.</summary>
+    /// <param name="index">The target index of the screen.</param>
+    public static void SetCurrentDisplay(in int index) => OS.CurrentScreen = index;
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="size">The size of the screen.</param>
+    /// <param name="mode">Screen display mode.</param>
+    /// <param name="refreshRate">The refresh rate of the monitor.</param>
+    /// <exception cref="ArgumentException">description</exception>
+    public static void SetResolution(Vector2 size, in int refreshRate, ScreenMode mode) {
+        DisplayInfo display = CurrentDisplay;
+        Resolution temp = new(size, refreshRate);
+        if ((Mode = mode) == ScreenMode.Fullscreen) {
+            if (!display.Contains(temp))
+                throw new ArgumentException($"This resolution '{temp}' does not exist.");
+        }
+        Displays[GetIndexDisplay(OS.CurrentScreen)] = DisplayInfo.ChangeCurrentResolution(temp, display);
         OS.WindowSize = size;
-        Mode = mode;
+        Engine.TargetFps = refreshRate;
     }
-
-    public static void SetResolution(int width, int height, ScreenMode mode)
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="size">The size of the screen.</param>
+    /// <param name="mode">Screen display mode.</param>
+    public static void SetResolution(Vector2 size, ScreenMode mode)
+        => SetResolution(size, (int)ScreenRefreshRate, mode);
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    /// <param name="refreshRate">The refresh rate of the monitor.</param>
+    /// <param name="mode">Screen display mode.</param>
+    public static void SetResolution(in float width, in float height, in int refreshRate, ScreenMode mode)
+        => SetResolution(new Vector2(width, height), refreshRate, mode);
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    /// <param name="mode">Screen display mode.</param>
+    public static void SetResolution(in float width, in float height, ScreenMode mode)
         => SetResolution(new Vector2(width, height), mode);
-
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="size">The size of the screen.</param>
+    /// <param name="refreshRate">The refresh rate of the monitor.</param>
+    public static void SetResolution(Vector2 size, in int refreshRate)
+        => SetResolution(size, refreshRate, Mode);
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="size">The size of the screen.</param>
     public static void SetResolution(Vector2 size)
         => SetResolution(size, Mode);
-
-    public static void SetResolution(int width, int height)
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    public static void SetResolution(in float width, in float height)
         => SetResolution(width, height, Mode);
-    
-    [Serializable] 
-    private struct ResolutionItem {
-        private int width;
-        private int height;
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    /// <param name="refreshRate">The refresh rate of the monitor.</param>
+    public static void SetResolution(in float width, in float height, in int refreshRate)
+        => SetResolution(width, height, refreshRate, Mode);
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="resolution">The new screen resolution.</param>
+    /// <param name="mode">Screen display mode.</param>
+    public static void SetResolution(Resolution resolution, ScreenMode mode)
+        => SetResolution(resolution.Width, resolution.Height, resolution.Frequency, mode);
+    /// <summary>sets the current screen resolution.</summary>
+    /// <param name="resolution">The new screen resolution.</param>
+    public static void SetResolution(Resolution resolution)
+        => SetResolution(resolution.Width, resolution.Height, resolution.Frequency);
 
-        public readonly Vector2 Size => new(width, height);
-        public int Width { readonly get => width; set => width = value; }
-        public int Height { readonly get => height; set => height = value; }
-
-        public ResolutionItem(int width, int height)
-        {
-            this.width = width;
-            this.height = height;
+    private static void AddResolution(in CustonResolutionList[] resolutions) {
+        for (int I = 0; I < DisplayCount; I++) {
+            int hash = DisplayInfo.GetHash(Displays[I]);
+            foreach (CustonResolutionList item2 in resolutions)
+                if (hash == (int)item2) {
+                    foreach (Resolution item3 in item2)
+                        Displays[I] = DisplayInfo.AddCustonResolution(item3, Displays[I]);
+                    break;
+                }
         }
+    }
 
-        public ResolutionItem(Vector2 resolution) : this((int)resolution.x, (int)resolution.y) {}
+    private static int GetIndexDisplay(int index) {
+        for (int I = 0; I < DisplayCount; I++)
+            if (Displays[I].Index == index)
+                return I;
+        return -1;
+    }
+
+    private static DisplayInfo GetDisplay(in int index) {
+        foreach (DisplayInfo item in Displays)
+            if (item.Index == index)
+                return item;
+        return DisplayInfo.None;
     }
 }
