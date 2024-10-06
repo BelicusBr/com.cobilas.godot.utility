@@ -49,10 +49,8 @@ public class Gizmos : CanvasLayer {
     public override void _Process(float delta) {
         if (movingToNextScene) return;
         canvasItem!.Update();
-        if (canvasItem.GetIndex() != SceneManager.CurrentSceneNode!.GetChildCount() - 1) {
-            SceneManager.CurrentSceneNode.RemoveChild(canvasItem);
-            SceneManager.CurrentSceneNode.AddChild(canvasItem);
-        }
+        if (canvasItem.GetIndex() != SceneManager.CurrentSceneNode!.GetChildCount() - 1)
+            SceneManager.CurrentSceneNode.MoveChild(canvasItem, SceneManager.CurrentSceneNode.GetChildCount() - 1);
     }
 
     private void DrawGizmos() {

@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.IO;
-using System.Text;
 using Cobilas.Collections;
 using Cobilas.IO.Serialization.Json;
 
@@ -25,6 +24,9 @@ public static class Screen {
     /// <summary>Number of screens detected.</summary>
     /// <returns>Returns the number of screens detected when starting the application.</returns>
     public static int DisplayCount => ArrayManipulation.ArrayLength(Displays);
+    /// <summary>This property contains all custom resolution lists that are not tied to a <seealso cref="DisplayInfo"/>.</summary>
+    /// <returns>Returns lists of custom resolutions that are not tied to a <seealso cref="DisplayInfo"/>.</returns>
+    public static CustonResolutionList[] OrphanList { get; private set; }
 
     /// <summary>Represents current game screen mode.</summary>
     /// <value>The current game screen mode.</value>
@@ -52,6 +54,7 @@ public static class Screen {
 
     static Screen() {
         Displays = Array.Empty<DisplayInfo>();
+        OrphanList = Array.Empty<CustonResolutionList>();
 
         for (int I = 0; I < 5; I++) {
             OpenTK.DisplayDevice display = OpenTK.DisplayDevice.GetDisplay((OpenTK.DisplayIndex)I);
@@ -161,15 +164,27 @@ public static class Screen {
         => SetResolution(resolution.Width, resolution.Height, resolution.Frequency);
 
     private static void AddResolution(in CustonResolutionList[] resolutions) {
+        CustonResolutionList[] orphanList = resolutions;
+        int[] hashs = [];
         for (int I = 0; I < DisplayCount; I++) {
             int hash = DisplayInfo.GetHash(Displays[I]);
             foreach (CustonResolutionList item2 in resolutions)
                 if (hash == (int)item2) {
                     foreach (Resolution item3 in item2)
                         Displays[I] = DisplayInfo.AddCustonResolution(item3, Displays[I]);
+                    ArrayManipulation.Add((int)item2, ref hashs);
                     break;
                 }
         }
+        for (int A = 0; A < hashs.Length; A++)
+            for (int B = 0; B < ArrayManipulation.ArrayLength(orphanList); B++)
+                if (hashs[A] == (int)orphanList[B]) {
+                    ArrayManipulation.Remove(B, ref orphanList);
+                    break;
+                }
+
+        OrphanList = orphanList;
+        ArrayManipulation.ClearArray(ref hashs);
     }
 
     private static int GetIndexDisplay(int index) {
