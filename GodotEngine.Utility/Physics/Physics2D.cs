@@ -160,16 +160,44 @@ public class Physics2D : Node2D {
             list.Add((Hit2D)(item as Dictionary));
         return true;
     }
-
+    /// <summary>Intersects a ray in a given space.</summary>
+    /// <exception cref="System.ArgumentNullException">The exception is thrown when <seealso cref="Camera2D"/> object is null.</exception>
+    /// <param name="camera"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     public static bool RayCast(Camera2D camera, Vector2 from, Vector2 to, out RayHit2D hit)
         => RayCast(camera, from, to, null, 2147483647U, out hit);
-
+    /// <summary>Intersects a ray in a given space.</summary>
+    /// <exception cref="System.ArgumentNullException">The exception is thrown when <seealso cref="Camera2D"/> object is null.</exception>
+    /// <param name="camera"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="collisionLayer"></param>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     public static bool RayCast(Camera2D camera, Vector2 from, Vector2 to, uint collisionLayer, out RayHit2D hit)
         => RayCast(camera, from, to, null, collisionLayer, out hit);
-
+    /// <summary>Intersects a ray in a given space.</summary>
+    /// <exception cref="System.ArgumentNullException">The exception is thrown when <seealso cref="Camera2D"/> object is null.</exception>
+    /// <param name="camera"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="exclude"></param>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     public static bool RayCast(Camera2D camera, Vector2 from, Vector2 to, CollisionObject2D[] exclude, out RayHit2D hit)
         => RayCast(camera, from, to, exclude, 2147483647U, out hit);
-
+    /// <summary>Intersects a ray in a given space.</summary>
+    /// <exception cref="System.ArgumentNullException">The exception is thrown when <seealso cref="Camera2D"/> object is null.</exception>
+    /// <param name="camera"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="exclude"></param>
+    /// <param name="collisionLayer"></param>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     public static bool RayCast(Camera2D? camera, Vector2 from, Vector2 to, CollisionObject2D[]? exclude, uint collisionLayer, out RayHit2D hit) {
         if (camera is null) throw new System.ArgumentNullException(nameof(camera));
 
