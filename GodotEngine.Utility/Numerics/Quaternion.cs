@@ -20,35 +20,36 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     private static readonly Quaternion identityQuaternion = new(0.0f, 0.0f, 0.0f, 1f);
 
     public static Quaternion Identity => identityQuaternion;
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Quaternion(float x, float y) : this(x, y, 0f, 0f) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Quaternion(float x, float y, float z) : this(x, y, z, 0f) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Quaternion(float x, float y, float z, float w) : this() {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Quaternion(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Quaternion(Vector4D vector) : this(vector.x, vector.y, vector.z, vector.w) {}
 #region Methods
+    /// <inheritdoc/>
     public readonly bool Equals(Quaternion other)
         => other.x == this.x && other.y == this.y && other.z == this.z && other.w == this.w;
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Quaternion quat && Equals(quat);
-
+    /// <inheritdoc/>
     public override readonly int GetHashCode() 
         => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2 ^ w.GetHashCode();
-
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{3:N3})");
-
+    /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y, this.z, this.w);
 #endregion

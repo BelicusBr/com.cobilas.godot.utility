@@ -5,19 +5,22 @@ using System.Globalization;
 namespace Cobilas.GodotEngine.Utility.Numerics;
 
 [Serializable]
-public struct Vector3DInt : IIntVectorGeneric<Vector3DInt> {
+public struct Vector3DInt : IIntVector {
     public int x;
     public int y;
     public int z;
-
+    /// <inheritdoc/>
     public readonly int AxisCount => 2;
+    /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
+    /// <inheritdoc/>
+    public readonly float aspect => Vector2D.Aspect(this);
+    /// <inheritdoc/>
     public readonly int sqrMagnitude => SqrMagnitude(this);
+    /// <inheritdoc/>
     public readonly Vector3DInt ceilToInt => CeilToInt(this);
+    /// <inheritdoc/>
     public readonly Vector3DInt floorToInt => FloorToInt(this);
-    readonly IIntVector IIntVector.ceilToInt => CeilToInt(this);
-    readonly IIntVector IIntVector.floorToInt => FloorToInt(this);
-    readonly float IIntVector.aspect => throw new NotImplementedException();
 
     private static readonly Vector3DInt _zero = new(0, 0);
     private static readonly Vector3DInt _one = new(1, 1, 1);
@@ -36,7 +39,7 @@ public struct Vector3DInt : IIntVectorGeneric<Vector3DInt> {
     public static Vector3DInt Left => _left;
     public static Vector3DInt Forward => _forward;
     public static Vector3DInt Back => _back;
-
+    /// <inheritdoc/>
     public int this[int index] { 
         readonly get => index switch {
             0 => x,
@@ -53,22 +56,27 @@ public struct Vector3DInt : IIntVectorGeneric<Vector3DInt> {
             }
         }
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3DInt(in int x, in int y, in int z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3DInt(in int x, in int y) : this(x, y, 0) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3DInt(in Vector3DInt vector) : this(vector.x, vector.y, vector.z) {}
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj) => obj is Vector3DInt vector && Equals(vector);
+    /// <inheritdoc/>
     public readonly bool Equals(Vector3DInt other) => other.x == this.x && other.y == this.y && other.z == this.z;
+    /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode();
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, this.x, this.y, this.z);
+    /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0} y:{1} z:{2})");
 
     public readonly Vector3DInt Abs(bool absX = true, bool absY = true, bool absZ = true) {
@@ -87,28 +95,25 @@ public struct Vector3DInt : IIntVectorGeneric<Vector3DInt> {
         return neg;
     }
 
-    public readonly Vector3DInt RoundToInt() => RoundToInt(this);
-    readonly IIntVector IIntVector.RoundToInt() => RoundToInt(this);
-
     public static Vector3DInt Neg(in Vector3DInt a) => new(-a[0], -a[1], -a[2]);
     public static float Magnitude(in Vector3DInt a) => Mathf.Sqrt(SqrMagnitude(a));
     public static float Distance(in Vector3DInt a, in Vector3DInt b) => Magnitude(a - b);
     public static int SqrMagnitude(in Vector3DInt a) => a.x * a.x + a.y * a.y + a.z * a.z;
     public static Vector3DInt Abs(in Vector3DInt a)  => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]), Mathf.Abs(a[2]));
-    public static Vector3DInt RoundToInt(in Vector3DInt a) => new(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y), Mathf.RoundToInt(a.z));
+    public static Vector3DInt RoundToInt(in Vector3D a) => new(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y), Mathf.RoundToInt(a.z));
     public static Vector3DInt Min(Vector3DInt lhs, Vector3DInt rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
     public static Vector3DInt Max(Vector3DInt lhs, Vector3DInt rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
 
-    public static Vector3DInt FloorToInt(in Vector3DInt a) {
-        Vector3DInt result = a;
+    public static Vector3DInt FloorToInt(in Vector3D a) {
+        Vector3DInt result = Vector3DInt._zero;
         result[0] = Mathf.FloorToInt(result[0]);
         result[1] = Mathf.FloorToInt(result[1]);
         result[2] = Mathf.FloorToInt(result[2]);
         return result;
     }
 
-    public static Vector3DInt CeilToInt(in Vector3DInt a) {
-        Vector3DInt result = a;
+    public static Vector3DInt CeilToInt(in Vector3D a) {
+        Vector3DInt result = Vector3DInt._zero;
         result[0] = Mathf.CeilToInt(result[0]);
         result[1] = Mathf.CeilToInt(result[1]);
         result[2] = Mathf.CeilToInt(result[2]);

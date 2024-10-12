@@ -8,18 +8,24 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     public float x;
     public float y;
     public float z;
-
+    /// <inheritdoc/>
     public readonly Vector3D Normalized => Normalize(this);
+    /// <inheritdoc/>
     public readonly Vector3D floor => Floor(this);
+    /// <inheritdoc/>
     public readonly Vector3D ceil => Ceil(this);
+    /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
+    /// <inheritdoc/>
+    public readonly float aspect => Vector2D.Aspect(this);
+    /// <inheritdoc/>
     public readonly float sqrMagnitude => SqrMagnitude(this);
+    /// <inheritdoc/>
     public readonly int AxisCount => 3;
 
     readonly IVector IVector.Normalized => Normalize(this);
     readonly IVector IVector.floor => Floor(this);
     readonly IVector IVector.ceil => Ceil(this);
-    readonly float IVector.aspect => throw new NotImplementedException();
 
     private static readonly Vector3D _zero = new(0f, 0f);
     private static readonly Vector3D _one = new(1f, 1f, 1f);
@@ -38,7 +44,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     public static Vector3D Left => _left;
     public static Vector3D Forward => _forward;
     public static Vector3D Back => _back;
-
+    /// <inheritdoc/>
     public float this[int index] {
         readonly get => index switch {
             0 => x,
@@ -56,17 +62,17 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
             
         }
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3D(float x, float y) : this(x, y, 0f) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3D(float x, float y, float z) : this() {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3D(Vector3D vector) : this(vector.x, vector.y, vector.z) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector3D(Vector3 vector) : this(vector.x, vector.y, vector.z) {}
 
 #region Methods
@@ -85,22 +91,22 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         abs[2] = negZ ? abs[2] : this[2];
         return abs;
     }
-
+    /// <inheritdoc/>
     public readonly bool Equals(Vector3D other)
         => other.x == this.x && other.y == this.y && other.z == this.z;
-
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y, this.z);
-
+    /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3})");
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Vector3D other && Equals(other);
-
+    /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode();
-
+    /// <inheritdoc/>
     public readonly Vector3D Round() => Round(this);
     readonly IVector IVector.Round() => Round(this);
 #endregion

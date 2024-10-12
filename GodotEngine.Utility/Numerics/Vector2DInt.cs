@@ -5,18 +5,17 @@ using System.Globalization;
 namespace Cobilas.GodotEngine.Utility.Numerics;
 
 [Serializable]
-public struct Vector2DInt : IIntVectorGeneric<Vector2DInt> {
+public struct Vector2DInt : IIntVector {
     public int x;
     public int y;
-
+    /// <inheritdoc/>
     public readonly int AxisCount => 2;
+    /// <inheritdoc/>
     public readonly float aspect => Aspect(this);
+    /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
+    /// <inheritdoc/>
     public readonly int sqrMagnitude => SqrMagnitude(this);
-    public readonly Vector2DInt ceilToInt => CeilToInt(this);
-    public readonly Vector2DInt floorToInt => FloorToInt(this);
-    readonly IIntVector IIntVector.ceilToInt => CeilToInt(this);
-    readonly IIntVector IIntVector.floorToInt => FloorToInt(this);
 
     private static readonly Vector2DInt _zero = new(0, 0);
     private static readonly Vector2DInt _one = new(1, 1);
@@ -31,7 +30,7 @@ public struct Vector2DInt : IIntVectorGeneric<Vector2DInt> {
     public static Vector2DInt Down => _down;
     public static Vector2DInt Right => _right;
     public static Vector2DInt Left => _left;
-
+    /// <inheritdoc/>
     public int this[int index] { 
         readonly get => index switch {
             0 => x,
@@ -46,27 +45,27 @@ public struct Vector2DInt : IIntVectorGeneric<Vector2DInt> {
             }
         }
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector2DInt(in int x, in int y) {
         this.x = x;
         this.y = y;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector2DInt(in Vector2DInt vector) : this(vector.x, vector.y) {}
-
+    /// <inheritdoc/>
     public readonly bool Equals(Vector2DInt other) => other.x == this.x && other.y == this.y;
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Vector2DInt vector && Equals(vector);
-
+    /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
-
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y);
-
+    /// <inheritdoc/>
     public readonly string ToString(string format)
         => ToString(format, CultureInfo.InvariantCulture);
-
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0} y:{1})");
 
     public readonly Vector2DInt Abs(bool absX = true, bool absY = true) {
@@ -83,28 +82,25 @@ public struct Vector2DInt : IIntVectorGeneric<Vector2DInt> {
         return neg;
     }
 
-    public readonly Vector2DInt RoundToInt() => RoundToInt(this);
-    readonly IIntVector IIntVector.RoundToInt() => RoundToInt(this);
-
     public static float Aspect(in Vector2DInt a) => a.x / a.y;
     public static Vector2DInt Neg(in Vector2DInt a) => new(-a[0], -a[1]);
     public static int SqrMagnitude(in Vector2DInt a) => a.x * a.x + a.y * a.y;
     public static float Magnitude(in Vector2DInt a) => Mathf.Sqrt(SqrMagnitude(a));
     public static float Distance(in Vector2DInt a, in Vector2DInt b) => Magnitude(a - b);
     public static Vector2DInt Abs(in Vector2DInt a)  => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]));
-    public static Vector2DInt RoundToInt(in Vector2DInt a) => new(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y));
+    public static Vector2DInt RoundToInt(in Vector2D a) => new(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y));
     public static Vector2DInt Min(Vector2DInt lhs, Vector2DInt rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y));
     public static Vector2DInt Max(Vector2DInt lhs, Vector2DInt rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));
 
-    public static Vector2DInt FloorToInt(in Vector2DInt a) {
-        Vector2DInt result = a;
+    public static Vector2DInt FloorToInt(in Vector2D a) {
+        Vector2DInt result = Vector2DInt._zero;
         result[0] = Mathf.FloorToInt(result[0]);
         result[1] = Mathf.FloorToInt(result[1]);
         return result;
     }
 
-    public static Vector2DInt CeilToInt(in Vector2DInt a) {
-        Vector2DInt result = a;
+    public static Vector2DInt CeilToInt(in Vector2D a) {
+        Vector2DInt result = Vector2DInt._zero;
         result[0] = Mathf.CeilToInt(result[0]);
         result[1] = Mathf.CeilToInt(result[1]);
         return result;

@@ -15,19 +15,25 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
 
     public static Vector4D Zero => _zero;
     public static Vector4D One => _one;
-
+    /// <inheritdoc/>
     public readonly Vector4D Normalized => Normalize(this);
+    /// <inheritdoc/>
     public readonly Vector4D floor => Floor(this);
+    /// <inheritdoc/>
     public readonly Vector4D ceil => Ceil(this);
+    /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
+    /// <inheritdoc/>
     public readonly float sqrMagnitude => SqrMagnitude(this);
+    /// <inheritdoc/>
     public readonly int AxisCount => 4;
+    /// <inheritdoc/>
+    public readonly float aspect => Vector2D.Aspect(this);
 
     readonly IVector IVector.floor => Floor(this);
     readonly IVector IVector.ceil => Ceil(this);
     readonly IVector IVector.Normalized => Normalize(this);
-    readonly float IVector.aspect => throw new NotImplementedException();
-
+    /// <inheritdoc/>
     public float this[int index] { 
         readonly get => index switch {
             0 => this[0],
@@ -47,20 +53,20 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
             
         }
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector4D(float x, float y) : this(x, y, 0f, 0f) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector4D(float x, float y, float z) : this(x, y, z, 0f) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector4D(float x, float y, float z, float w) : this() {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector4D(Vector4D vector) : this(vector.x, vector.y, vector.z, vector.w) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector4D(Quaternion vector) : this(vector.x, vector.y, vector.z, vector.w) {}
     
     public readonly Vector4D Abs(bool absX = true, bool absY = true, bool absZ = true, bool absW = true) {
@@ -80,22 +86,22 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
         abs[3] = negW ? abs[3] : this[3];
         return abs;
     }
-
+    /// <inheritdoc/>
     public readonly bool Equals(Vector4D other)
         => other.x == this.x && other.y == this.y && other.z == this.z && other.w == this.w;
-
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y, this.z, this.w);
-
+    /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})");
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Vector3D other && Equals(other);
-
+    /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2 ^ w.GetHashCode();
-
+    /// <inheritdoc/>
     public readonly Vector4D Round() => Round(this);
     readonly IVector IVector.Round() => Round(this);
 

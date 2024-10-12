@@ -7,13 +7,19 @@ namespace Cobilas.GodotEngine.Utility.Numerics;
 public struct Vector2D : IVectorGeneric<Vector2D> {
     public float x;
     public float y;
-
+    /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
+    /// <inheritdoc/>
     public readonly float sqrMagnitude => SqrMagnitude(this);
+    /// <inheritdoc/>
     public readonly Vector2D Normalized => Normalize(this);
+    /// <inheritdoc/>
     public readonly Vector2D floor => Floor(this);
+    /// <inheritdoc/>
     public readonly Vector2D ceil => Ceil(this);
+    /// <inheritdoc/>
     public readonly float aspect => Aspect(this);
+    /// <inheritdoc/>
     public readonly int AxisCount => 2;
 
     readonly IVector IVector.Normalized => Normalize(this);
@@ -33,7 +39,7 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
     public static Vector2D Down => _down;
     public static Vector2D Right => _right;
     public static Vector2D Left => _left;
-
+    /// <inheritdoc/>
     public float this[int index] {
         readonly get => index switch {
             0 => x,
@@ -48,31 +54,32 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
             }
         }
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector2D(float x, float y) : this() {
         this.x = x;
         this.y = y;
     }
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector2D(Vector2D vector) : this(vector.x, vector.y) {}
-
+    /// <summary>Starts a new instance of the object.</summary>
     public Vector2D(Vector2 vector) : this(vector.x, vector.y) {}
 
 #region Methods
+    /// <inheritdoc/>
     public readonly bool Equals(Vector2D other)
         => other.x == this.x && other.y == this.y;
-
+    /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format, this.x, this.y);
-
+    /// <inheritdoc/>
     public readonly string ToString(string format)
         => ToString(format, CultureInfo.InvariantCulture);
-
+    /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3})");
-
+    /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Vector2D other && Equals(other);
-
+    /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
 
     public readonly Vector2D Abs(bool absX = true, bool absY = true) {
@@ -88,7 +95,7 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
         neg[1] = negY ? neg[1] : this[1];
         return neg;
     }
-    
+    /// <inheritdoc/>
     public readonly Vector2D Round() => Round(this);
     readonly IVector IVector.Round() => Round(this);
     #endregion
