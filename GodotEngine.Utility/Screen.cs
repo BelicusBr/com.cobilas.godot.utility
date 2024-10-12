@@ -104,7 +104,7 @@ public static class Screen {
     /// <param name="mode">Screen display mode.</param>
     /// <param name="refreshRate">The refresh rate of the monitor.</param>
     /// <exception cref="ArgumentException">description</exception>
-    public static void SetResolution(Vector2 size, in int refreshRate, ScreenMode mode) {
+    public static void SetResolution(in Vector2 size, in int refreshRate, in ScreenMode mode) {
         DisplayInfo display = CurrentDisplay;
         Resolution temp = new(size, refreshRate);
         if ((Mode = mode) == ScreenMode.Fullscreen) {
@@ -118,29 +118,29 @@ public static class Screen {
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="size">The size of the screen.</param>
     /// <param name="mode">Screen display mode.</param>
-    public static void SetResolution(Vector2 size, ScreenMode mode)
+    public static void SetResolution(in Vector2 size, in ScreenMode mode)
         => SetResolution(size, (int)ScreenRefreshRate, mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="width">The width of the screen.</param>
     /// <param name="height">The height of the screen.</param>
     /// <param name="refreshRate">The refresh rate of the monitor.</param>
     /// <param name="mode">Screen display mode.</param>
-    public static void SetResolution(in float width, in float height, in int refreshRate, ScreenMode mode)
+    public static void SetResolution(in float width, in float height, in int refreshRate, in ScreenMode mode)
         => SetResolution(new Vector2(width, height), refreshRate, mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="width">The width of the screen.</param>
     /// <param name="height">The height of the screen.</param>
     /// <param name="mode">Screen display mode.</param>
-    public static void SetResolution(in float width, in float height, ScreenMode mode)
+    public static void SetResolution(in float width, in float height, in ScreenMode mode)
         => SetResolution(new Vector2(width, height), mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="size">The size of the screen.</param>
     /// <param name="refreshRate">The refresh rate of the monitor.</param>
-    public static void SetResolution(Vector2 size, in int refreshRate)
+    public static void SetResolution(in Vector2 size, in int refreshRate)
         => SetResolution(size, refreshRate, Mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="size">The size of the screen.</param>
-    public static void SetResolution(Vector2 size)
+    public static void SetResolution(in Vector2 size)
         => SetResolution(size, Mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="width">The width of the screen.</param>
@@ -156,11 +156,11 @@ public static class Screen {
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="resolution">The new screen resolution.</param>
     /// <param name="mode">Screen display mode.</param>
-    public static void SetResolution(Resolution resolution, ScreenMode mode)
+    public static void SetResolution(in Resolution resolution, in ScreenMode mode)
         => SetResolution(resolution.Width, resolution.Height, resolution.Frequency, mode);
     /// <summary>sets the current screen resolution.</summary>
     /// <param name="resolution">The new screen resolution.</param>
-    public static void SetResolution(Resolution resolution)
+    public static void SetResolution(in Resolution resolution)
         => SetResolution(resolution.Width, resolution.Height, resolution.Frequency);
 
     private static void AddResolution(in CustonResolutionList[] resolutions) {
@@ -187,7 +187,7 @@ public static class Screen {
         ArrayManipulation.ClearArray(ref hashs);
     }
 
-    private static int GetIndexDisplay(int index) {
+    private static int GetIndexDisplay(in int index) {
         for (int I = 0; I < DisplayCount; I++)
             if (Displays[I].Index == index)
                 return I;
