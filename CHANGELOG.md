@@ -1,3 +1,68 @@
+# [3.0.0] (12/10/2024)
+## Removed
+### IIntVectorGeneric interface
+A interface foi removida por não aver necessidade de conter funções não estaticas usadas para converter vetores de ponto flutuante.
+
+### IIntVector.floorToInt
+A propriedade foi removida por não aver necessidade.
+
+### IIntVector.ceilToInt
+A propriedade foi removida por não aver necessidade.
+
+### IIntVector.RoundToInt()
+O método foi removido por não aver necessidade.
+
+# [2.0.0] (06/10/2024-12/10/2024)
+## Added
+### Screen.OrphanList
+The `Screen.OrphanList` property has been added to display a list of custom resolutions not tied to a screen.
+
+### RayHit2D.IsValid(Dictionary?)
+The `RayHit2D.IsValid(Dictionary?)` method has been added to check whether an object of type `Godot.Collections.Dictionary` is valid for conversion.
+
+### RayHit2D.IsValid(Dictionary?)
+The `Hit2D.IsValid(Dictionary?)` method has been added to check whether an object of type `Godot.Collections.Dictionary` is valid for conversion.
+
+## Changed
+### Screen.Resolutions
+The `Screen.Resolutions` property now returns an array of type `Resolution` which makes it incompatible with previous versions of the package.
+
+### Screen.CurrentResolution
+The `Screen.CurrentResolution` property now returns a value of type `Resolution` which makes it incompatible with previous versions of the package.
+
+### Scene struct
+The `Scene` struct is implementing the comparison interfaces `IEquatable<Scene>, IEquatable<int>, IEquatable<string>`. \
+The `Scene` struct implements the comparison operators and also implements the explicit conversion operators <kbd>Scene -> int</kbd> and <kbd>Scene -> string</kbd>.
+
+# [1.8.0] (03/10/2024-06/10/2024)
+## Added
+### RunTime.TimeScale
+The `RunTime.TimeScale` property has been added to track in-game time.
+
+### RunTime.FrameCount
+The `RunTime.FrameCount` property has been added to show how many frames have been displayed in-game.
+
+### Screen.ScreenRefreshRate
+The `Screen.ScreenRefreshRate` property has been added to show the screen refresh rate.
+
+### Screen.Displays
+The `Screen.Displays` property has been added to display a list of connected displays on the PC.
+
+### Screen.CurrentDisplay
+The `Screen.CurrentDisplay` property has been added to display information about the current screen.
+
+### Screen.DisplayCount
+The `Screen.DisplayCount` property has been added to display the number of screens connected to the PC.
+
+### CustonResolutionList struct
+The `CustonResolutionList` struct has been added to store a list of custom resolutions for a screen.
+
+### DisplayInfo struct
+The `DisplayInfo` struct has been added to store screen information.
+
+### Resolution struct
+The `Resolution` struct has been added to store resolution information.
+
 # [1.7.0] (29/09/2024)
 ## Added
 New `RunTime` structure
