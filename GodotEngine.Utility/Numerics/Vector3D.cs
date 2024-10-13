@@ -3,10 +3,14 @@ using System;
 using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
+/// <summary>Represents a three-dimensional vector.</summary>
 [Serializable]
 public struct Vector3D : IVectorGeneric<Vector3D> {
+    /// <inheritdoc cref="Vector4D.x"/>
     public float x;
+    /// <inheritdoc cref="Vector4D.y"/>
     public float y;
+    /// <inheritdoc cref="Vector4D.z"/>
     public float z;
     /// <inheritdoc/>
     public readonly Vector3D Normalized => Normalize(this);
@@ -35,14 +39,21 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     private static readonly Vector3D _left = new(-1f, 0f);
     private static readonly Vector3D _forward = new(0f, 0f, 1f);
     private static readonly Vector3D _back = new(0f, 0f, -1f);
-
+    /// <summary>Shorthand for writing Vector3(0,0,0).</summary>
     public static Vector3D Zero => _zero;
+    /// <summary>Shorthand for writing Vector3(1,1,1).</summary>
     public static Vector3D One => _one;
+    /// <summary>Shorthand for writing Vector3(0,-1f,0).</summary>
     public static Vector3D Up => _up;
+    /// <summary>Shorthand for writing Vector3(0,1f,0).</summary>
     public static Vector3D Down => _down;
+    /// <summary>Shorthand for writing Vector3(1f,0,0).</summary>
     public static Vector3D Right => _right;
+    /// <summary>Shorthand for writing Vector3(-1f,0,0).</summary>
     public static Vector3D Left => _left;
+    /// <summary>Shorthand for writing Vector3(0,0,1f).</summary>
     public static Vector3D Forward => _forward;
+    /// <summary>Shorthand for writing Vector3(0,0,-1f).</summary>
     public static Vector3D Back => _back;
     /// <inheritdoc/>
     public float this[int index] {
@@ -76,6 +87,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     public Vector3D(Vector3 vector) : this(vector.x, vector.y, vector.z) {}
 
 #region Methods
+    /// <inheritdoc cref="Vector4D.Abs(bool, bool, bool, bool)"/>
     public readonly Vector3D Abs(bool absX = true, bool absY = true, bool absZ = true) {
         Vector2D abs = Abs(this);
         abs[0] = absX ? abs[0] : this[0];
@@ -83,7 +95,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         abs[2] = absZ ? abs[2] : this[2];
         return abs;
     }
-
+    /// <inheritdoc cref="Vector4D.Neg(bool, bool, bool, bool)"/>
     public readonly Vector3D Neg(bool negX = true, bool negY = true, bool negZ = true) {
         Vector2D abs = Neg(this);
         abs[0] = negX ? abs[0] : this[0];
@@ -111,23 +123,40 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     readonly IVector IVector.Round() => Round(this);
 #endregion
 #region Static Methods
+    /// <inheritdoc cref="Vector4D.Neg(in Vector4D)"/>
     public static Vector3D Neg(in Vector3D a) => new(-a.x, -a.y, -a.z);
+    /// <inheritdoc cref="Vector4D.Magnitude(in Vector4D)"/>
     public static float Magnitude(in Vector3D a) => Mathf.Sqrt(SqrMagnitude(a));
+    /// <inheritdoc cref="Vector4D.Distance(in Vector4D, Vector4D)"/>
     public static float Distance(in Vector3D a, in Vector3D b) => Magnitude(a - b);
+    /// <inheritdoc cref="Vector4D.Abs(in Vector4D)"/>
     public static Vector3D Abs(in Vector3D a) => new(Mathf.Abs(a[0]), Mathf.Abs(a[1]), Mathf.Abs(a[2]));
+    /// <inheritdoc cref="Vector4D.Round(in Vector4D)"/>
     public static Vector3D Round(in Vector3D a) => new(Mathf.Round(a.x), Mathf.Round(a.y), Mathf.Round(a.z));
+    /// <inheritdoc cref="Vector4D.Dot(in Vector4D, in Vector4D)"/>
     public static float Dot(in Vector3D lhs, in Vector3D rhs) => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+    /// <inheritdoc cref="Vector4D.SqrMagnitude(in Vector4D)"/>
     public static float SqrMagnitude(in Vector3D a) => (float)(a.x * (double)a.x + a.y * (double)a.y + a.z * (double)a.z);
+    /// <summary>Returns the angle in degrees between from and to.</summary>
+    /// <param name="lhs">The vector from which the angular difference is measured.</param>
+    /// <param name="rhs">The vector to which the angular difference is measured.</param>
+    /// <returns>The angle in degrees between the two vectors.</returns>
     public static float AngleTo(in Vector2D lhs, in Vector2D rhs) => Mathf.Atan2(Magnitude(Cross(lhs, rhs)), Dot(lhs, rhs));
+    /// <inheritdoc cref="Vector4D.Min(in Vector4D, in Vector4D)"/>
     public static Vector3D Min(Vector3D lhs, Vector3D rhs) => new(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
+    /// <inheritdoc cref="Vector4D.Max(in Vector4D, in Vector4D)"/>
     public static Vector3D Max(Vector3D lhs, Vector3D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
+    /// <summary>Cross Product of two vectors.</summary>
+    /// <param name="lhs">One of the values.</param>
+    /// <param name="rhs">The other value.</param>
+    /// <returns>Returns the cross product of vectors.</returns>
     public static Vector3D Cross(in Vector3D lhs, in Vector3D rhs) => new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
-
+    /// <inheritdoc cref="Vector4D.Normalize(in Vector4D)"/>
     public static Vector3D Normalize(in Vector3D a) {
         float num = Vector3D.Magnitude(a);
         return (double)num > 9.99999974737875E-06 ? a / num : Vector3D.Zero;
     }
-
+    /// <inheritdoc cref="Vector4D.Ceil(in Vector4D)"/>
     public static Vector3D Ceil(in Vector3D a) {
         Vector3D result = a;
         result[0] = Mathf.Ceil(result[0]);
@@ -135,7 +164,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result[2] = Mathf.Ceil(result[2]);
         return result;
     }
-    
+    /// <inheritdoc cref="Vector4D.Floor(in Vector4D)"/>
     public static Vector3D Floor(in Vector3D a) {
         Vector3D result = a;
         result[0] = Mathf.Floor(result[0]);
@@ -144,7 +173,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         return result;
     }
 #endregion
-
+    /// <summary>Addition operation between two values.(<seealso cref="Vector3D"/> + <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator +(Vector3D a, Vector3D b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x + b.x;
@@ -152,7 +184,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z + b.z;
         return result;
     }
-
+    /// <summary>Subtraction operation between two values.(<seealso cref="Vector3D"/> - <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator -(Vector3D a, Vector3D b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x - b.x;
@@ -160,7 +195,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z - b.z;
         return result;
     }
-
+    /// <summary>Division operation between two values.(<seealso cref="Vector3D"/> / <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator /(Vector3D a, Vector3D b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x / b.x;
@@ -168,7 +206,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z / b.z;
         return result;
     }
-
+    /// <summary>Multiplication operation between two values.(<seealso cref="Vector3D"/> * <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator *(Vector3D a, Vector3D b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x * b.x;
@@ -176,7 +217,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z * b.z;
         return result;
     }
-
+    /// <summary>Division operation between two values.(<seealso cref="Vector3D"/> / <seealso cref="float"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator /(Vector3D a, float b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x / b;
@@ -184,7 +228,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z / b;
         return result;
     }
-
+    /// <summary>Multiplication operation between two values.(<seealso cref="Vector3D"/> * <seealso cref="float"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
     public static Vector3D operator *(Vector3D a, float b) {
         Vector3D result = Vector3D._zero;
         result.x = a.x * b;
@@ -192,16 +239,32 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z * b;
         return result;
     }
-
+    /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>
+    /// <param name="lhs">Object to be compared.</param>
+    /// <param name="rhs">Object of comparison.</param>
+    /// <returns>Returns the result of the comparison.</returns>
     public static bool operator ==(in Vector3D lhs, in Vector3D rhs) => lhs.Equals(rhs);
+    /// <summary>Indicates whether this instance is different from another instance of the same type.</summary>
+    /// <param name="lhs">Object to be compared.</param>
+    /// <param name="rhs">Object of comparison.</param>
+    /// <returns>Returns the result of the comparison.</returns>
     public static bool operator !=(in Vector3D lhs, in Vector3D rhs) => !lhs.Equals(rhs);
-
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector3"/> to <seealso cref="Vector3D"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector3D(Vector3 v) => new (v.x, v.y, v.z);
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector3D"/> to <seealso cref="Vector3"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector3(Vector3D v) => new (v.x, v.y, v.z);
-
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector2"/> to <seealso cref="Vector3D"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector3D(Vector2 v) => new (v.x, v.y);
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector3D"/> to <seealso cref="Vector2"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector2(Vector3D v) => new (v.x, v.y);
-    
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector3D"/> to <seealso cref="Vector2D"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector2D(Vector3D v) => new (v.x, v.y);
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector3D"/> to <seealso cref="Vector4D"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector4D(Vector3D v) => new (v.x, v.y);
 }

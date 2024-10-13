@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Defines methods to support comparing vectors for equality.</summary>
-[StructLayout(LayoutKind.Sequential, Size = 2)]
 public readonly struct VectorEqualityComparer : IEqualityComparer,
     IEqualityComparer<Vector2D>, IEqualityComparer<Vector3D>,
     IEqualityComparer<Vector4D>, IEqualityComparer<Vector2DInt>,
