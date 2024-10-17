@@ -58,7 +58,7 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
         => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2 ^ w.GetHashCode();
     /// <inheritdoc/>
     public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{3:N3})");
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IFormattable.ToString(string, IFormatProvider)"/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)

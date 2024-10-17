@@ -30,6 +30,6 @@ public interface IVector : IFormattable {
     float this[int index] { get; set; }
     /// <inheritdoc cref="Godot.Vector2.Round"/>
     IVector Round();
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IFormattable.ToString(string, IFormatProvider)"/>
     string ToString(string format);
 }

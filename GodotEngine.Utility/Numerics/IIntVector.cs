@@ -14,6 +14,6 @@ public interface IIntVector : IFormattable {
     /// <inheritdoc cref="IVector.this"/>
     int this[int index] { get; set; }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IFormattable.ToString(string, IFormatProvider)"/>
     string ToString(string format);
 }
