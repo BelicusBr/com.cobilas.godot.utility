@@ -1,3 +1,21 @@
+# [3.2.0] (17/10/2024)
+## Added
+### GDDirectory.GetDirectories()
+The `GDDirectory.GetDirectories()` method has been added. \
+This method allows you to get the subfolders within the current folder.
+
+### Overloading methods of the GDFile class.
+The `GDFile.Load(string, bool)` and `GDFile.Load<T>(string, bool)` methods have been added to the `GDFile` method.
+
+### properties for the GDIONull classes.
+The `GDIONull.FileNull` and `GDIONull.DirectoryNull` properties have been added to the GDIONull class. \
+These properties return a null representation of a file or directory.
+
+# [3.1.1] (13/10/2024)
+## Added
+### Vector4D Comparison Operator
+Equality and difference operators have been added to the Vector4D structure.
+
 # [3.0.0] (12/10/2024)
 ## Removed
 ### IIntVectorGeneric interface
