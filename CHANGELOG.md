@@ -19,16 +19,16 @@ Equality and difference operators have been added to the Vector4D structure.
 # [3.0.0] (12/10/2024)
 ## Removed
 ### IIntVectorGeneric interface
-A interface foi removida por não aver necessidade de conter funções não estaticas usadas para converter vetores de ponto flutuante.
+The interface was removed as there was no need to contain non-static functions used to convert floating point vectors.
 
 ### IIntVector.floorToInt
-A propriedade foi removida por não aver necessidade.
+The property was removed as there was no need for it.
 
 ### IIntVector.ceilToInt
-A propriedade foi removida por não aver necessidade.
+The property was removed as there was no need for it.
 
 ### IIntVector.RoundToInt()
-O método foi removido por não aver necessidade.
+The method was removed as there was no need for it.
 
 # [2.0.0] (06/10/2024-12/10/2024)
 ## Added
