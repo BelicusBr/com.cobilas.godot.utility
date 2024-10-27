@@ -7,155 +7,108 @@ namespace Cobilas.GodotEngine.Utility.Input;
 [RunTimeInitializationClass(nameof(InputKeyBoard))]
 public class InputKeyBoard : Node {
 
-    private readonly List<KeyItem> pairs = new();
-    private readonly List<MouseItem> pairs2 = new();
-    private static bool mousePressed;
+    private readonly List<PeripheralItem> periferics = [];
+    private readonly GCInputKeyBoard gCInputKeyBoard = new();
     private static InputKeyBoard? keyBoard = null;
+    private static ulong lastPressed = 0UL;
 
     public static int MouseIndex { get; private set;}
     public static bool DoubleClick { get; private set;}
     public static float DeltaScroll { get; private set;}
     public static Vector2 MousePosition { get; private set;}
     public static Vector2 MouseGlobalPosition { get; private set;}
-
+    /// <inheritdoc/>
     public override void _Ready() {
         keyBoard ??= this;
+        if (keyBoard == this) {
+            gCInputKeyBoard.Name = nameof(GCInputKeyBoard);
+            gCInputKeyBoard.periferics = this.periferics;
+            Viewport root = GetTree().Root;
+            root.CallDeferred("add_child", gCInputKeyBoard);
+            int gcIndex = gCInputKeyBoard.GetIndex();
+            //move_child
+            gCInputKeyBoard.GCEvent += () => {
+                //MouseIndex = 0;
+                if (gcIndex != gCInputKeyBoard.GetIndex())
+                    root.CallDeferred("move_child", gCInputKeyBoard, gcIndex = root.GetChildCount() - 1);
+            };
+        }
     }
-
+    /// <inheritdoc/>
     public override void _Input(InputEvent @event) {
-        mousePressed = false;
         if (@event is InputEventKey input) {
-            KeyItem key = GetKeyItem(input.Scancode);
+            if (lastPressed == input.Scancode) return;
+            PeripheralItem key = GetKeyItem(lastPressed = input.Scancode);
             if (input.Pressed) {
-                if (key.status == KeyStatus.None) {
-                    pairs.Add(key = new KeyItem {
-                        status = KeyStatus.Down,
-                        key = (KeyList)input.Scancode
-                    });
-                }
-            } else if (key.status == KeyStatus.Down || key.status == KeyStatus.Press)
-                key.status = KeyStatus.Up;
+                if (key.KeyCode == KeyCode.None)
+                    key = new((KeyCode)input.Scancode, KeyStatus.Down | KeyStatus.Press);
+                else key.Status = KeyStatus.Down | KeyStatus.Press;
+            } else {
+                key.Status = KeyStatus.Up;
+                key.Dispose();
+            }
             SetKeyItem(input.Scancode, key);
         } else if (@event is InputEventMouseMotion mouseMotion) {
             MousePosition = mouseMotion.Position;
             MouseGlobalPosition = mouseMotion.GlobalPosition;
         } else if (@event is InputEventMouseButton mouseButton) {
-            mousePressed = mouseButton.Pressed;
             DeltaScroll = mouseButton.Factor;
             DoubleClick = mouseButton.Doubleclick;
             MouseIndex = mouseButton.ButtonIndex;
             if (MouseIndex == 0) return;
-            MouseItem key = GetMouseItem(MouseIndex);
-            if (mousePressed) {
-                if (key.status == KeyStatus.None)
-                    pairs2.Add(key = new MouseItem {
-                        status = KeyStatus.Down,
-                        Index = MouseIndex
-                    });
-            } else if (key.status == KeyStatus.Down || key.status == KeyStatus.Press)
-                key.status = KeyStatus.Up;
-            SetMouseItem(MouseIndex, key);
+            PeripheralItem key = GetKeyItem((ulong)MouseIndex);
+            if (mouseButton.Pressed) {
+                if (key.KeyCode == KeyCode.None)
+                    key = new((KeyCode)MouseIndex, KeyStatus.Down | KeyStatus.Press);
+                else key.Status = KeyStatus.Down | KeyStatus.Press;
+            } else {
+                key.Status = KeyStatus.Up;
+                key.Dispose();
+            }
+            SetKeyItem((ulong)MouseIndex, key);
         }
     }
 
-    public override void _PhysicsProcess(float delta) {
-        if (!mousePressed)
-            MouseIndex = 0;
-        for (int I = 0; I < pairs.Count; I++) {
-            if (pairs[I].status == KeyStatus.Down) {
-                KeyItem temp = pairs[I];
-                if (!temp.pressDelay)
-                    temp.pressDelay = true;
-                else temp.status = KeyStatus.Press;
-                pairs[I] = temp;
-                continue;
-            } else if (pairs[I].status != KeyStatus.Up)
-                continue;
-            
-            if (pairs[I].onDestroy) {
-                pairs.RemoveAt(I);
-                I = -1;
-            } else if (!pairs[I].onDestroy) {
-                KeyItem key = pairs[I];
-                key.onDestroy = true;
-                pairs[I] = key;
+    private void SetKeyItem(ulong scancode, PeripheralItem value)
+        => SetKeyItem((KeyCode)scancode, value);
+
+    private void SetKeyItem(KeyCode scancode, PeripheralItem value) {
+        if (scancode == KeyCode.None) return;
+        for (int I = 0; I < periferics.Count; I++)
+            if (periferics[I].KeyCode == scancode) {
+                periferics[I] = value;
+                return;
             }
-        }
-        for (int I = 0; I < pairs2.Count; I++) {
-            if (pairs2[I].status == KeyStatus.Down) {
-                MouseItem temp = pairs2[I];
-                if (!temp.pressDelay)
-                    temp.pressDelay = true;
-                else temp.status = KeyStatus.Press;
-                pairs2[I] = temp;
-                continue;
-            } else if (pairs2[I].status != KeyStatus.Up)
-                continue;
-            
-            if (pairs2[I].onDestroy) {
-                pairs2.RemoveAt(I);
-                I = -1;
-            } else if (!pairs2[I].onDestroy) {
-                MouseItem key = pairs2[I];
-                key.onDestroy = true;
-                pairs2[I] = key;
-            }
-        }
+        periferics.Add(value);
     }
 
-    private void SetKeyItem(ulong scancode, KeyItem value)
-        => SetKeyItem((KeyList)scancode, value);
+    private PeripheralItem GetKeyItem(ulong scancode)
+        => GetKeyItem((KeyCode)scancode);
 
-    private void SetKeyItem(KeyList scancode, KeyItem value) {
-        for (int I = 0; I < pairs.Count; I++)
-            if (pairs[I].key == scancode) {
-                pairs[I] = value;
-                break;
-            }
+    private PeripheralItem GetKeyItem(KeyCode scancode) {
+        for (int I = 0; I < periferics.Count; I++)
+            if (periferics[I].KeyCode == scancode)
+                return periferics[I];
+        return PeripheralItem.Empty;
     }
 
-    private KeyItem GetKeyItem(ulong scancode)
-        => GetKeyItem((KeyList)scancode);
-
-    private KeyItem GetKeyItem(KeyList scancode) {
-        for (int I = 0; I < pairs.Count; I++)
-            if (pairs[I].key == scancode)
-                return pairs[I];
-        return KeyItem.Empyt;
-    }
-
-    private void SetMouseItem(int index, MouseItem value) {
-        for (int I = 0; I < pairs2.Count; I++)
-            if (pairs2[I].Index == index) {
-                pairs2[I] = value;
-                break;
-            }
-    }
-
-    private MouseItem GetMouseItem(int index) {
-        for (int I = 0; I < pairs2.Count; I++)
-            if (pairs2[I].Index == index)
-                return pairs2[I];
-        return default;
-    }
-
-    public static bool GetKeyDown(KeyList key)
+    public static bool GetKeyDown(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Down);
 
-    public static bool GetKeyPress(KeyList key)
+    public static bool GetKeyPress(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Press);
 
-    public static bool GetKeyUp(KeyList key)
+    public static bool GetKeyUp(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Up);
 
     public static bool GetMouseDown(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Down);
+        => GetKeyStatus((KeyCode)buttonIndex, KeyStatus.Down);
 
     public static bool GetMousePress(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Press);
+        => GetKeyStatus((KeyCode)buttonIndex, KeyStatus.Press);
 
     public static bool GetMouseUp(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Up);
+        => GetKeyStatus((KeyCode)buttonIndex, KeyStatus.Up);
 
     public static bool GetMouseDown(MouseButton button)
         => GetMouseDown((int)button);
@@ -166,13 +119,16 @@ public class InputKeyBoard : Node {
     public static bool GetMouseUp(MouseButton button)
         => GetMouseUp((int)button);
 
-    private static bool GetKeyStatus(KeyList key, KeyStatus status) {
-        KeyItem keyItem = keyBoard!.GetKeyItem(key);
-        return keyItem.status != KeyStatus.None && keyItem.status == status;
-    }
-
-    private static bool GetMouseStatus(int index, KeyStatus status) {
-        MouseItem keyItem = keyBoard!.GetMouseItem(index);
-        return keyItem.status != KeyStatus.None && keyItem.status == status;
+    private static bool GetKeyStatus(KeyCode key, KeyStatus status) {
+        PeripheralItem keyItem = keyBoard!.GetKeyItem(key);
+        bool result = keyItem.Status != KeyStatus.None && keyItem.Status.HasFlag(status);
+        if (keyItem.Status.HasFlag(KeyStatus.Down)) {
+            keyItem.Status = KeyStatus.Press;
+            keyBoard.SetKeyItem(key, keyItem);
+        } else if (keyItem.Status == KeyStatus.Up) {
+            keyItem.Status = KeyStatus.None;
+            keyBoard.SetKeyItem(key, keyItem);
+        }
+        return result;
     }
 }
