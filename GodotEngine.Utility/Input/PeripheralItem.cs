@@ -4,11 +4,9 @@ using System;
 namespace Cobilas.GodotEngine.Utility.Input;
 /// <summary>Responsible for maintaining the status information of a peripheral.</summary>
 public struct PeripheralItem : IEquatable<PeripheralItem>, IEquatable<KeyCode>,
-    IEquatable<KeyList>, IEquatable<MouseButton>, IEquatable<KeyStatus>, IEquatable<ulong>,
-    IDisposable {
-    /// <summary>This field signals to the InputKeyBoard that this this should be discarded.</summary>
-    /// <returns>Returns <c>true</c> when this object is marked as disposable.</returns>
-    public bool OnDestroy { get; private set; }
+    IEquatable<KeyList>, IEquatable<MouseButton>, IEquatable<KeyStatus>, IEquatable<ulong> {
+
+    internal ChangeState PeripheralState { get; set; }
     /// <summary>Represents the status of a peripheral input.</summary>
     /// <value>Allows you to change the status of the object.</value>
     /// <returns>Returns the status of the peripheral.</returns>
@@ -21,22 +19,24 @@ public struct PeripheralItem : IEquatable<PeripheralItem>, IEquatable<KeyCode>,
     public readonly ulong ScanCode => (ulong)KeyCode;
     /// <summary>Indicates whether it is a mouse trigger.</summary>
     /// <returns>Returns <c>true</c> when the object is a mouse trigger.</returns>
-    public readonly bool IsMouseButton => this.ScanCode == 1ul || this.ScanCode == 2ul || this.ScanCode == 3ul ||
-            this.ScanCode == 4ul || this.ScanCode == 5ul || this.ScanCode == 6ul ||
-            this.ScanCode == 7ul || this.ScanCode == 8ul;
+    public readonly bool IsMouseButton => KeyCode switch {
+        KeyCode.MouseLeft or KeyCode.MouseMiddle or KeyCode.MouseRight or 
+        KeyCode.MouseWheelDown or KeyCode.MouseWheelLeft or KeyCode.MouseWheelRight or 
+        KeyCode.MouseWheelUp or KeyCode.MouseXB1 or KeyCode.MouseXB2 or KeyCode.MouseXB3 or 
+        KeyCode.MouseXB4 or KeyCode.MouseXB5 or KeyCode.MouseXB6 => true,
+        _ => false,
+    };
     /// <summary>Represents an empty PeripheralItem.</summary>
     /// <returns>Returns an empty representation of PeripheralItem.</returns>
     public static PeripheralItem Empty => new(KeyCode.None);
     /// <summary>Starts a new instance of the object.</summary>
-    public PeripheralItem(KeyCode keyCode, KeyStatus keyStatus, bool onDestroy) {
+    public PeripheralItem(KeyCode keyCode, KeyStatus keyStatus) {
         KeyCode = keyCode;
         Status = keyStatus;
-        OnDestroy = onDestroy;
+        PeripheralState = ChangeState.None;
     }
     /// <summary>Starts a new instance of the object.</summary>
-    public PeripheralItem(KeyCode keyCode, KeyStatus keyStatus) : this(keyCode, keyStatus, false) {}
-    /// <summary>Starts a new instance of the object.</summary>
-    public PeripheralItem(KeyCode keyCode) : this(keyCode, KeyStatus.None, false) {}
+    public PeripheralItem(KeyCode keyCode) : this(keyCode, KeyStatus.None) {}
     /// <inheritdoc/>
     public readonly bool Equals(KeyCode other) => IEquals(other);
     /// <inheritdoc/>
@@ -55,13 +55,10 @@ public struct PeripheralItem : IEquatable<PeripheralItem>, IEquatable<KeyCode>,
     public readonly override int GetHashCode() => base.GetHashCode();
     /// <inheritdoc/>
     public readonly override string ToString() => $"Key[{KeyCode}] Code[{ScanCode}] Status[{Status}]";
-    /// <inheritdoc/>
-    /// <remarks>When calling this method the object will be marked for destruction.</remarks>
-    public void Dispose() => OnDestroy = true;
 
     private readonly bool IEquals(object obj)
         => obj switch {
-            PeripheralItem per => per.OnDestroy == this.OnDestroy && per.KeyCode == this.KeyCode && per.Status == this.Status,
+            PeripheralItem per => per.KeyCode == this.KeyCode && per.Status == this.Status,
             KeyCode kc => kc == this.KeyCode,
             KeyStatus ks => ks == this.Status,
             KeyList kl => !this.IsMouseButton && kl == (KeyList)this.KeyCode,

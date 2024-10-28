@@ -3,30 +3,32 @@ namespace Cobilas.GodotEngine.Utility.Input;
 public enum KeyCode : ulong {
     /// <summary>None key.</summary>
     None = 0,
-    /// <summary>Right mouse trigger.</summary>
+    /// <inheritdoc cref="Godot.ButtonList.Right"/>
     MouseRight = 1,
-    /// <summary>Left mouse trigger.</summary>
+    /// <inheritdoc cref="Godot.ButtonList.Left"/>
     MouseLeft = 2,
-    /// <summary>Middle mouse trigger (Scroll).</summary>
+    /// <inheritdoc cref="Godot.ButtonList.Middle"/>
     MouseMiddle = 3,
-    /// <summary>Mouse trigger number 4.</summary>
-    MouseXB4 = 4,
-    /// <summary>Mouse trigger number 5.</summary>
-    MouseXB5 = 5,
-    /// <summary>Mouse trigger number 6.</summary>
-    MouseXB6 = 6,
-    /// <summary>Mouse trigger number 7.</summary>
-    MouseXB7 = 7,
-    /// <summary>Mouse trigger number 8.</summary>
-    MouseXB8 = 8,
-    /// <summary>Mouse trigger number 9.</summary>
-    MouseXB9 = 9,
-    /// <summary>Mouse trigger number 10.</summary>
-    MouseXB10 = 10,
-    /// <summary>Mouse trigger number 11.</summary>
-    MouseXB11 = 11,
-    /// <summary>Mouse trigger number 12.</summary>
-    MouseXB12 = 12,
+    /// <inheritdoc cref="Godot.ButtonList.WheelUp"/>
+    MouseWheelUp = 4,
+    /// <inheritdoc cref="Godot.ButtonList.WheelDown"/>
+    MouseWheelDown = 5,
+    /// <inheritdoc cref="Godot.ButtonList.WheelLeft"/>
+    MouseWheelLeft = 6,
+    /// <inheritdoc cref="Godot.ButtonList.WheelRight"/>
+    MouseWheelRight = 7,
+    /// <inheritdoc cref="Godot.ButtonList.Xbutton1"/>
+    MouseXB1 = 8,
+    /// <inheritdoc cref="Godot.ButtonList.Xbutton2"/>
+    MouseXB2 = 9,
+    /// <summary>Extra mouse button 3 (only present on some mice).</summary>
+    MouseXB3 = 10,
+    /// <summary>Extra mouse button 4 (only present on some mice).</summary>
+    MouseXB4 = 11,
+    /// <summary>Extra mouse button 5 (only present on some mice).</summary>
+    MouseXB5 = 12,
+    /// <summary>Extra mouse button 6 (only present on some mice).</summary>
+    MouseXB6 = 13,
     /// <inheritdoc cref="Godot.KeyList.Escape"/>
     Escape = 16777217,
     /// <inheritdoc cref="Godot.KeyList.Tab"/>
