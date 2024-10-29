@@ -26,8 +26,8 @@ public class SceneManager : Node {
         if (manager == null) {
             manager = this;
             int_root = GetParent<RunTimeInitialization>();
-            Viewport root = GetTree().Root;
-            CurrentSceneNode = root.GetChild(root.GetChildCount() - 1);
+            //Viewport root = GetTree().Root;
+            CurrentSceneNode = GetTree().CurrentScene;//root.GetChild(1);
             using (GDDirectory gdd = GDDirectory.GetGDDirectory()!) {
                 GDFile[] files = gdd.GetDirectory("res://Scenes/")!.GetFiles();
                 scenes = new Scene[ArrayManipulation.ArrayLength(files)];
