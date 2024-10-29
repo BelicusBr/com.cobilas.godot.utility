@@ -15,57 +15,32 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public sealed class RunTimeInitializationClassAttribute : Attribute {
     /// <summary>The execution priority.</summary>
-    /// <value>Returns the priority execution level.</value>
+    /// <returns>Returns the priority execution level.</returns>
     public int SubPriority { get; private set; }
     /// <summary>The name of the priority.</summary>
-    /// <value>Returns the name of the priority that will be executed.</value>
+    /// <returns>Returns the name of the priority that will be executed.</returns>
     public string ClassName { get; private set; }
     /// <summary>The type of priority.</summary>
-    /// <value>Returns the type of priority that will be executed.</value>
+    /// <returns>Returns the type of priority that will be executed.</returns>
     public Priority BootPriority { get; private set; }
-
+    /// <summary>Allows the object to be called last in the root object hierarchy.</summary>
+    /// <returns>Returns <c>true</c> when marked to be called last in the root object hierarchy.</returns>
+    public bool LastBoot { get; private set; }
     /// <summary>Instance the RunTimeInitializationClassAttribute attribute.</summary>
     /// <param name="bootPriority">The type of priority.</param>
     /// <param name="name">The name of the priority.</param>
     /// <param name="subPriority">The execution priority.</param>
-    public RunTimeInitializationClassAttribute(Priority bootPriority, string? name, int subPriority) {
+    /// <param name="lastBoot">Allows the object to be called last in the root object hierarchy.</param>
+    public RunTimeInitializationClassAttribute(
+        string? name,
+        Priority bootPriority = Priority.StartBefore,
+        int subPriority = 0, 
+        bool lastBoot = false) {
         SubPriority = subPriority;
-        ClassName = name!;
+        ClassName = name is null ? string.Empty : name;
         BootPriority = bootPriority;
+        LastBoot = lastBoot;
     }
-
-    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.
-    /// <para>By default the execution priority is 0.</para>
-    /// </summary>
-    /// <param name="bootPriority">The type of priority.</param>
-    /// <param name="name">The name of the priority.</param>
-    public RunTimeInitializationClassAttribute(Priority bootPriority, string? name) : this(bootPriority, name, 0) {}
-
-    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.
-    /// <para>By default the execution priority is 0.</para>
-    /// <para>By default the priority name and the class name that the attribute is associated with.</para>
-    /// </summary>
-    /// <param name="bootPriority">The type of priority.</param>
-    public RunTimeInitializationClassAttribute(Priority bootPriority) : this(bootPriority, null) {}
-
-    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.
-    /// <para>By default the priority type is <seealso cref="Priority.StartBefore"/>.</para>
-    /// </summary>
-    /// <param name="name">The name of the priority.</param>
-    /// <param name="subPriority">The execution priority.</param>
-    public RunTimeInitializationClassAttribute(string name, int subPriority) : this(Priority.StartBefore, name, subPriority) {}
-
-    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.
-    /// <para>By default the priority type is <seealso cref="Priority.StartBefore"/>.</para>
-    /// <para>By default the execution priority is 0.</para>
-    /// </summary>
-    /// <param name="name">The name of the priority.</param>
-    public RunTimeInitializationClassAttribute(string name) : this(Priority.StartBefore, name) {}
-
-    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.
-    /// <para>By default the priority type is <seealso cref="Priority.StartBefore"/>.</para>
-    /// <para>By default the execution priority is 0.</para>
-    /// <para>By default the priority name and the class name that the attribute is associated with.</para>
-    /// </summary>
-    public RunTimeInitializationClassAttribute() : this(Priority.StartBefore) {}
+    /// <summary>Instance the RunTimeInitializationClassAttribute attribute.</summary>
+    public RunTimeInitializationClassAttribute() : this(string.Empty) {}
 }

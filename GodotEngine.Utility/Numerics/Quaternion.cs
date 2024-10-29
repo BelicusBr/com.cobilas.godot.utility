@@ -134,7 +134,7 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// <summary>Multiplication operation between two values.(<seealso cref="Quaternion"/> * <seealso cref="Vector3D"/>)</summary>
     /// <param name="rotation">First module.</param>
     /// <param name="point">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the multiplication.</returns>
     public static Vector3D operator *(Quaternion rotation, Vector3D point) {
         float num1 = rotation.x * 2f;
         float num2 = rotation.y * 2f;
@@ -157,7 +157,7 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// <summary>Multiplication operation between two values.(<seealso cref="Quaternion"/> * <seealso cref="Quaternion"/>)</summary>
     /// <param name="lhs">First module.</param>
     /// <param name="rhs">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the multiplication.</returns>
     public static Quaternion operator *(Quaternion lhs, Quaternion rhs) 
         => new((float) (lhs.w * (double)rhs.x + lhs.x * (double)rhs.w + lhs.y * (double)rhs.z - lhs.z * (double)rhs.y),
             (float) (lhs.w * (double)rhs.y + lhs.y * (double)rhs.w + lhs.z * (double)rhs.x - lhs.x * (double)rhs.z),

@@ -1,8 +1,9 @@
 using Godot;
 using System;
+using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility.Input;
-
+[RunTimeInitializationClass(nameof(GCInputKeyBoard), Priority.StartLater, int.MaxValue, true)]
 internal class GCInputKeyBoard : Node {
     internal enum GCStatus : byte {
         Standby = 0,
@@ -10,15 +11,13 @@ internal class GCInputKeyBoard : Node {
         PhyProcess = 2
     }
 
-    internal event Action? GCEvent;
-    internal GCStatus status = GCStatus.Standby;
-    private int myIndex = 0;
+    internal static event Action? GCEvent;
+    private GCStatus status = GCStatus.Standby;
 
     public override void _Process(float delta) {
         if (status == GCStatus.Standby) status = GCStatus.Process;
         if (status == GCStatus.Process) {
             GCEvent?.Invoke();
-            ChangeMyPosition();
             status = GCStatus.Standby;
         }
     }
@@ -27,16 +26,7 @@ internal class GCInputKeyBoard : Node {
         if (status == GCStatus.Standby) status = GCStatus.PhyProcess;
         if (status == GCStatus.PhyProcess) {
             GCEvent?.Invoke();
-            ChangeMyPosition();
             status = GCStatus.Standby;
         }
-    }
-
-    private void ChangeMyPosition() {
-        if (myIndex == GetIndex()) return;
-        Viewport root = GetTree().Root;
-        root.CallDeferred("remove_child", this);
-        root.CallDeferred("add_child", this);
-        myIndex = GetIndex();
     }
 }

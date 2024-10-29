@@ -133,7 +133,7 @@ public struct Vector2DInt : IIntVector {
     /// <summary>Subtraction operation between two values.(<seealso cref="Vector2DInt"/> - <seealso cref="Vector2DInt"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the subtraction.</returns>
     public static Vector2DInt operator -(Vector2DInt a, Vector2DInt b) {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x - b.x;
@@ -143,7 +143,7 @@ public struct Vector2DInt : IIntVector {
     /// <summary>Division operation between two values.(<seealso cref="Vector2DInt"/> / <seealso cref="Vector2DInt"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the division.</returns>
     public static Vector2DInt operator /(Vector2DInt a, Vector2DInt b) {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x / b.x;
@@ -153,7 +153,7 @@ public struct Vector2DInt : IIntVector {
     /// <summary>Multiplication operation between two values.(<seealso cref="Vector2DInt"/> * <seealso cref="Vector2DInt"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the multiplication.</returns>
     public static Vector2DInt operator *(Vector2DInt a, Vector2DInt b) {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x * b.x;
@@ -163,7 +163,7 @@ public struct Vector2DInt : IIntVector {
     /// <summary>Division operation between two values.(<seealso cref="Vector2DInt"/> / <seealso cref="int"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the division.</returns>
     public static Vector2DInt operator /(Vector2DInt a, int b) {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x / b;
@@ -173,7 +173,7 @@ public struct Vector2DInt : IIntVector {
     /// <summary>Multiplication operation between two values.(<seealso cref="Vector2DInt"/> * <seealso cref="int"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the multiplication.</returns>
     public static Vector2DInt operator *(Vector2DInt a, int b) {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x * b;

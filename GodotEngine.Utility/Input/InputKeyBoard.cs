@@ -1,13 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility.Runtime;
+using Cobilas.GodotEngine.Utility.Numerics;
 
 namespace Cobilas.GodotEngine.Utility.Input;
 /// <summary>This class has methods and properties that get information from keyboard and mouse inputs.</summary>
 [RunTimeInitializationClass(nameof(InputKeyBoard))]
 public class InputKeyBoard : Node {
 
-    private readonly GCInputKeyBoard gCInputKeyBoard = new();
     private readonly List<PeripheralItem> periferics = [];
     private static MouseInfo mouseInfo = new();
     private static InputKeyBoard? keyBoard = null;
@@ -22,17 +22,15 @@ public class InputKeyBoard : Node {
     public static float DeltaScroll => mouseInfo.deltaScroll;
     /// <summary>The current mouse position.</summary>
     /// <returns>Returns the mouse position based on the defined <see cref="Godot.Viewport"/>.</returns>
-    public static Vector2 MousePosition => mouseInfo.mousePosition;
+    public static Vector2D MousePosition => mouseInfo.mousePosition;
     /// <summary>The current global mouse position.</summary>
     /// <returns>Returns the mouse position based on a root <see cref="Godot.Viewport"/>.</returns>
-    public static Vector2 MouseGlobalPosition => mouseInfo.mouseGlobalPosition;
+    public static Vector2D MouseGlobalPosition => mouseInfo.mouseGlobalPosition;
     /// <inheritdoc/>
     public override void _Ready() {
         keyBoard ??= this;
-        if (keyBoard == this) {
-            gCInputKeyBoard.GCEvent += ChangePeripheralSwitchingStatus;
-            GetTree().Root.CallDeferred("add_child", gCInputKeyBoard);
-        }
+        if (keyBoard == this)
+            GCInputKeyBoard.GCEvent += ChangePeripheralSwitchingStatus;
     }
     /// <inheritdoc/>
     public override void _Input(InputEvent @event) {

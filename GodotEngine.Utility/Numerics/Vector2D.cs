@@ -161,6 +161,7 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
     /// <inheritdoc cref="Vector4D.Max(in Vector4D, in Vector4D)"/>
     public static Vector2D Max(Vector2D lhs, Vector2D rhs) => new(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));
     #endregion
+    #region op Addition
     /// <summary>Addition operation between two values.(<seealso cref="Vector2D"/> + <seealso cref="Vector2D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
@@ -171,56 +172,143 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
         result.y = a.y + b.y;
         return result;
     }
-    /// <summary>Subtraction operation between two values.(<seealso cref="Vector2D"/> - <seealso cref="Vector2D"/>)</summary>
+    /// <summary>Addition operation between two values.(<seealso cref="Vector2D"/> + <seealso cref="Vector2"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
     /// <returns>The result of the addition.</returns>
+    public static Vector2D operator +(Vector2D a, Vector2 b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x + b.x;
+        result.y = a.y + b.y;
+        return result;
+    }
+    /// <summary>Addition operation between two values.(<seealso cref="Vector2"/> + <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the addition.</returns>
+    public static Vector2D operator +(Vector2 a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x + b.x;
+        result.y = a.y + b.y;
+        return result;
+    }
+    #endregion
+    #region op Subtraction
+    /// <summary>Subtraction operation between two values.(<seealso cref="Vector2D"/> - <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the subtraction.</returns>
     public static Vector2D operator -(Vector2D a, Vector2D b) {
         Vector2D result = Vector2D._zero;
         result.x = a.x - b.x;
         result.y = a.y - b.y;
         return result;
     }
+    /// <summary>Subtraction operation between two values.(<seealso cref="Vector2D"/> - <seealso cref="Vector2"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the subtraction.</returns>
+    public static Vector2D operator -(Vector2D a, Vector2 b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x - b.x;
+        result.y = a.y - b.y;
+        return result;
+    }
+    /// <summary>Subtraction operation between two values.(<seealso cref="Vector2"/> - <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the subtraction.</returns>
+    public static Vector2D operator -(Vector2 a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x - b.x;
+        result.y = a.y - b.y;
+        return result;
+    }
+    #endregion
+    #region op Division
     /// <summary>Division operation between two values.(<seealso cref="Vector2D"/> / <seealso cref="Vector2D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the division.</returns>
     public static Vector2D operator /(Vector2D a, Vector2D b) {
         Vector2D result = Vector2D._zero;
         result.x = a.x / b.x;
         result.y = a.y / b.y;
         return result;
     }
-    /// <summary>Multiplication operation between two values.(<seealso cref="Vector2D"/> * <seealso cref="Vector2D"/>)</summary>
+    /// <summary>Division operation between two values.(<seealso cref="Vector2D"/> / <seealso cref="Vector2"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
-    public static Vector2D operator *(Vector2D a, Vector2D b) {
+    /// <returns>The result of the division.</returns>
+    public static Vector2D operator /(Vector2D a, Vector2 b) {
         Vector2D result = Vector2D._zero;
-        result.x = a.x * b.x;
-        result.y = a.y * b.y;
+        result.x = a.x / b.x;
+        result.y = a.y / b.y;
+        return result;
+    }
+    /// <summary>Division operation between two values.(<seealso cref="Vector2"/> / <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the division.</returns>
+    public static Vector2D operator /(Vector2 a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x / b.x;
+        result.y = a.y / b.y;
         return result;
     }
     /// <summary>Division operation between two values.(<seealso cref="Vector2D"/> / <seealso cref="float"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the division.</returns>
     public static Vector2D operator /(Vector2D a, float b) {
         Vector2D result = Vector2D._zero;
         result.x = a.x / b;
         result.y = a.y / b;
         return result;
     }
+    #endregion
+    #region op Multiplication
+    /// <summary>Multiplication operation between two values.(<seealso cref="Vector2D"/> * <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the multiplication.</returns>
+    public static Vector2D operator *(Vector2D a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x * b.x;
+        result.y = a.y * b.y;
+        return result;
+    }
+    /// <summary>Multiplication operation between two values.(<seealso cref="Vector2D"/> * <seealso cref="Vector2"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the multiplication.</returns>
+    public static Vector2D operator *(Vector2D a, Vector2 b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x * b.x;
+        result.y = a.y * b.y;
+        return result;
+    }
+    /// <summary>Multiplication operation between two values.(<seealso cref="Vector2"/> * <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the multiplication.</returns>
+    public static Vector2D operator *(Vector2 a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x * b.x;
+        result.y = a.y * b.y;
+        return result;
+    }
     /// <summary>Multiplication operation between two values.(<seealso cref="Vector2D"/> * <seealso cref="float"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
-    /// <returns>The result of the addition.</returns>
+    /// <returns>The result of the multiplication.</returns>
     public static Vector2D operator *(Vector2D a, float b) {
         Vector2D result = Vector2D._zero;
         result.x = a.x * b;
         result.y = a.y * b;
         return result;
     }
+    #endregion
     /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>
     /// <param name="lhs">Object to be compared.</param>
     /// <param name="rhs">Object of comparison.</param>

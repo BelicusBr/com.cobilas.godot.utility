@@ -7,7 +7,7 @@ using Cobilas.GodotEngine.Utility.Runtime;
 namespace Cobilas.GodotEngine.Utility; 
 
 /// <summary>Gizmos are used to give visual debugging or setup aids in the Scene view.</summary>
-[RunTimeInitializationClass(Priority.StartLater, nameof(Gizmos))]
+[RunTimeInitializationClass(nameof(Gizmos), Priority.StartLater)]
 public class Gizmos : CanvasLayer {
     private Node2D? canvasItem = null;
     private bool movingToNextScene;
