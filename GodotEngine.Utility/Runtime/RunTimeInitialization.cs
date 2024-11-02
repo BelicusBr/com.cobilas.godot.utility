@@ -27,7 +27,9 @@ public class RunTimeInitialization : Node {
 
     /// <inheritdoc/>
     public override void _Ready() {
-        LastRunTimeInitialization lastRunTime = new();
+        LastRunTimeInitialization lastRunTime = new() {
+            Name = nameof(LastRunTimeInitialization)
+        };
         GetTree().Root.CallDeferred("add_child", lastRunTime);
 
         Type[] components = TypeUtilitarian.GetTypes();

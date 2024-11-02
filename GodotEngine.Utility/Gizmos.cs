@@ -34,12 +34,12 @@ public class Gizmos : CanvasLayer {
 
             SceneManager.UnloadedScene += (s) => {
                 movingToNextScene = true;
-                SceneManager.CurrentSceneNode.RemoveChild(canvasItem);
+                s.SceneNode.RemoveChild(canvasItem);
                 AddChild(canvasItem);
             };
             SceneManager.LoadedScene += (s) => {
                 RemoveChild(canvasItem);
-                SceneManager.CurrentSceneNode.AddChild(canvasItem);
+                s.SceneNode.AddChild(canvasItem);
                 movingToNextScene = false;
             };
         }
