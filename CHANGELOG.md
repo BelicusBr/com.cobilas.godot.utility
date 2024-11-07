@@ -1,4 +1,42 @@
-# [3.2.0] (17/10/2024)
+# [4.1.0] (29/10/2024 - 04/11/2024)
+## Added
+### IYieldCoroutine.IsLastCoroutine property
+This property was added to indicate whether the coroutine will be executed after all update methods.
+
+### LastFixedRunTimeSecond class
+This class was added to signal that the coroutine will be executed after all `_PhysicsProcess(float)` update methods.
+
+### LastRunTimeSecond class
+This class was added to signal that the coroutine will be executed after all `_Process(float)` update methods.
+
+### NullNode class
+This class gives a representation of a null node.
+
+### Vector2D operator
+Added addition, subtraction, division and multiplication operators between `Vector2D` and `Godot.Vector2`.
+
+### Vector3D operator
+Added addition, subtraction, division and multiplication operators between `Vector3D` and `Godot.Vector3`.
+
+### Scene
+#### properties
+The `Scene.SceneNode` property was added to obtain the scene in node form. \
+The `Scene.Empty` property was created to give an empty representation of a scene.
+
+### SceneManager.BuiltScenes property
+This property's function is to reveal all the scenes that were compiled together with the project and that were in the <kbd>res://Scenes/</kbd> folder.
+
+## Changed
+All constructors of the `RunTimeInitializationClassAttribute` class have been replaced by the `RunTimeInitializationClassAttribute(string?, [Priority:Priority.StartBefore], [int:0], [bool:false])` constructor
+
+## Removed
+### KeyItem and MouseItem
+These structures have been removed as they are being replaced by the `PeripheralItem` structure.
+
+### RunTimeInitialization constants
+The constants `RunTimeInitialization.DeltaTime` and `RunTimeInitialization.FixedDeltaTime` have been removed as they have been replaced by the constants `RunTime.DeltaTime` and `RunTime.FixedDeltaTime`.
+
+# [3.2.0] (17/10/2024 - 27/10/2024)
 ## Added
 ### GDDirectory.GetDirectories()
 The `GDDirectory.GetDirectories()` method has been added. \
@@ -8,8 +46,26 @@ This method allows you to get the subfolders within the current folder.
 The `GDFile.Load(string, bool)` and `GDFile.Load<T>(string, bool)` methods have been added to the `GDFile` method.
 
 ### properties for the GDIONull classes.
-The `GDIONull.FileNull` and `GDIONull.DirectoryNull` properties have been added to the GDIONull class. \
+The `GDIONull.FileNull` and `GDIONull.DirectoryNull` properties have been added to the `GDIONull` class. \
 These properties return a null representation of a file or directory.
+
+### KeyCode enum
+The `KeyCode` enum was added to extend the `KeyList` enum by adding mouse buttons.
+
+### PeripheralItem struct
+The `PeripheralItem` struct has been added to hold certain keyboard or mouse event information.
+
+### InputKeyBoard and method overloading
+`InputKeyBoard` has built-in methods `InputKeyBoard.GetKeyDown(KeyCode)`, `InputKeyBoard.GetKeyUp(KeyCode)` and `InputKeyBoard.GetKeyPress(KeyCode)` that take `KeyCode` as a parameter.
+
+## Removed
+The `InputKeyBoard._PhysicsProcess(float)` method has been removed as it is no longer needed.
+
+## Changed
+Now the `KeyStatus` enum has the `System.Flags` attribute.
+
+## Deprecate
+The `MouseItem` and `KeyItem` structures have been replaced by the `PeripheralItem` structure.
 
 # [3.1.1] (13/10/2024)
 ## Added
