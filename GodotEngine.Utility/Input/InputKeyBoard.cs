@@ -1,178 +1,243 @@
 using Godot;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility.Runtime;
+using Cobilas.GodotEngine.Utility.Numerics;
 
-namespace Cobilas.GodotEngine.Utility.Input; 
-
+namespace Cobilas.GodotEngine.Utility.Input;
+/// <summary>This class has methods and properties that get information from keyboard and mouse inputs.</summary>
 [RunTimeInitializationClass(nameof(InputKeyBoard))]
 public class InputKeyBoard : Node {
 
-    private readonly List<KeyItem> pairs = new();
-    private readonly List<MouseItem> pairs2 = new();
-    private static bool mousePressed;
+    private readonly List<PeripheralItem> periferics = [];
+    private static MouseInfo mouseInfo = new();
     private static InputKeyBoard? keyBoard = null;
-
-    public static int MouseIndex { get; private set;}
-    public static bool DoubleClick { get; private set;}
-    public static float DeltaScroll { get; private set;}
-    public static Vector2 MousePosition { get; private set;}
-    public static Vector2 MouseGlobalPosition { get; private set;}
-
+    /// <summary>The mouse trigger index.</summary>
+    /// <returns>Returns an <see cref="System.Int32"/> containing the index of the mouse trigger.</returns>
+    public static int MouseIndex => mouseInfo.mouseIndex;
+    /// <summary>Detects a double mouse click.</summary>
+    /// <returns>Returns true when a double mouse click is detected.</returns>
+    public static bool DoubleClick => mouseInfo.doubleClick;
+    /// <summary>Indicates a change in mouse scroll.</summary>
+    /// <returns>Returns a floating-point value when the mouse scroll is changed.</returns>
+    public static float DeltaScroll => mouseInfo.deltaScroll;
+    /// <summary>The current mouse position.</summary>
+    /// <returns>Returns the mouse position based on the defined <see cref="Godot.Viewport"/>.</returns>
+    public static Vector2D MousePosition => mouseInfo.mousePosition;
+    /// <summary>The current global mouse position.</summary>
+    /// <returns>Returns the mouse position based on a root <see cref="Godot.Viewport"/>.</returns>
+    public static Vector2D MouseGlobalPosition => mouseInfo.mouseGlobalPosition;
+    /// <inheritdoc/>
     public override void _Ready() {
         keyBoard ??= this;
+        if (keyBoard == this)
+            GCInputKeyBoard.GCEvent += ChangePeripheralSwitchingStatus;
     }
-
+    /// <inheritdoc/>
     public override void _Input(InputEvent @event) {
-        mousePressed = false;
         if (@event is InputEventKey input) {
-            KeyItem key = GetKeyItem(input.Scancode);
+            PeripheralItem key = GetKeyItem(input.Scancode);
             if (input.Pressed) {
-                if (key.status == KeyStatus.None) {
-                    pairs.Add(key = new KeyItem {
-                        status = KeyStatus.Down,
-                        key = (KeyList)input.Scancode
-                    });
-                }
-            } else if (key.status == KeyStatus.Down || key.status == KeyStatus.Press)
-                key.status = KeyStatus.Up;
+                if (key.KeyCode == KeyCode.None)
+                    key = new((KeyCode)input.Scancode, KeyStatus.Down | KeyStatus.Press) {
+                        PeripheralState = ChangeState.Delay | ChangeState.Press
+                    };
+            } else {
+                key.Status = KeyStatus.Up;
+                key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
+            }
             SetKeyItem(input.Scancode, key);
         } else if (@event is InputEventMouseMotion mouseMotion) {
-            MousePosition = mouseMotion.Position;
-            MouseGlobalPosition = mouseMotion.GlobalPosition;
+            mouseInfo.mousePosition = mouseMotion.Position;
+            mouseInfo.mouseGlobalPosition = mouseMotion.GlobalPosition;
         } else if (@event is InputEventMouseButton mouseButton) {
-            mousePressed = mouseButton.Pressed;
-            DeltaScroll = mouseButton.Factor;
-            DoubleClick = mouseButton.Doubleclick;
-            MouseIndex = mouseButton.ButtonIndex;
+            mouseInfo.doubleClick = mouseButton.Doubleclick;
+            int index = mouseButton.ButtonIndex;
+            switch ((MouseButton)index) {
+                case MouseButton.MouseLeft: case MouseButton.MouseMiddle: case MouseButton.MouseRight:
+                case MouseButton.MouseXB1: case MouseButton.MouseXB2: case MouseButton.MouseXB3:
+                case MouseButton.MouseXB4: case MouseButton.MouseXB5: case MouseButton.MouseXB6:
+                    mouseInfo.mouseIndex = mouseButton.ButtonIndex;
+                    if (mouseInfo.changeState.HasFlag(ChangeState.C_Index)) {
+                        mouseInfo.changeState ^= ChangeState.C_Index;
+                        mouseInfo.changeState |= ChangeState.D_Index;
+                    } else mouseInfo.changeState |= ChangeState.D_Index;
+                    break;
+                case MouseButton.MouseWheelUp: case MouseButton.MouseWheelDown:
+                    mouseInfo.deltaScroll = mouseButton.Factor;
+                    if (mouseInfo.changeState.HasFlag(ChangeState.C_Scroll)) {
+                        mouseInfo.changeState ^= ChangeState.C_Scroll;
+                        mouseInfo.changeState |= ChangeState.D_Scroll;
+                    } else mouseInfo.changeState |= ChangeState.D_Scroll;
+                    break;
+            }
             if (MouseIndex == 0) return;
-            MouseItem key = GetMouseItem(MouseIndex);
-            if (mousePressed) {
-                if (key.status == KeyStatus.None)
-                    pairs2.Add(key = new MouseItem {
-                        status = KeyStatus.Down,
-                        Index = MouseIndex
-                    });
-            } else if (key.status == KeyStatus.Down || key.status == KeyStatus.Press)
-                key.status = KeyStatus.Up;
-            SetMouseItem(MouseIndex, key);
+            PeripheralItem key = GetKeyItem((ulong)MouseIndex);
+            if (mouseButton.Pressed) {
+                if (key.KeyCode == KeyCode.None)
+                    key = new((KeyCode)MouseIndex, KeyStatus.Down | KeyStatus.Press) {
+                        PeripheralState = ChangeState.Delay | ChangeState.Press
+                    };
+            } else {
+                key.Status = KeyStatus.Up;
+                key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
+            }
+            SetKeyItem((ulong)MouseIndex, key);
         }
     }
 
-    public override void _PhysicsProcess(float delta) {
-        if (!mousePressed)
-            MouseIndex = 0;
-        for (int I = 0; I < pairs.Count; I++) {
-            if (pairs[I].status == KeyStatus.Down) {
-                KeyItem temp = pairs[I];
-                if (!temp.pressDelay)
-                    temp.pressDelay = true;
-                else temp.status = KeyStatus.Press;
-                pairs[I] = temp;
-                continue;
-            } else if (pairs[I].status != KeyStatus.Up)
-                continue;
-            
-            if (pairs[I].onDestroy) {
-                pairs.RemoveAt(I);
-                I = -1;
-            } else if (!pairs[I].onDestroy) {
-                KeyItem key = pairs[I];
-                key.onDestroy = true;
-                pairs[I] = key;
-            }
+    private void ChangePeripheralSwitchingStatus() {
+        if (mouseInfo.changeState.HasFlag(ChangeState.D_Index)) {
+            mouseInfo.changeState ^= ChangeState.D_Index;
+            mouseInfo.changeState |= ChangeState.C_Index;
+        } else if (mouseInfo.changeState.HasFlag(ChangeState.C_Index)) {
+            mouseInfo.changeState ^= ChangeState.C_Index;
+            mouseInfo.mouseIndex = 0;
+        } else if (mouseInfo.changeState.HasFlag(ChangeState.D_Scroll)) {
+            mouseInfo.changeState ^= ChangeState.D_Scroll;
+            mouseInfo.changeState |= ChangeState.C_Scroll;
+        } else if (mouseInfo.changeState.HasFlag(ChangeState.C_Scroll)) {
+            mouseInfo.changeState ^= ChangeState.C_Scroll;
+            mouseInfo.deltaScroll = 0;
         }
-        for (int I = 0; I < pairs2.Count; I++) {
-            if (pairs2[I].status == KeyStatus.Down) {
-                MouseItem temp = pairs2[I];
-                if (!temp.pressDelay)
-                    temp.pressDelay = true;
-                else temp.status = KeyStatus.Press;
-                pairs2[I] = temp;
+        for (int I = 0; I < periferics.Count; I++) {
+            PeripheralItem item = periferics[I];
+            if (item.PeripheralState.HasFlag(ChangeState.Delay)) {
+                if (item.PeripheralState.HasFlag(ChangeState.Press))
+                    item.PeripheralState = ChangeState.Changed | ChangeState.Press;
+                else if (item.PeripheralState.HasFlag(ChangeState.Destroy))
+                    item.PeripheralState = ChangeState.Destroy;
+            } else if (item.PeripheralState.HasFlag(ChangeState.Changed)) {
+                if (item.PeripheralState.HasFlag(ChangeState.Press)) {
+                    item.PeripheralState = ChangeState.None;
+                    item.Status = KeyStatus.Press;
+                }
+            } else if (item.PeripheralState.HasFlag(ChangeState.Destroy)) {
+                periferics.RemoveAt(I--);
                 continue;
-            } else if (pairs2[I].status != KeyStatus.Up)
-                continue;
-            
-            if (pairs2[I].onDestroy) {
-                pairs2.RemoveAt(I);
-                I = -1;
-            } else if (!pairs2[I].onDestroy) {
-                MouseItem key = pairs2[I];
-                key.onDestroy = true;
-                pairs2[I] = key;
             }
+            periferics[I] = item;
         }
     }
 
-    private void SetKeyItem(ulong scancode, KeyItem value)
-        => SetKeyItem((KeyList)scancode, value);
+    private void SetKeyItem(ulong scancode, PeripheralItem value)
+        => SetKeyItem((KeyCode)scancode, value);
 
-    private void SetKeyItem(KeyList scancode, KeyItem value) {
-        for (int I = 0; I < pairs.Count; I++)
-            if (pairs[I].key == scancode) {
-                pairs[I] = value;
-                break;
+    private void SetKeyItem(KeyCode scancode, PeripheralItem value) {
+        if (scancode == KeyCode.None) return;
+        for (int I = 0; I < periferics.Count; I++)
+            if (periferics[I].KeyCode == scancode) {
+                periferics[I] = value;
+                return;
             }
+        periferics.Add(value);
     }
 
-    private KeyItem GetKeyItem(ulong scancode)
-        => GetKeyItem((KeyList)scancode);
+    private PeripheralItem GetKeyItem(ulong scancode)
+        => GetKeyItem((KeyCode)scancode);
 
-    private KeyItem GetKeyItem(KeyList scancode) {
-        for (int I = 0; I < pairs.Count; I++)
-            if (pairs[I].key == scancode)
-                return pairs[I];
-        return KeyItem.Empyt;
+    private PeripheralItem GetKeyItem(KeyCode scancode) {
+        for (int I = 0; I < periferics.Count; I++)
+            if (periferics[I].KeyCode == scancode)
+                return periferics[I];
+        return PeripheralItem.Empty;
     }
-
-    private void SetMouseItem(int index, MouseItem value) {
-        for (int I = 0; I < pairs2.Count; I++)
-            if (pairs2[I].Index == index) {
-                pairs2[I] = value;
-                break;
-            }
-    }
-
-    private MouseItem GetMouseItem(int index) {
-        for (int I = 0; I < pairs2.Count; I++)
-            if (pairs2[I].Index == index)
-                return pairs2[I];
-        return default;
-    }
-
-    public static bool GetKeyDown(KeyList key)
+    /// <summary>Determines whether the key was pressed.</summary>
+    /// <param name="key">The target key to be verified.</param>
+    /// <returns>Returns <c>true</c> if the key was pressed.</returns>
+    /// <example>
+    /// <code>
+    /// using Godot;
+    /// using Cobilas.GodotEngine.Utility.Input;
+    /// 
+    /// public override void _Process(float delta) {
+    ///     if (InputKeyBoard.GetKeyDown(KeyCode.A))
+    ///         GD.Print("This instruction will only be called each time the key is pressed.");
+    /// }
+    /// </code>
+    /// </example>
+    /// <remarks>The method has overloads that allow the use of the <seealso cref="KeyList"/>, <seealso cref="MouseButton"/> and <seealso cref="ButtonList"/> enumerators.</remarks>
+    public static bool GetKeyDown(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Down);
-
-    public static bool GetKeyPress(KeyList key)
+    /// <summary>Determines whether the key is being pressed.</summary>
+    /// <param name="key">The target key to be verified.</param>
+    /// <returns>Returns <c>true</c> if the key is being pressed.</returns>
+    /// <example>
+    /// <code>
+    /// using Godot;
+    /// using Cobilas.GodotEngine.Utility.Input;
+    /// 
+    /// public override void _Process(float delta) {
+    ///     if (InputKeyBoard.GetKeyPress(KeyCode.A))
+    ///         GD.Print("The instruction will be called constantly as long as the key is pressed.");
+    /// }
+    /// </code>
+    /// </example>
+    /// <remarks>The method has overloads that allow the use of the <seealso cref="KeyList"/>, <seealso cref="MouseButton"/> and <seealso cref="ButtonList"/> enumerators.</remarks>
+    public static bool GetKeyPress(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Press);
-
-    public static bool GetKeyUp(KeyList key)
+    /// <summary>Determines whether the key has been released.</summary>
+    /// <param name="key">The target key to be verified.</param>
+    /// <returns>Returns <c>true</c> if the key was released.</returns>
+    /// <example>
+    /// <code>
+    /// using Godot;
+    /// using Cobilas.GodotEngine.Utility.Input;
+    /// 
+    /// public override void _Process(float delta) {
+    ///     if (InputKeyBoard.GetKeyUp(KeyCode.A))
+    ///         GD.Print("This instruction will only be called whenever the key is released.");
+    /// }
+    /// </code>
+    /// </example>
+    /// <remarks>The method has overloads that allow the use of the <seealso cref="KeyList"/>, <seealso cref="MouseButton"/> and <seealso cref="ButtonList"/> enumerators.</remarks>
+    public static bool GetKeyUp(KeyCode key)
         => GetKeyStatus(key, KeyStatus.Up);
-
+    /// <inheritdoc cref="GetKeyDown(KeyCode)"/>
+    public static bool GetKeyDown(KeyList key) => GetKeyDown((KeyCode)key);
+    /// <inheritdoc cref="GetKeyPress(KeyCode)"/>
+    public static bool GetKeyPress(KeyList key) => GetKeyPress((KeyCode)key);
+    /// <inheritdoc cref="GetKeyUp(KeyCode)"/>
+    public static bool GetKeyUp(KeyList key) => GetKeyUp((KeyCode)key);
+    /// <inheritdoc cref="GetKeyDown(KeyCode)"/>
+    public static bool GetKeyDown(MouseButton key) => GetKeyDown((KeyCode)key);
+    /// <inheritdoc cref="GetKeyPress(KeyCode)"/>
+    public static bool GetKeyPress(MouseButton key) => GetKeyPress((KeyCode)key);
+    /// <inheritdoc cref="GetKeyUp(KeyCode)"/>
+    public static bool GetKeyUp(MouseButton key) => GetKeyUp((KeyCode)key);
+    /// <inheritdoc cref="GetKeyDown(KeyCode)"/>
+    public static bool GetKeyDown(ButtonList key) => GetKeyDown((KeyCode)key);
+    /// <inheritdoc cref="GetKeyPress(KeyCode)"/>
+    public static bool GetKeyPress(ButtonList key) => GetKeyPress((KeyCode)key);
+    /// <inheritdoc cref="GetKeyUp(KeyCode)"/>
+    public static bool GetKeyUp(ButtonList key) => GetKeyUp((KeyCode)key);
+    /// <summary>Determines whether the mouse trigger was pressed.</summary>
+    /// <param name="buttonIndex">The target index to be checked.</param>
+    /// <returns>Returns <c>true</c> if the mouse trigger was pressed.</returns>
     public static bool GetMouseDown(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Down);
-
+        => GetMouseDown((MouseButton)buttonIndex);
+    /// <summary>Determines whether the mouse trigger is being pressed.</summary>
+    /// <param name="buttonIndex">The target index to be checked.</param>
+    /// <returns>Returns <c>true</c> if the mouse trigger is being pressed.</returns>
     public static bool GetMousePress(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Press);
-
+        => GetMousePress((MouseButton)buttonIndex);
+    /// <summary>Determines whether the mouse trigger has been drop by the user.</summary>
+    /// <param name="buttonIndex">The target index to be checked.</param>
+    /// <returns>Returns <c>true</c> if the mouse trigger was released by the user.</returns>
     public static bool GetMouseUp(int buttonIndex)
-        => GetMouseStatus(buttonIndex, KeyStatus.Up);
-
+        => GetMouseUp((MouseButton)buttonIndex);
+    /// <inheritdoc cref="GetMouseDown(int)"/>
+    /// <param name="button">The target mouse trigger to be checked.</param>
     public static bool GetMouseDown(MouseButton button)
-        => GetMouseDown((int)button);
-
+        => GetKeyStatus((KeyCode)button, KeyStatus.Down);
+    /// <inheritdoc cref="GetMousePress(int)"/>
+    /// <param name="button">The target mouse trigger to be checked.</param>
     public static bool GetMousePress(MouseButton button)
-        => GetMousePress((int)button);
-
+        => GetKeyStatus((KeyCode)button, KeyStatus.Press);
+    /// <inheritdoc cref="GetMouseUp(int)"/>
+    /// <param name="button">The target mouse trigger to be checked.</param>
     public static bool GetMouseUp(MouseButton button)
-        => GetMouseUp((int)button);
+        => GetKeyStatus((KeyCode)button, KeyStatus.Up);
 
-    private static bool GetKeyStatus(KeyList key, KeyStatus status) {
-        KeyItem keyItem = keyBoard!.GetKeyItem(key);
-        return keyItem.status != KeyStatus.None && keyItem.status == status;
-    }
-
-    private static bool GetMouseStatus(int index, KeyStatus status) {
-        MouseItem keyItem = keyBoard!.GetMouseItem(index);
-        return keyItem.status != KeyStatus.None && keyItem.status == status;
-    }
+    private static bool GetKeyStatus(KeyCode key, KeyStatus status) 
+        => keyBoard!.GetKeyItem(key).Status.HasFlag(status);
 }
