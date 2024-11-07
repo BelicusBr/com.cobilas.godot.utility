@@ -1,7 +1,11 @@
 using Godot;
 
 namespace Cobilas.GodotEngine.Utility;
-
+/// <summary>This class contains some Features pre-defined by the engine.</summary>
+/// <remarks>
+/// Features are an alternative to the .Net preprocessing definitions 
+/// as Godot 3.5's GDScript does not support preprocessing definitions.
+/// </remarks>
 public static class GDFeature {
     /// <summary>Running on a release build.</summary>
     public static bool HasRelease => OS.HasFeature("release");
@@ -82,8 +86,13 @@ public static class GDFeature {
     public static bool HasPVRTC => OS.HasFeature("pvrtc");
 
     /// <summary>
-    /// <para>Returns <c>true</c> if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the <a href="$DOCS_URL/tutorials/export/feature_tags.html">Feature Tags</a> documentation for more details.</para>
-    /// <para>Note: Tag names are case-sensitive.</para>
+    /// Can be used to check whether you're currently running a debug build, 
+    /// on a certain platform or arch, etc. Refer to the <a href="https://docs.godotengine.org/en/3.5/tutorials/export/feature_tags.html">Feature Tags</a> documentation for more details.
     /// </summary>
+    /// <param name="tagName">Tag names are case-sensitive.</param>
+    /// <returns>
+    /// ]Returns <c>true</c> if the feature for the given feature tag is supported 
+    /// in the currently running instance, depending on the platform, build etc.
+    /// </returns>
     public static bool HasFeature(string? tagName) => OS.HasFeature(tagName ?? string.Empty);
 }

@@ -25,23 +25,30 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// </example>
 public class RunTimeInitialization : Node {
 
-    /// <summary>The interval in seconds from the last frame to the current one (Read Only)</summary>
-    [Obsolete("Use RunTime.DeltaTime")]
-    public const float DeltaTime = RunTime.DeltaTime;
-    /// <summary>The interval in seconds of in-game time at which physics and other fixed frame rate updates  are performed.</summary>
-    [Obsolete("Use RunTime.FixedDeltaTime")]
-    public const float FixedDeltaTime = RunTime.FixedDeltaTime;
-
     /// <inheritdoc/>
     public override void _Ready() {
+        LastRunTimeInitialization lastRunTime = new() {
+            Name = nameof(LastRunTimeInitialization)
+        };
+        GetTree().Root.CallDeferred("add_child", lastRunTime);
+
         Type[] components = TypeUtilitarian.GetTypes();
+        StartRunTimeInitializationClass(this, components, false);
+    }
+    /// <summary>Initializes all classes that are marked with the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</summary>
+    /// <param name="taget">The node that will receive the components.</param>
+    /// <param name="components">The list of all types that will be checked to see if they contain the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</param>
+    /// <param name="lastBoot"><c>true</c> for classes that will be started last in the root object hierarchy.
+    /// <para><c>false</c> for classes that will be started first in the root object hierarchy.</para>
+    /// </param>
+    internal static void StartRunTimeInitializationClass(Node taget, Type[] components, bool lastBoot) {
         Dictionary<Priority, PriorityList> pairs = new() {
             { Priority.StartBefore, new PriorityList() },
             { Priority.StartLater, new PriorityList() }
         };
         foreach (var item in components) {
             RunTimeInitializationClassAttribute attri = item.GetAttribute<RunTimeInitializationClassAttribute>();
-            if (attri != null) {
+            if (attri is not null && attri.LastBoot == lastBoot) {
                 Node node = item.Activator<Node>();
                 if (!string.IsNullOrEmpty(attri.ClassName))
                     node.Name = string.IsNullOrEmpty(attri.ClassName) ? item.Name : attri.ClassName;
@@ -51,11 +58,11 @@ public class RunTimeInitialization : Node {
 
         using (PriorityList list = pairs[Priority.StartBefore]) {
             list.ReorderList();
-            list.Run(this);
+            list.Run(taget);
         }
         using (PriorityList list = pairs[Priority.StartLater]) {
             list.ReorderList();
-            list.Run(this);
+            list.Run(taget);
         }
     }
 }
