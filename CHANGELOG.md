@@ -1,3 +1,8 @@
+# [4.1.1] (11/11/2024)
+## Fixed
+### NullReferenceException in Gizmos._Process(float)
+The method uses a private variable to update the drawing method but the `Gizm._Process(float)` method did not verify if variable was null.
+
 # [4.1.0] (29/10/2024 - 04/11/2024)
 ## Added
 ### IYieldCoroutine.IsLastCoroutine property
