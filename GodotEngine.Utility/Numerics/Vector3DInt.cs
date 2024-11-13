@@ -164,6 +164,10 @@ public struct Vector3DInt : IIntVector {
         result.z = a.z - b.z;
         return result;
     }
+    /// <summary>The operator allows us to reverse the value.</summary>
+    /// <param name="a">Or value that will be invested.</param>
+    /// <returns>Returns the result of the inversion.</returns>
+    public static Vector3DInt operator -(Vector3DInt a) => a.Neg();
     /// <summary>Division operation between two values.(<seealso cref="Vector3DInt"/> / <seealso cref="Vector3DInt"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
