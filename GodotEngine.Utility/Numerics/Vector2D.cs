@@ -224,6 +224,10 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
         result.y = a.y - b.y;
         return result;
     }
+    /// <summary>The operator allows us to reverse the value.</summary>
+    /// <param name="a">Or value that will be invested.</param>
+    /// <returns>Returns the result of the inversion.</returns>
+    public static Vector2D operator -(Vector2D a) => a.Neg();
     #endregion
     #region op Division
     /// <summary>Division operation between two values.(<seealso cref="Vector2D"/> / <seealso cref="Vector2D"/>)</summary>

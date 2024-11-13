@@ -140,6 +140,10 @@ public struct Vector2DInt : IIntVector {
         result.y = a.y - b.y;
         return result;
     }
+    /// <summary>The operator allows us to reverse the value.</summary>
+    /// <param name="a">Or value that will be invested.</param>
+    /// <returns>Returns the result of the inversion.</returns>
+    public static Vector2DInt operator -(Vector2DInt a) => a.Neg();
     /// <summary>Division operation between two values.(<seealso cref="Vector2DInt"/> / <seealso cref="Vector2DInt"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
