@@ -173,5 +173,8 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// <param name="rhs">Object of comparison.</param>
     /// <returns>Returns the result of the comparison.</returns>
     public static bool operator !=(Quaternion lhs, Quaternion rhs) => !lhs.Equals(rhs);
+    /// <summary>Implicit conversion operator.(<seealso cref="Quaternion"/> to <seealso cref="Vector4D"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
+    public static implicit operator Vector4D(Quaternion v) => new(v.x, v.y, v.z, v.w);
 }
 #endregion

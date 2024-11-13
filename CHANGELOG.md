@@ -1,3 +1,11 @@
+# [4.2.0] (12/11/2024)
+## Added
+### Vector inversion operators
+Now the `Vector2D`, `Vector2DInt`, `Vector3D`, `Vector3DInt` and `Vector4D` structures have received values ​​inversion operators.
+
+### Implicit operator
+The `Quaternion` structure received an implicit operator from `Quaternion` to `Vector4D`.
+
 # [4.1.2] (12/11/2024)
 ## Fixed
 ### Deltascroll always positive

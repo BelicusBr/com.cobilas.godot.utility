@@ -208,6 +208,10 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
     /// <param name="b">Second module.</param>
     /// <returns>The result of the subtraction.</returns>
     public static Vector4D operator -(Vector4D a, Vector4D b) => new(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+    /// <summary>The operator allows us to reverse the value.</summary>
+    /// <param name="a">Or value that will be invested.</param>
+    /// <returns>Returns the result of the inversion.</returns>
+    public static Vector4D operator -(Vector4D a) => a.Neg();
     /// <summary>Division operation between two values.(<seealso cref="Vector4D"/> / <seealso cref="Vector4D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
@@ -256,4 +260,7 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
     /// <summary>Implicit conversion operator.(<seealso cref="Vector4D"/> to <seealso cref="Vector3D"/>)</summary>
     /// <param name="v">Object to be converted.</param>
     public static implicit operator Vector3D(Vector4D v) => new (v.x, v.y, v.z);
+    /// <summary>Implicit conversion operator.(<seealso cref="Vector4D"/> to <seealso cref="Quaternion"/>)</summary>
+    /// <param name="v">Object to be converted.</param>
+    public static implicit operator Quaternion(Vector4D v) => new(v.x, v.y, v.z, v.w);
 }

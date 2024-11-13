@@ -239,6 +239,10 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         result.z = a.z - b.z;
         return result;
     }
+    /// <summary>The operator allows us to reverse the value.</summary>
+    /// <param name="a">Or value that will be invested.</param>
+    /// <returns>Returns the result of the inversion.</returns>
+    public static Vector3D operator -(Vector3D a) => a.Neg();
     /// <summary>Division operation between two values.(<seealso cref="Vector3D"/> / <seealso cref="Vector3D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
