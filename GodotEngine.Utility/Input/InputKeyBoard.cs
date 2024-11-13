@@ -63,7 +63,7 @@ public class InputKeyBoard : Node {
                     } else mouseInfo.changeState |= ChangeState.D_Index;
                     break;
                 case MouseButton.MouseWheelUp: case MouseButton.MouseWheelDown:
-                    mouseInfo.deltaScroll = mouseButton.Factor;
+                    mouseInfo.deltaScroll = (MouseButton)index == MouseButton.MouseWheelUp ? mouseButton.Factor : -mouseButton.Factor;
                     if (mouseInfo.changeState.HasFlag(ChangeState.C_Scroll)) {
                         mouseInfo.changeState ^= ChangeState.C_Scroll;
                         mouseInfo.changeState |= ChangeState.D_Scroll;
