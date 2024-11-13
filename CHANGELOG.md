@@ -1,3 +1,8 @@
+# [4.1.2] (12/11/2024)
+## Fixed
+### Deltascroll always positive
+The `Inputkeyboard.Deltascroll` property always returned positive values ​​by misunderstanding inputs reeiers
+
 # [4.1.1] (11/11/2024)
 ## Fixed
 ### NullReferenceException in Gizmos._Process(float)
