@@ -1,7 +1,20 @@
+# [4.2.3] (14/11/2024)
+## Fixed
+### Incorrect resolution
+The `Screen.CurrentResolution` property had the problem of returning the full screen resolution without considering other screen modes.
+### Problems with vector and quaternion interpolation
+All vector and quaternion structures had a problem of `ArgumentNullException` when inserted into an interpolated string. \
+This could occur when the `format` parameter of the `IFormattable.ToString(string, IFormatProvider)` will be null.
+
+# [4.2.1] (14/11/2024)
+## Fixed
+### NullReferenceException in Screen class
+Private `Screen.AddResolution` function always emitted a `NullReferenceException` because it does not correct the parameter if it is null and void or not.
+
 # [4.2.0] (12/11/2024)
 ## Added
 ### Vector inversion operators
-Now the `Vector2D`, `Vector2DInt`, `Vector3D`, `Vector3DInt` and `Vector4D` structures have received values ​​inversion operators.
+Now the `Vector2D`, `Vector2DInt`, `Vector3D`, `Vector3DInt` and `Vector4D` structures have received values inversion operators.
 
 ### Implicit operator
 The `Quaternion` structure received an implicit operator from `Quaternion` to `Vector4D`.
@@ -9,7 +22,7 @@ The `Quaternion` structure received an implicit operator from `Quaternion` to `V
 # [4.1.2] (12/11/2024)
 ## Fixed
 ### Deltascroll always positive
-The `Inputkeyboard.Deltascroll` property always returned positive values ​​by misunderstanding inputs reeiers
+The `Inputkeyboard.Deltascroll` property always returned positive values by misunderstanding inputs reeiers
 
 # [4.1.1] (11/11/2024)
 ## Fixed

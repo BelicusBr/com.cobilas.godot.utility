@@ -78,7 +78,7 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
         => other.x == this.x && other.y == this.y;
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, this.x, this.y);
+        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3})", this.x, this.y);
     /// <inheritdoc/>
     public readonly string ToString(string format)
         => ToString(format, CultureInfo.InvariantCulture);
