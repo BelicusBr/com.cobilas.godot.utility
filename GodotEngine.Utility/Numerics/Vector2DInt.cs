@@ -68,7 +68,7 @@ public struct Vector2DInt : IIntVector {
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, this.x, this.y);
+        => string.Format(formatProvider, format ?? "(x:{0} y:{1})", this.x, this.y);
     /// <inheritdoc/>
     public readonly string ToString(string format)
         => ToString(format, CultureInfo.InvariantCulture);
