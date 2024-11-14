@@ -62,7 +62,7 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, this.x, this.y, this.z, this.w);
+        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})", this.x, this.y, this.z, this.w);
 #endregion
 #region static methods
     /// <summary>Converts this quaternion to one with the same orientation but with a magnitude of 1.</summary>

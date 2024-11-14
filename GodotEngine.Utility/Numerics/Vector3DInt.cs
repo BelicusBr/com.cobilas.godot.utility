@@ -83,7 +83,8 @@ public struct Vector3DInt : IIntVector {
     /// <inheritdoc/>
     public override readonly int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode();
     /// <inheritdoc/>
-    public readonly string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, this.x, this.y, this.z);
+    public readonly string ToString(string format, IFormatProvider formatProvider) 
+        => string.Format(formatProvider, format ?? "(x:{0} y:{1} z:{2})", this.x, this.y, this.z);
     /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>

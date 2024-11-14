@@ -107,7 +107,7 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
         => other.x == this.x && other.y == this.y && other.z == this.z && other.w == this.w;
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, this.x, this.y, this.z, this.w);
+        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})", this.x, this.y, this.z, this.w);
     /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>

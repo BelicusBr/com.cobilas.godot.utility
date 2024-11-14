@@ -108,7 +108,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
         => other.x == this.x && other.y == this.y && other.z == this.z;
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, this.x, this.y, this.z);
+        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3})", this.x, this.y, this.z);
     /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>

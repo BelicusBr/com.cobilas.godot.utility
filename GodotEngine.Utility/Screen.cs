@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.IO;
 using Cobilas.Collections;
+using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
 
 using IOFile = System.IO.File;
@@ -12,6 +13,8 @@ namespace Cobilas.GodotEngine.Utility;
 
 /// <summary>Gets or changes game screen information.</summary>
 public static class Screen {
+
+    private readonly static Dictionary<Vector2, Resolution> _gameScreenResolution = [];
 
     /// <summary>Gets all detected screens.</summary>
     /// <remarks>This property will only return all screens that were detected from the start of the application,
@@ -42,15 +45,15 @@ public static class Screen {
             OS.WindowFullscreen = value == ScreenMode.Fullscreen;
         }
     }
-    /// <summary>The current resolution of the game screen.</summary>
-    /// <returns>Returns the current resolution of the game screen as Vector2D.</returns>
-    public static Resolution CurrentResolution => CurrentDisplay.CurrentResolution;
     /// <summary>The current frequency of the game screen.</summary>
     /// <returns>Returns the current game screen frequency as a floating point.</returns>
     public static float ScreenRefreshRate => OS.GetScreenRefreshRate();
     /// <summary>Represents the game screen resolutions.</summary>
     /// <returns>Returns all stored resolutions.</returns>
     public static Resolution[] Resolutions => GetDisplay(OS.CurrentScreen).Resolutions;
+    /// <summary>The current resolution of the game screen.</summary>
+    /// <returns>Returns the current resolution of the game screen as Vector2D.</returns>
+    public static Resolution CurrentResolution => Mode == ScreenMode.Fullscreen ? CurrentDisplay.CurrentResolution : GetGameScreenResolution();
 
     static Screen() {
         Displays = Array.Empty<DisplayInfo>();
@@ -163,7 +166,17 @@ public static class Screen {
     public static void SetResolution(in Resolution resolution)
         => SetResolution(resolution.Width, resolution.Height, resolution.Frequency);
 
-    private static void AddResolution(in CustonResolutionList[] resolutions) {
+    private static Resolution GetGameScreenResolution() {
+        Vector2 size = OS.WindowSize;
+        if (_gameScreenResolution.TryGetValue(size, out Resolution resolution))
+            return resolution;
+        resolution = new(size, (int)ScreenRefreshRate);
+        _gameScreenResolution.Add(size, resolution);
+        return resolution;
+    }
+
+    private static void AddResolution(in CustonResolutionList[]? resolutions) {
+        if (resolutions is null) return;
         CustonResolutionList[] orphanList = resolutions;
         int[] hashs = [];
         for (int I = 0; I < DisplayCount; I++) {
