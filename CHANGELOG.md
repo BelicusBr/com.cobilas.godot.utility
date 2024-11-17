@@ -1,3 +1,8 @@
+# [4.2.4] (16/11/2024)
+## Changed
+### Dependency update
+The `Cobilas.Core.Net4x` dependency of the `Cobilas.Godot.Utility` package has been updated to version `2.0.1`.
+
 # [4.2.3] (14/11/2024)
 ## Fixed
 ### Incorrect resolution

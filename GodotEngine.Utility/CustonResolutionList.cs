@@ -43,7 +43,7 @@ public readonly struct CustonResolutionList : IEnumerable<Resolution> {
     public static CustonResolutionList[] Deserialize(Stream? stream) {
         if (stream is null)
             throw new ArgumentNullException("stream");
-        return Json.Deserialize<CustonResolutionList[]>(Encoding.UTF8.GetString(stream.Read()));
+        return Json.Deserialize<CustonResolutionList[]>(Encoding.UTF8.GetString(stream.Read()))!;
     }
 
     /// <inheritdoc/>
