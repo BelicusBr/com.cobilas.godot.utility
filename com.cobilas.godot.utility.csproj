@@ -10,7 +10,7 @@
     <Authors>BélicusBr</Authors>
     <Title>Cobilas Godot Utility</Title>
     <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>4.2.3</PackageVersion>
+    <PackageVersion>4.2.4</PackageVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>C:\local.nuget</PackageOutputPath>
     <RepositoryType>git</RepositoryType>
@@ -26,6 +26,6 @@
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
     <PackageReference Include="OpenTK" Version="3.3.1" />
-    <PackageReference Include="Cobilas.Core.Net4x" Version="1.6.1" />
+    <PackageReference Include="Cobilas.Core.Net4x" Version="2.0.1" />
 </ItemGroup>
 </Project>
