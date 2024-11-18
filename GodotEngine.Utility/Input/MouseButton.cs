@@ -5,9 +5,9 @@ public enum MouseButton : byte {
     /// <summary>Unidentified trigger.</summary>
     Unknown = 0,
     /// <inheritdoc cref="Godot.ButtonList.Right"/>
-    MouseRight = 1,
+    MouseRight = 2,
     /// <inheritdoc cref="Godot.ButtonList.Left"/>
-    MouseLeft = 2,
+    MouseLeft = 1,
     /// <inheritdoc cref="Godot.ButtonList.Middle"/>
     MouseMiddle = 3,
     /// <inheritdoc cref="Godot.ButtonList.WheelUp"/>
