@@ -90,10 +90,10 @@ public static void StopAllCoroutines();
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
-  <PackageReference Include="Cobilas.Godot.Utility" Version="4.2.4" />
+  <PackageReference Include="Cobilas.Godot.Utility" Version="4.2.5" />
 </ItemGroup>
 ```
 Or use command line.
 ```
-dotnet add package Cobilas.Godot.Utility --version 4.2.4
+dotnet add package Cobilas.Godot.Utility --version 4.2.5
 ```

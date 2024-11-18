@@ -1,3 +1,10 @@
+# [4.2.5] (18/11/2024)
+## Fixed
+### Correction of MouseButton enum values
+`MouseButton.MouseRight` now has the correct value of 2 (previously 1). \
+`MouseButton.MouseLeft` now has the correct value of 1 (previously 2). \
+This fix resolves the inversion in mouse trigger detection, ensuring that mouse click events are interpreted correctly.
+
 # [4.2.4] (16/11/2024)
 ## Changed
 ### Dependency update
