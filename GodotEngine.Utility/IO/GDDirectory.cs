@@ -4,6 +4,7 @@ using System.Text;
 using Cobilas.Collections;
 
 using SYSPath = System.IO.Path;
+using System.Linq;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>Represents a directory file.</summary>
@@ -11,6 +12,13 @@ public sealed class GDDirectory : GDFileBase {
 
     private bool disposedValue;
     private GDFileBase[] subDir = Array.Empty<GDFileBase>();
+
+    private static readonly char[] separatorChar = {
+        SYSPath.DirectorySeparatorChar,
+        SYSPath.VolumeSeparatorChar,
+        SYSPath.AltDirectorySeparatorChar,
+        SYSPath.PathSeparator
+    };
     /// <inheritdoc/>
     public override string Path { get; protected set; }
     /// <inheritdoc/>
@@ -191,8 +199,7 @@ public sealed class GDDirectory : GDFileBase {
     /// the user directory (<c>user://folder</c>) or an absolute
     /// path of the user filesystem (e.g. <c>/tmp/folder</c> or <c>C:\tmp\folder</c>).
     /// </param>
-    public static GDDirectory? GetGDDirectory(string? path)
-        => GetGDDirectory(SYSPath.IsPathRooted(path) ? $"{path}/" : path, GDFileBase.Null);
+    public static GDDirectory? GetGDDirectory(string? path) => GetGDDirectory(path, GDFileBase.Null);
 
     private static GDDirectory? GetGDDirectory(string? relativePath, GDFileBase? parent) {
         if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
@@ -200,21 +207,41 @@ public sealed class GDDirectory : GDFileBase {
         using Directory directory = new();
         if (directory.Open(relativePath) == Error.Ok) {
             GDDirectory gDDirectory = new(parent, relativePath);
-            directory.ListDirBegin(false, true);
+            directory.ListDirBegin(true, true);
             string filename = directory.GetNext();
+
             while (!string.IsNullOrEmpty(filename)) {
-                if (filename == "." || filename == "..") {
-                    filename = directory.GetNext();
-                    continue;
-                }
                 if (directory.CurrentIsDir())
-                    ArrayManipulation.Add(GetGDDirectory($"{relativePath}{filename}/", gDDirectory)!, ref gDDirectory.subDir);
-                else ArrayManipulation.Add(new GDFile(gDDirectory, $"{relativePath}{filename}"), ref gDDirectory.subDir);
+                    ArrayManipulation.Add(GetGDDirectory(Combine(relativePath, filename), gDDirectory)!, ref gDDirectory.subDir);
+                else ArrayManipulation.Add(new GDFile(gDDirectory, Combine(relativePath, filename)), ref gDDirectory.subDir);
                 filename = directory.GetNext();
             }
+            
             directory.ListDirEnd();
             return gDDirectory;
         }
         return null;
+    }
+
+    private static string? Combine(params string[]? paths) {
+        if (paths is null) throw new ArgumentNullException(nameof(paths));
+        StringBuilder builder = new();
+        foreach (string item in paths) {
+            builder.Append(item);
+            if (!IsSeparator(item))
+                builder.Append('/');
+        }
+        return builder.ToString().TrimEnd(separatorChar);
+    }
+
+    private static bool IsSeparator(string path) {
+        for (int i = path.Length - 1; i >= 0 ; i--) {
+            if (char.IsWhiteSpace(path[i])) continue;
+            if (char.IsLetterOrDigit(path[i])) return false;
+            foreach (char item in separatorChar)
+                if (path[i] == item)
+                    return true;
+        }
+        return false;
     }
 }
