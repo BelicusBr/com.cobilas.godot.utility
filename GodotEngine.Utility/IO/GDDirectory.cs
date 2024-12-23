@@ -205,8 +205,7 @@ public sealed class GDDirectory : GDFileBase {
         if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
 
         using Directory directory = new();
-        Error error;
-        if ((error = directory.Open(relativePath)) == Error.Ok) {
+        if (directory.Open(relativePath) == Error.Ok) {
             GDDirectory gDDirectory = new(parent, relativePath);
             directory.ListDirBegin(true, true);
             string filename = directory.GetNext();
@@ -221,7 +220,6 @@ public sealed class GDDirectory : GDFileBase {
             directory.ListDirEnd();
             return gDDirectory;
         }
-        GD.Print(relativePath, "|", error);
         return null;
     }
 
