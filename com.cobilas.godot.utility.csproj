@@ -1,6 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/3.3.0">
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <!-- <TargetFramework>net472</TargetFramework> -->
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>Cobilas</RootNamespace>
@@ -10,7 +11,7 @@
     <Authors>BélicusBr</Authors>
     <Title>Cobilas Godot Utility</Title>
     <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>4.2.5</PackageVersion>
+    <PackageVersion>4.2.6</PackageVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>C:\local.nuget</PackageOutputPath>
     <RepositoryType>git</RepositoryType>
@@ -25,7 +26,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
-    <PackageReference Include="OpenTK" Version="3.3.1" />
+    <PackageReference Include="OpenTK" Version="3.3.3" />
     <PackageReference Include="Cobilas.Core.Net4x" Version="2.0.1" />
 </ItemGroup>
 </Project>
