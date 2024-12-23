@@ -1,3 +1,8 @@
+# [4.2.6] (23/12/2024)
+## Fixed
+### Invalid file path
+The `GDDirectory.GetGDDirectory(string)` method was creating invalid paths for files and directories for representations which resulted in directory or file not found errors.
+
 # [4.2.5] (18/11/2024)
 ## Fixed
 ### Correction of MouseButton enum values
