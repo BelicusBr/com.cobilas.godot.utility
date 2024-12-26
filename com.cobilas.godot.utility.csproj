@@ -27,6 +27,6 @@
     <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
     <PackageReference Include="OpenTK" Version="3.3.3" />
-    <PackageReference Include="Cobilas.Core.Net4x" Version="2.0.1" />
+    <PackageReference Include="Cobilas.Core.Net4x" Version="2.1.0" />
 </ItemGroup>
 </Project>
