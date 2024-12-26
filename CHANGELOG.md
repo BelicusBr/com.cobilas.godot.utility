@@ -1,3 +1,8 @@
+# [4.3.0] (26/12/2024)
+## Added
+### DebugLog
+The `DebugLog` class has been added to provide a way to output trace logs to the godot console.
+
 # [4.2.7] (23/12/2024)
 ## Fixed
 ### Invalid file path
