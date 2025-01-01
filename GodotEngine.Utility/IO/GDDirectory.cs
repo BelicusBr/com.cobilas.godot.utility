@@ -152,13 +152,13 @@ public sealed class GDDirectory : GDFileBase {
     /// <param name="isSubdirectory">Allows the method to search subdirectories.</param>
     /// <exception cref="ArgumentNullException">The exception is thrown when <seealso cref="string"/> object is null.</exception>
     /// <returns>If the directory is not found, a <seealso cref="GDDirectory"/> marked as <seealso cref="GDFileAttributes.Null"/> will be returned.</returns>
-    public GDFile? GetFile(string? name, bool isSubdirectory = false) {
+    public GDFile GetFile(string? name, bool isSubdirectory = false) {
         if (name is null) throw new ArgumentNullException(nameof(name));
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
             switch (subDir[I].Attribute) {
                 case GDFileAttributes.File:
                     if (subDir[I].Name == name || subDir[I].NameWithoutExtension == name)
-                        return subDir[I] as GDFile;
+                        return subDir[I] is GDFile gdf ? gdf : GDIONull.FileNull;
                     break;
                 case GDFileAttributes.Directory when isSubdirectory:
                     GDFile directory = (subDir[I] as GDDirectory)!.GetFile(name, isSubdirectory)!;
@@ -191,7 +191,7 @@ public sealed class GDDirectory : GDFileBase {
         }
     }
     /// <inheritdoc cref="GDDirectory.GetGDDirectory(string?)"/>
-    public static GDDirectory? GetGDDirectory()
+    public static GDDirectory GetGDDirectory()
         => GetGDDirectory("res://");
     /// <summary>Opens an existing directory of the filesystem.</summary>
     /// <param name="path">
@@ -199,9 +199,9 @@ public sealed class GDDirectory : GDFileBase {
     /// the user directory (<c>user://folder</c>) or an absolute
     /// path of the user filesystem (e.g. <c>/tmp/folder</c> or <c>C:\tmp\folder</c>).
     /// </param>
-    public static GDDirectory? GetGDDirectory(string? path) => GetGDDirectory(path, GDFileBase.Null);
+    public static GDDirectory GetGDDirectory(string? path) => GetGDDirectory(path, GDFileBase.Null);
 
-    private static GDDirectory? GetGDDirectory(string? relativePath, GDFileBase? parent) {
+    private static GDDirectory GetGDDirectory(string? relativePath, GDFileBase? parent) {
         if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
 
         using Directory directory = new();
@@ -220,7 +220,7 @@ public sealed class GDDirectory : GDFileBase {
             directory.ListDirEnd();
             return gDDirectory;
         }
-        return null;
+        return GDIONull.DirectoryNull;
     }
 
     private static string? Combine(params string[]? paths) {

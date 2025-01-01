@@ -1,15 +1,16 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEngine.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Represents a two-dimensional vector</summary>
 [Serializable]
 public struct Vector2D : IVectorGeneric<Vector2D> {
     /// <inheritdoc cref="Vector4D.x"/>
-    public float x;
+    [ShowProperty(true)] public float x;
     /// <inheritdoc cref="Vector4D.y"/>
-    public float y;
+    [ShowProperty(true)] public float y;
     /// <inheritdoc/>
     public readonly float magnitude => Magnitude(this);
     /// <inheritdoc/>

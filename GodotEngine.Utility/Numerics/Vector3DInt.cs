@@ -1,17 +1,18 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEngine.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Representation of a three-dimensional vector using integers.</summary>
 [Serializable]
 public struct Vector3DInt : IIntVector {
     /// <inheritdoc cref="Vector4D.x"/>
-    public int x;
+    [ShowProperty(true)] public int x;
     /// <inheritdoc cref="Vector4D.y"/>
-    public int y;
+    [ShowProperty(true)] public int y;
     /// <inheritdoc cref="Vector4D.z"/>
-    public int z;
+    [ShowProperty(true)] public int z;
     /// <inheritdoc/>
     public readonly int AxisCount => 2;
     /// <inheritdoc/>

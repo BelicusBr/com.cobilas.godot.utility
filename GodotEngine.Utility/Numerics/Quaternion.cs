@@ -1,19 +1,20 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEngine.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Quaternions are used to represent rotations.</summary>
 [Serializable]
 public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// <summary>X component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</summary>
-    public float x;
+    [ShowProperty(true)] public float x;
     /// <summary>Y component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</summary>
-    public float y;
+    [ShowProperty(true)] public float y;
     /// <summary>Z component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</summary>
-    public float z;
+    [ShowProperty(true)] public float z;
     /// <summary>W component of the Quaternion. Do not directly modify quaternions.</summary>
-    public float w;
+    [ShowProperty(true)] public float w;
     /// <summary>A small value used to compare quaternions for equality.</summary>
     /// <remarks>
     /// The <c>kEpsilon</c> constant is used to determine if two quaternions are nearly equal, accounting for floating-point precision errors.
