@@ -29,7 +29,7 @@ public static class DebugLog {
         if (stream != Stream.Null) throw new InvalidOperationException($"Flow {filePath} is already open!");
         stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
         if (clear) stream.SetLength(0L);
-        else stream.Position = stream.Length - 1;
+        else stream.Position = stream.Length == 0 ? stream.Length : stream.Length - 1;
     }
     /// <summary>Allows the termination of a log stream.</summary>
     /// <exception cref="InvalidOperationException">Occurs when the flow is already closed.</exception>
@@ -62,7 +62,7 @@ public static class DebugLog {
         builder.AppendLine("=====<message>=====");
         foreach (object item in message)
             if (item is not null)
-                builder.AppendLine(item.ToString());
+                builder.Append(item.ToString());
         return builder.ToString().TrimEnd();
     }
 
