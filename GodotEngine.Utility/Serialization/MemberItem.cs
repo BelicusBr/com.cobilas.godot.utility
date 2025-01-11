@@ -28,6 +28,13 @@ public sealed class MemberItem : INullObject {
     /// <returns>Returns the name of the member.</returns>
     public string Name => Menber is null ? string.Empty : Menber.Name;
     public bool IsStruct => TypeMenber.IsValueType;
+    public bool IsHide => Menber.GetCustomAttribute<HidePropertyAttribute>() is not null;
+    public bool IsSaveCache {
+        get {
+            SerializeFieldAttribute attribute = Menber.GetCustomAttribute<SerializeFieldAttribute>();
+            return attribute is not null && attribute.SaveInCache;
+        }
+    }
     /// <summary>Check if it is written.</summary>
     /// <returns>Returns <c>true</c> if written.</returns>
     public bool IsWrite => Menber switch {

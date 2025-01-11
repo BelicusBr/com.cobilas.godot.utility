@@ -14,16 +14,16 @@ public static class BuildSerialization {
         string id = GetID(node);
         if (TryGetSerializedObject(id, out SerializedNode result)) return result;
         else serializeds.Add(result = new(id));
-        result.Add(Build(node, node.GetType(), null));
+        result.Add(Build(node, node.GetType(), null, id));
         return result;
     }
 
-    private static List<SerializedObject> Build(object obj, Type type, SerializedObject root) {
+    private static List<SerializedObject> Build(object obj, Type type, SerializedObject root, string id) {
         List<SerializedObject> result = [];
         foreach (MemberInfo? item in type.GetMembers(flags))
             if (IsSerialized(item)) {
                 if (PrimitiveTypeCustom.IsPrimitiveType(GetMemberType(item))) {
-                    SerializedProperty property = new(item.Name, root) {
+                    SerializedProperty property = new(item.Name, root, id) {
                         Member = new MemberItem() {
                             Parent = obj,
                             Menber = item
@@ -32,7 +32,7 @@ public static class BuildSerialization {
                     };
                     result.Add(property);
                 } else if (IsPropertyCustom(GetMemberType(item))) {
-                    SerializedProperty property = new(item.Name, root) {
+                    SerializedProperty property = new(item.Name, root, id) {
                         Member = new MemberItem() {
                             Parent = obj,
                             Menber = item
@@ -41,7 +41,7 @@ public static class BuildSerialization {
                     };
                     result.Add(property);
                 } else {
-                    NoSerializedProperty property = new(item.Name, root) {
+                    NoSerializedProperty property = new(item.Name, root, id) {
                         Member = new MemberItem() {
                             Parent = obj,
                             Menber = item
@@ -49,7 +49,7 @@ public static class BuildSerialization {
                     };
                     result.Add(property);
                     KeyValuePair<object, Type> pair = GetValue(obj, item);
-                    property.Add(Build(pair.Key, pair.Value, property));
+                    property.Add(Build(pair.Key, pair.Value, property, id));
                 }
             }
         return result;

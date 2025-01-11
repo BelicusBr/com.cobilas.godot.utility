@@ -1,9 +1,10 @@
 namespace Cobilas.GodotEngine.Utility.Serialization;
 /// <summary>SerializedObjectNull; Representa um SerializedObject nulo.</summary>
 public sealed class SONull : SerializedObject, INullObject {
-    private static readonly SONull @null = new(string.Empty, null!);
+    public override string RootNodeId { get; protected set; }
+    private static readonly SONull @null = new(string.Empty, null!, string.Empty);
 
-    public SONull(string name, SerializedObject parent) : base(name, parent) {}
+    public SONull(string name, SerializedObject parent, string rootNodeId) : base(name, parent, rootNodeId) {}
 
     /// <summary>Representa nula de SerializedObject.</summary>
     /// <returns>Retorna uma representa nula de SerializedObject.</returns>

@@ -1,23 +1,24 @@
-using Godot;
 using System.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
-using System;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
 
 public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObject> {
     private readonly List<SerializedObject> properties;
-    private object objParent;
 
+    public override string RootNodeId { get; protected set; }
     public override string Name { get; protected set; }
     public override string PropertyPath => GetPath(this);
     public override SerializedObject Parent { get; protected set; }
     public override MemberItem Member { get; set; }
 
-    public NoSerializedProperty(string name, SerializedObject parent) : base(name, parent) {
+    public NoSerializedProperty(string name, SerializedObject parent, string rootNodeId) : base(name, parent, rootNodeId) {
         properties = [];
     }
+
+    // public NoSerializedProperty(string name, SerializedObject parent) : base(name, parent) {
+    // }
 
     public void Add(SerializedObject obj) => properties.Add(obj);
     public void Add(IEnumerable<SerializedObject> objs) => properties.AddRange(objs);

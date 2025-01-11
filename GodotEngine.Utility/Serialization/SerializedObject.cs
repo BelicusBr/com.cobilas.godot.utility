@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-
 namespace Cobilas.GodotEngine.Utility.Serialization;
 
 public abstract class SerializedObject : ISerializedPropertyManipulation {
+    public abstract string RootNodeId { get; protected set; }
     public abstract string Name { get; protected set; }
     public abstract SerializedObject Parent { get; protected set; }
     /// <summary>The custom class member.</summary>
@@ -15,10 +13,10 @@ public abstract class SerializedObject : ISerializedPropertyManipulation {
     /// <value>Receives the custom property path.</value>
     public abstract string PropertyPath { get; }
 
-    protected SerializedObject(string name, SerializedObject parent)
-    {
+    protected SerializedObject(string name, SerializedObject parent, string rootNodeId) {
         Name = name;
         Parent = parent;
+        RootNodeId = rootNodeId;
     }
 
     public abstract object? Get(string? propertyName);

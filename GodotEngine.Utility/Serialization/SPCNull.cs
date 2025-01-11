@@ -12,18 +12,8 @@ public sealed class SPCNull : PropertyCustom, INullObject {
 
     public static SPCNull Null => @null;
 
-    public override object? Get(string? propertyName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override PropertyItem[] GetPropertyList()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool Set(string? propertyName, object? value)
-    {
-        throw new NotImplementedException();
-    }
+    public override object? Get(string? propertyName) => throw new NotImplementedException();
+    public override PropertyItem[] GetPropertyList() => throw new NotImplementedException();
+    public override bool Set(string? propertyName, object? value) => throw new NotImplementedException();
+    public override object? CacheValueToObject(string? propertyName, string? value) => throw new NotImplementedException();
 }

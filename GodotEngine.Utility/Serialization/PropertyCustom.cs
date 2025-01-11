@@ -8,4 +8,5 @@ public abstract class PropertyCustom : ISerializedPropertyManipulation {
     public abstract object? Get(string? propertyName);
     public abstract PropertyItem[] GetPropertyList();
     public abstract bool Set(string? propertyName, object? value);
+    public abstract object? CacheValueToObject(string? propertyName, string? value);
 }
