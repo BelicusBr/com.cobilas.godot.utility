@@ -4,21 +4,23 @@ using Cobilas.Collections;
 using System.Collections.Generic;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
-
+/// <summary>The class is a serialization representation of a node.</summary>
 public class SerializedNode : ISerializedPropertyManipulation {
     private readonly string id;
     private readonly List<SerializedObject> properties;
-
+    /// <summary>The id of the node object.</summary>
+    /// <returns>Returns the id of the node object.</returns>
     public string Id => id;
-
+    /// <summary>Creates a new instance of this object.</summary>
     public SerializedNode(string id) {
         this.id = id;
         this.properties = [];
     }
-
+    /// <inheritdoc cref="NoSerializedProperty.Add(SerializedObject)"/>
     public void Add(SerializedObject obj) => properties.Add(obj);
+    /// <inheritdoc cref="NoSerializedProperty.Add(IEnumerable{SerializedObject})"/>
     public void Add(IEnumerable<SerializedObject> objs) => properties.AddRange(objs);
-
+    /// <inheritdoc cref="PropertyCustom.Get(string?)"/>
     public object? Get(string? propertyName) {
         foreach (SerializedObject item in properties) {
             object? result = item.Get(propertyName);
@@ -26,7 +28,7 @@ public class SerializedNode : ISerializedPropertyManipulation {
         }
         return null;
     }
-
+    /// <inheritdoc cref="PropertyCustom.Set(string?, object?)"/>
     public bool Set(string? propertyName, object? value) {
         foreach (SerializedObject item in properties) {
             if (item.Set(propertyName, value)) 
@@ -34,14 +36,14 @@ public class SerializedNode : ISerializedPropertyManipulation {
         }
         return false;
     }
-
+    /// <inheritdoc cref="PropertyCustom.GetPropertyList"/>
     public PropertyItem[] GetPropertyList() {
         PropertyItem[] result = [];
         foreach (SerializedObject item in properties)
             ArrayManipulation.Add(item.GetPropertyList(), ref result);
         return result;
     }
-
+    /// <inheritdoc/>
     public override string ToString() {
         StringBuilder builder = new();
         builder.AppendLine($"ID: {id}");
@@ -56,14 +58,17 @@ public class SerializedNode : ISerializedPropertyManipulation {
             }
         return builder.ToString();
     }
-
+    /// <summary>The method converts a list of <seealso cref="PropertyItem"/> to an <see cref="Godot.Collections.Array"/></summary>
+    /// <param name="list">The list to be converted.</param>
+    /// <returns>Returns an <see cref="Godot.Collections.Array"/> containing the serialization information for the properties.</returns>
     public static Array GetPropertyList(PropertyItem[] list) {
         Array array = [];
         foreach (PropertyItem item in list)
             array.Add(item.ToDictionary());
         return array;
     }
-
+    /// <inheritdoc cref="GetPropertyList(PropertyItem[])"/>
+    /// <param name="node">The <seealso cref="SerializedNode"/> that will get the list of <seealso cref="PropertyItem"/> to be converted.</param>
     public static Array GetPropertyList(SerializedNode node)
         => GetPropertyList(node.GetPropertyList());
 

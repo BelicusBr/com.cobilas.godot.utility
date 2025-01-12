@@ -5,8 +5,13 @@ using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
-
+/// <summary>Class to handle property caching.</summary>
 public static class SerializationCache {
+    /// <summary>Gets the value of the property that is cached.</summary>
+    /// <param name="id">The ID of the cache</param>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="value">The value of the property that is cached.</param>
+    /// <returns>Returns <c>true</c> when the value is retrieved from the cache.</returns>
     public static bool GetValueInCache(string? id, string? propertyName, out string value) {
         if (id is null) throw new ArgumentNullException(nameof(id));
         else if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
@@ -15,14 +20,19 @@ public static class SerializationCache {
         using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
         GDFile file = directory.GetFile($"id_{id}.cache");
         if (file == GDIONull.FileNull) {
-
+            SetValueInCache(id, propertyName, value = string.Empty);
+            return false;
         }
         Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(file.Read());
 
         if (cache is not null && cache.TryGetValue(propertyName, out value)) return true;
         return false;
     }
-
+    /// <summary>Caches the property value.</summary>
+    /// <param name="id">The ID of the cache</param>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="value">The property value that will be cached.</param>
+    /// <returns>Returns <c>true</c> when the property value is cached.</returns>
     public static bool SetValueInCache(string? id, string? propertyName, object? value) {
         if (id is null) throw new ArgumentNullException(nameof(id));
         else if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));

@@ -4,17 +4,19 @@ using System.Reflection;
 using System.Collections.Generic;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
-
+/// <summary>Class allows to build a serialization list of properties of a node class.</summary>
 public static class BuildSerialization {
     private const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     private static readonly List<SerializedNode> serializeds = [];
     private static readonly Dictionary<Type, PropertyCustom> propertyCustom = [];
-
-    public static SerializedNode Build(Node node) {
+    /// <summary>The method constructs a serialization list of properties for the node.</summary>
+    /// <param name="node">The node to use.</param>
+    /// <returns>Returns a serialization representation of the node.</returns>
+    public static SerializedNode? Build(Node node) {
         string id = GetID(node);
-        if (TryGetSerializedObject(id, out SerializedNode result)) return result;
+        if (TryGetSerializedObject(id, out SerializedNode? result)) return result;
         else serializeds.Add(result = new(id));
-        result.Add(Build(node, node.GetType(), null, id));
+        result.Add(Build(node, node.GetType(), SONull.Null, id));
         return result;
     }
 
@@ -54,7 +56,9 @@ public static class BuildSerialization {
             }
         return result;
     }
-
+    /// <summary>Checks if the type has a <seealso cref="PropertyCustom"/>.</summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>Returns <c>true</c> when the type has a <seealso cref="PropertyCustom"/>.</returns>
     public static bool IsPropertyCustom(Type type) {
         if (propertyCustom.ContainsKey(type)) return true;
         Type[] types = TypeUtilitarian.GetTypes();
@@ -77,7 +81,7 @@ public static class BuildSerialization {
             _ => new()
         };
 
-    private static bool TryGetSerializedObject(string id, out SerializedNode result) {
+    private static bool TryGetSerializedObject(string id, out SerializedNode? result) {
         for (int I = 0; I < serializeds.Count; I++)
             if (id == serializeds[I].Id) {
                 result = serializeds[I];

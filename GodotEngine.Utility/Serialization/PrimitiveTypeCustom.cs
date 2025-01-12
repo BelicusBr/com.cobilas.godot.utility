@@ -3,18 +3,22 @@ using System;
 using System.Globalization;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
-public class PrimitiveTypeCustom : PropertyCustom {
-    public override bool IsHide { get; set; }
-    public override string PropertyPath { get; set; }
-    public override MemberItem Member { get; set; }
-
+/// <summary>Allows customization of a primitive type in the inspector.</summary>
+public sealed class PrimitiveTypeCustom : PropertyCustom {
+    /// <inheritdoc/>
+    public override bool IsHide => Member.IsHide;
+    /// <inheritdoc/>
+    public override MemberItem Member { get; set; } = MemberItem.Null;
+    /// <inheritdoc/>
+    public override string PropertyPath { get; set; } = string.Empty;
+    /// <inheritdoc/>
     public override object? Get(string? propertyName) {
         if (propertyName is null) return null;
         else if (propertyName == string.Empty) return null;
         else if (propertyName == PropertyPath) return Member.Value;
         return null;
     }
-
+    /// <inheritdoc/>
     public override PropertyItem[] GetPropertyList() {
         PropertyUsageFlags flags = PropertyUsageFlags.Storage | PropertyUsageFlags.ScriptVariable;
         if (!IsHide) flags |= PropertyUsageFlags.Editor;
@@ -30,7 +34,7 @@ public class PrimitiveTypeCustom : PropertyCustom {
             new(PropertyPath, type, usage:flags)
         };
     }
-
+    /// <inheritdoc/>
     public override bool Set(string? propertyName, object? value) {
         if (propertyName is null) return false;
         else if (propertyName == string.Empty) return false;
@@ -40,11 +44,11 @@ public class PrimitiveTypeCustom : PropertyCustom {
         }
         return false;
     }
-
+    /// <inheritdoc/>
     public static bool IsPrimitiveType(Type type) 
         => type.CompareType(typeof(string), typeof(bool), typeof(sbyte), typeof(byte), typeof(ushort),
             typeof(short), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double));
-
+    /// <inheritdoc/>
     public override object? CacheValueToObject(string? propertyName, string? value) {
         if (value is null) return null;
         else if (Member.TypeMenber.CompareType<bool>()) return bool.Parse(value);

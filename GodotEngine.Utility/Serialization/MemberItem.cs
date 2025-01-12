@@ -27,8 +27,14 @@ public sealed class MemberItem : INullObject {
     /// <summary>The name of the member.</summary>
     /// <returns>Returns the name of the member.</returns>
     public string Name => Menber is null ? string.Empty : Menber.Name;
+    /// <summary>Checks if the member is a <c>struct</c>.</summary>
+    /// <returns>Returns <c>true</c> when the member is a <c>struct</c>.</returns>
     public bool IsStruct => TypeMenber.IsValueType;
+    /// <summary>Check if the member is hidden from the editor.</summary>
+    /// <returns>returns <c>true</c> when the member is hidden from the editor.</returns>
     public bool IsHide => Menber.GetCustomAttribute<HidePropertyAttribute>() is not null;
+    /// <summary>Checks if the member value is cacheable.</summary>
+    /// <returns>Returns <c>true</c> when the member value is cacheable.</returns>
     public bool IsSaveCache {
         get {
             SerializeFieldAttribute attribute = Menber.GetCustomAttribute<SerializeFieldAttribute>();

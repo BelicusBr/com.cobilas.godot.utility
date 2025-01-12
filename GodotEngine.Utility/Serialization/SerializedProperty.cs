@@ -1,43 +1,48 @@
 using System;
 
 namespace Cobilas.GodotEngine.Utility.Serialization;
-
+/// <summary>Property serialization class in inspector.</summary>
 public class SerializedProperty : SerializedObject {
-    public PropertyCustom Custom { get; set; }
-    public override MemberItem Member { get; set; }
-    public override string Name { get; protected set; }
+    /// <summary>Property customization object.</summary>
+    /// <value>Allows you to define a property customization object.</value>
+    /// <returns>Returns the property customization object.</returns>
+    public PropertyCustom Custom { get; set; } = SPCNull.Null;
+    /// <inheritdoc/>
+    public override MemberItem Member { get; set; } = MemberItem.Null;
+    /// <inheritdoc/>
+    public override string Name { get; protected set; } = string.Empty;
+    /// <inheritdoc/>
     public override string PropertyPath => GetPath(this);
-    public override string RootNodeId { get; protected set; }
-    public override SerializedObject Parent { get; protected set; }
-
+    /// <inheritdoc/>
+    public override string RootNodeId { get; protected set; } = string.Empty;
+    /// <inheritdoc/>
+    public override SerializedObject Parent { get; protected set; } = SONull.Null;
+    /// <summary>Creates a new instance of this object.</summary>
     public SerializedProperty(string name, SerializedObject parent, string rootNodeId) : base(name, parent, rootNodeId) {}
-
+    /// <inheritdoc cref="PropertyCustom.Get(string?)"/>
     public override object? Get(string? propertyName) {
         if (Custom is null) return null;
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
-        Custom.IsHide = Member.IsHide;
         if (Member.IsSaveCache && GDFeature.HasEditor)
             if (SerializationCache.GetValueInCache(RootNodeId, propertyName, out string value))
                 return Custom.CacheValueToObject(propertyName, value);
         return Custom.Get(propertyName);
     }
-
+    /// <inheritdoc cref="PropertyCustom.Set(string?, object?)"/>
     public override bool Set(string? propertyName, object? value) {
         if (Custom is null) return false;
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
-        Custom.IsHide = Member.IsHide;
         if (Member.IsSaveCache && GDFeature.HasEditor)
             _ = SerializationCache.SetValueInCache(RootNodeId, propertyName, value);
         return Custom.Set(propertyName, value);
     }
-
+    /// <inheritdoc cref="PropertyCustom.GetPropertyList"/>
     public override PropertyItem[] GetPropertyList() {
         if (Custom is null) return Array.Empty<PropertyItem>();
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
-        Custom.IsHide = Member.IsHide;
         return Custom.GetPropertyList();
     }
 }
