@@ -43,30 +43,30 @@ using System.Collections;
 using Cobilas.GodotEngine.Utility;
 
 public class ClassTest : Node {
-  private Coroutine coroutine;
-  public override void _Ready() {
-    coroutine = CoroutineManager.StartCoroutine(Corroutine1());
-    coroutine = CoroutineManager.StartCoroutine(Corroutine2());
-    coroutine = CoroutineManager.StartCoroutine(Corroutine3());
-  }
+	private Coroutine coroutine;
+	public override void _Ready() {
+		coroutine = CoroutineManager.StartCoroutine(Corroutine1());
+		coroutine = CoroutineManager.StartCoroutine(Corroutine2());
+		coroutine = CoroutineManager.StartCoroutine(Corroutine3());
+	}
 
-  private IEnumerator Corroutine1() {
-    GD.Print("Zé da manga");
-    //When the return is null, by default the coroutine is executed as _Process().
-    yield return null;
-  }
+	private IEnumerator Corroutine1() {
+		GD.Print("Zé da manga");
+		//When the return is null, by default the coroutine is executed as _Process().
+		yield return null;
+	}
 
-  private IEnumerator Corroutine2() {
-    GD.Print("Zé da manga");
-    //When the return is RunTimeSecond the coroutine is executed as _Process() with a pre-defined delay.
-    yield return new RunTimeSecond(3);
-  }
+	private IEnumerator Corroutine2() {
+		GD.Print("Zé da manga");
+		//When the return is RunTimeSecond the coroutine is executed as _Process() with a pre-defined delay.
+		yield return new RunTimeSecond(3);
+	}
 
-  private IEnumerator Corroutine3() {
-    GD.Print("Zé da manga");
-    When the return is RunTimeSecond the coroutine is executed as _PhysicProcess() with a pre-defined delay.
-    yield return new FixedRunTimeSecond(3);
-  }
+	private IEnumerator Corroutine3() {
+		GD.Print("Zé da manga");
+		When the return is RunTimeSecond the coroutine is executed as _PhysicProcess() with a pre-defined delay.
+		yield return new FixedRunTimeSecond(3);
+	}
 }
 ```
 With the `IYieldVolatile` interface you can switch coroutine execution between `_Process(float)` and `_PhysicsProcess(float)`.
@@ -83,17 +83,40 @@ Now to stop a coroutine.
 public static void StopCoroutine(Coroutine Coroutine);
 public static void StopAllCoroutines();
 ```
-## Other classes
-`InputKeyBoard` `Physics2D` `SceneManager` `GDDirectory` `Gizmos`
+## SerializedPropertyCustom
+Now a class has been added for custom serialization of properties in the Godot inspector. \
+With the `HideProperty` and `ShowProperty` attributes you can serialize properties in the Godot inspector.
+### Example
+Below is an example of usage.
+```c#
+public class Exe1 : Node {
+	[ShowProperty] string var1;
+	[ShowProperty] string var2;
+	[ShowProperty] string var3;
+	//The property will not be shown but its value will be saved.
+	[HideProperty] string var4;
+	[ShowProperty] vec2d var5;
+
+	public override GDArray _GetPropertyList() => SerializedNode.GetPropertyList(BuildSerialization.Build(this).GetPropertyList());
+	public override bool _Set(string property, object value) => BuildSerialization.Build(this).Set(property, value);
+	public override object _Get(string property) => BuildSerialization.Build(this).Get(property);
+}
+[Serializable]
+public struct vec2d {
+	//When ShowProperty or HideProperty has its parameter true the value will be saved in cache.
+	[ShowProperty(true)] public float x;
+	[ShowProperty(true)] public float y;
+}
+```
 
 ## The [Cobilas Godot Utility](https://www.nuget.org/packages/Cobilas.Godot.Utility/) is on nuget.org
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
-  <PackageReference Include="Cobilas.Godot.Utility" Version="4.3.0" />
+	<PackageReference Include="Cobilas.Godot.Utility" Version="4.4.0" />
 </ItemGroup>
 ```
 Or use command line.
 ```
-dotnet add package Cobilas.Godot.Utility --version 4.3.0
+dotnet add package Cobilas.Godot.Utility --version 4.4.0
 ```

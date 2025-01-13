@@ -21,4 +21,7 @@ public readonly struct RunTime {
     /// <summary>The total number of frames since the start of the game (Read Only).</summary>
     /// <returns>The total number of frames</returns>
     public static int FrameCount => Engine.GetFramesDrawn();
+    /// <summary>Allows you to check whether the editor is in <c>EditorMode</c> or <c>PlayerMode</c>.</summary>
+    /// <returns>Returns the state of the editor.</returns>
+    public static ExecutionMode ExecutionMode { get; internal set; } = ExecutionMode.EditorMode;
 }

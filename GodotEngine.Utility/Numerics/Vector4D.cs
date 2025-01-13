@@ -1,19 +1,20 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEngine.Utility.EditorSerialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Represents a four-dimensional vector.(Four-axis vector)</summary>
 [Serializable]
 public struct Vector4D : IVectorGeneric<Vector4D> {
     /// <summary>X component of the vector.</summary>
-    public float x;
+    [ShowProperty(true)] public float x;
     /// <summary>Y component of the vector.</summary>
-    public float y;
+    [ShowProperty(true)] public float y;
     /// <summary>Z component of the vector.</summary>
-    public float z;
+    [ShowProperty(true)] public float z;
     /// <summary>W component of the vector.</summary>
-    public float w;
+    [ShowProperty(true)] public float w;
 
     private static readonly Vector4D _zero = new(0f, 0f);
     private static readonly Vector4D _one = new(1f, 1f, 1f, 1f);

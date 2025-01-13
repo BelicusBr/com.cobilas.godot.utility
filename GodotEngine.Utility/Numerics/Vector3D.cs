@@ -1,17 +1,18 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEngine.Utility.EditorSerialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Represents a three-dimensional vector.</summary>
 [Serializable]
 public struct Vector3D : IVectorGeneric<Vector3D> {
     /// <inheritdoc cref="Vector4D.x"/>
-    public float x;
+    [ShowProperty(true)] public float x;
     /// <inheritdoc cref="Vector4D.y"/>
-    public float y;
+    [ShowProperty(true)] public float y;
     /// <inheritdoc cref="Vector4D.z"/>
-    public float z;
+    [ShowProperty(true)] public float z;
     /// <inheritdoc/>
     public readonly Vector3D Normalized => Normalize(this);
     /// <inheritdoc/>
