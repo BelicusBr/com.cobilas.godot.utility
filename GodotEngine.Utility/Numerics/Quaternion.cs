@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Globalization;
-using Cobilas.GodotEngine.Utility.Serialization;
+using Cobilas.GodotEngine.Utility.EditorSerialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Quaternions are used to represent rotations.</summary>

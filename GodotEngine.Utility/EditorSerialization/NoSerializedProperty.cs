@@ -2,7 +2,7 @@ using System.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Represents a property that does not have a <seealso cref="PropertyCustom"/>.</summary>
 public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObject> {
     private readonly List<SerializedObject> properties;

@@ -1,4 +1,4 @@
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Base class for custom properties.</summary>
 public abstract class PropertyCustom : ISerializedPropertyManipulation {
     /// <inheritdoc cref="MemberItem.IsHide"/>

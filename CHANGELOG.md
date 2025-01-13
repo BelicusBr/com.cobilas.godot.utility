@@ -1,8 +1,8 @@
 # [4.4.0] (08/01/2025)
 ## Added
-### Serialização customizada
-Agora foi adicionado classe para serialização customizada de propriedades no inspetor do godot. \
-Com os atributos `HideProperty` e `ShowProperty` pode-se serializar as propriedades no inspetor do godot.
+### Custom serialization
+Now a class has been added for custom serialization of properties in the Godot inspector. \
+With the `HideProperty` and `ShowProperty` attributes you can serialize properties in the Godot inspector.
 
 # [4.3.0] (26/12/2024)
 ## Added

@@ -1,4 +1,4 @@
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Base class for serialization properties.</summary>
 public abstract class SerializedObject : ISerializedPropertyManipulation {
     /// <summary>The name of the object.</summary>

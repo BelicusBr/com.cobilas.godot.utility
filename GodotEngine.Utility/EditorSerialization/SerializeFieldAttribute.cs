@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Cobilas.GodotEngine.Utility.Serialization; 
+namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
 /// <summary>Base attribute for field and property serialization attributes.</summary>
 public abstract class SerializeFieldAttribute : Attribute {
     /// <summary>Indicates whether fields and properties are cached.</summary>

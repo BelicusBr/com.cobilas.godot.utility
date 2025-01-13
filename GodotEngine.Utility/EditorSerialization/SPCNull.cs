@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Null representation of <seealso cref="PropertyCustom"/>.</summary>
 public sealed class SPCNull : PropertyCustom, INullObject {
     private static readonly SPCNull @null = new();

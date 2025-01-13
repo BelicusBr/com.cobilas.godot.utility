@@ -3,7 +3,7 @@ using Godot.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>The class is a serialization representation of a node.</summary>
 public class SerializedNode : ISerializedPropertyManipulation {
     private readonly string id;

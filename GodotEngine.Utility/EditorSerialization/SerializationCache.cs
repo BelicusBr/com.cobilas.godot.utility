@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
 
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Class to handle property caching.</summary>
 public static class SerializationCache {
     /// <summary>Gets the value of the property that is cached.</summary>

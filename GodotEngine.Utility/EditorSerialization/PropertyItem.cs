@@ -2,7 +2,7 @@ using Godot;
 using System;
 using Godot.Collections;
 
-namespace Cobilas.GodotEngine.Utility.Serialization; 
+namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
 /// <summary>The class stores the information for drawing in the editor.</summary>
 public sealed class PropertyItem : IDisposable {
     private readonly Dictionary dictionary;

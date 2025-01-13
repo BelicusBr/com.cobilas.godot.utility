@@ -1,8 +1,7 @@
 using System;
 using System.Reflection;
-using Cobilas.Collections;
 
-namespace Cobilas.GodotEngine.Utility.Serialization; 
+namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
 /// <summary>Represents a property or field.</summary>
 public sealed class MemberItem : INullObject {
     /// <summary>The parent object of the member.</summary>
@@ -13,17 +12,6 @@ public sealed class MemberItem : INullObject {
     /// <value>Receives the field or property.</value>
     /// <returns>Returns the field or property.</returns>
     public MemberInfo? Menber { get; set; }
-    /// <summary>The member's secondary names.</summary>
-    /// <remarks>
-    /// Secondary names are used to identify fields.
-    /// <para>Example:</para>
-    /// a Vector2D type structure has fields x and y but they are not naturally serialized, 
-    /// which makes secondary names necessary for them to be manipulated. For example, 
-    /// we create secondary names "{0}/x" and "{0}/y" in this format that will be merged 
-    /// with the PropertyPath property in the IsPropertyPath method.
-    /// </remarks>
-    /// <returns>Returns the secondary names of the member.</returns>
-    public string[] PropertyNames { get; private set; }
     /// <summary>The name of the member.</summary>
     /// <returns>Returns the name of the member.</returns>
     public string Name => Menber is null ? string.Empty : Menber.Name;
@@ -79,26 +67,8 @@ public sealed class MemberItem : INullObject {
         };
     /// <summary>Null representation of <seealso cref="MemberItem"/>.</summary>
     /// <returns>Returns a null representation of <seealso cref="MemberItem"/>.</returns>
-    public static MemberItem Null => new(Array.Empty<string>()) {
+    public static MemberItem Null => new() {
         Parent = "null",
         Menber = null
     };
-    /// <summary>Creates a new instance of this object.</summary>
-    public MemberItem(params string[] propertyNames) 
-        => this.PropertyNames = propertyNames;
-    /// <summary>Creates a new instance of this object.</summary>
-    public MemberItem() : this("{0}") { }
-    /// <summary>Check if property name belongs to this member.</summary>
-    /// <param name="propertyName">Name of the property to be checked.</param>
-    /// <param name="index">The secondary name index.</param>
-    /// <returns>returns <c>true</c> if name belongs to this member.</returns>
-    public bool IsPropertyName(string propertyName, out int index) {
-        for (int I = 0; I < ArrayManipulation.ArrayLength(PropertyNames); I++)
-            if (string.Format(PropertyNames[I], Menber?.Name) == propertyName) {
-                index = I;
-                return true;
-            }
-        index = -1;
-        return false;
-    }
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.Serialization;
+namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Property serialization class in inspector.</summary>
 public class SerializedProperty : SerializedObject {
     /// <summary>Property customization object.</summary>

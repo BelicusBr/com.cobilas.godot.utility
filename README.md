@@ -84,27 +84,30 @@ public static void StopCoroutine(Coroutine Coroutine);
 public static void StopAllCoroutines();
 ```
 ## SerializedPropertyCustom
-Agora foi adicionado classe para serialização customizada de propriedades no inspetor do godot. \
-Com os atributos `HideProperty` e `ShowProperty` pode-se serializar as propriedades no inspetor do godot.
-### Exemplo
-Abaixo a um exemplo de uso.
+Now a class has been added for custom serialization of properties in the Godot inspector. \
+With the `HideProperty` and `ShowProperty` attributes you can serialize properties in the Godot inspector.
+### Example
+Below is an example of usage.
 ```c#
-public class Exe1 : Node, ISerializedObject {
+public class Exe1 : Node {
 	[ShowProperty] string var1;
 	[ShowProperty] string var2;
 	[ShowProperty] string var3;
-	//A propriedade não será mostrada mas seu valor sera salvo.
+	//The property will not be shown but its value will be saved.
 	[HideProperty] string var4;
-	//Essa propriedade gera um id unico para serialização.
-	public string ObjectID => GetPathTo(this).StringHash();
+	[ShowProperty] vec2d var5;
 
-	public override GDArray _GetPropertyList() => SerializedObject.GetPropertyList(this);
-	public override bool _Set(string property, object value) => SerializedObject.Set(this, property, value);
-	public override object _Get(string property) => SerializedObject.Get(this, property);
+	public override GDArray _GetPropertyList() => SerializedNode.GetPropertyList(BuildSerialization.Build(this).GetPropertyList());
+	public override bool _Set(string property, object value) => BuildSerialization.Build(this).Set(property, value);
+	public override object _Get(string property) => BuildSerialization.Build(this).Get(property);
+}
+[Serializable]
+public struct vec2d {
+	//When ShowProperty or HideProperty has its parameter true the value will be saved in cache.
+	[ShowProperty(true)] public float x;
+	[ShowProperty(true)] public float y;
 }
 ```
-## Other classes
-`InputKeyBoard` `Physics2D` `SceneManager` `GDDirectory` `Gizmos`
 
 ## The [Cobilas Godot Utility](https://www.nuget.org/packages/Cobilas.Godot.Utility/) is on nuget.org
 To include the package, open the `.csproj` file and add it.
