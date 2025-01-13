@@ -27,6 +27,7 @@ public class RunTimeInitialization : Node {
 
     /// <inheritdoc/>
     public override void _Ready() {
+        RunTime.ExecutionMode = ExecutionMode.PlayerMode;
         LastRunTimeInitialization lastRunTime = new() {
             Name = nameof(LastRunTimeInitialization)
         };
