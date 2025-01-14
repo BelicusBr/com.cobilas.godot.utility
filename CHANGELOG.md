@@ -1,3 +1,7 @@
+# [4.4.1] (13/01/2025)
+## Fixed
+The `SONull` and `SPCNull` classes had inherited members that returned `System.NotImplementedException` which caused problems when creating an instance of these classes.
+
 # [4.4.0] (08/01/2025)
 ## Added
 ### Custom serialization
