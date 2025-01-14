@@ -113,10 +113,10 @@ public struct vec2d {
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
-	<PackageReference Include="Cobilas.Godot.Utility" Version="4.4.0" />
+	<PackageReference Include="Cobilas.Godot.Utility" Version="4.4.1" />
 </ItemGroup>
 ```
 Or use command line.
 ```
-dotnet add package Cobilas.Godot.Utility --version 4.4.0
+dotnet add package Cobilas.Godot.Utility --version 4.4.1
 ```
