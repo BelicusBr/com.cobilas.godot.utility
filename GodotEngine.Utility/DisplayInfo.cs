@@ -40,10 +40,10 @@ public readonly struct DisplayInfo : IEquatable<DisplayInfo> {
         IList<DisplayResolution> temp_resolutions = device.AvailableResolutions;
         currentResolution = new(device.Width, device.Height, (int)device.RefreshRate);
         resolutions = new Resolution[temp_resolutions.Count];
-        for (int I = 0; I < temp_resolutions.Count; I++) {
-            DisplayResolution resolution = temp_resolutions[I];
-            resolutions[I] = new(resolution.Width, resolution.Height, (int)resolution.RefreshRate);
-        }
+
+        for (int I = 0; I < temp_resolutions.Count; I++)
+            resolutions[I] = new(temp_resolutions[I].Width, temp_resolutions[I].Height, (int)temp_resolutions[I].RefreshRate);
+        
         c_resolutions = new(GetHash(this), Array.Empty<Resolution>());
     }
 

@@ -1,32 +1,33 @@
 <Project Sdk="Godot.NET.Sdk/3.3.0">
-  <PropertyGroup>
-    <TargetFrameworks>net472;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <!-- <TargetFramework>net472</TargetFramework> -->
-    <LangVersion>default</LangVersion>
-    <Nullable>enable</Nullable>
-    <RootNamespace>Cobilas</RootNamespace>
-    <NoWarn>IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056</NoWarn>
-</PropertyGroup>
-<PropertyGroup>
-    <Authors>BélicusBr</Authors>
-    <Title>Cobilas Godot Utility</Title>
-    <PackageId>Cobilas.Godot.Utility</PackageId>
-    <PackageVersion>4.4.1</PackageVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageOutputPath>C:\local.nuget</PackageOutputPath>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageTags>CSharp;C#;net472;netstandard2.0;netstandard2.1;godotengine;godot</PackageTags>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-</PropertyGroup>
-<ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
-    <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
-    <PackageReference Include="OpenTK" Version="3.3.3" />
-    <PackageReference Include="Cobilas.Core.Net4x" Version="2.1.0" />
-</ItemGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net472;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <LangVersion>default</LangVersion>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Cobilas</RootNamespace>
+        <NoWarn>IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056</NoWarn>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Authors>BélicusBr</Authors>
+        <Title>Cobilas Godot Utility</Title>
+        <PackageId>Cobilas.Godot.Utility</PackageId>
+        <PackageVersion>4.5.0</PackageVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>C:\local.nuget</PackageOutputPath>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
+        <NeutralLanguage>en</NeutralLanguage>
+        <PackageTags>CSharp;C#;net472;netstandard2.0;netstandard2.1;godotengine;godot</PackageTags>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+        <None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="OpenTK" Version="3.3.3" />
+        <PackageReference Include="Cobilas.Core.Net4x" Version="2.1.0" />
+    </ItemGroup>
 </Project>
