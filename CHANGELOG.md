@@ -1,3 +1,11 @@
+# [4.5.0] (16/01/2025)
+## Changed
+The `BuildSerialization.Build(Godot.Object)` method now accepts objects of type `Godot.Node` and `Godot.Resource`.
+
+## Added
+Now objects of type `Enum` have a `PropertyCustom` class. \
+The `PropertyCustomAttribute` attribute allows the use of parent classes for child classes.
+
 # [4.4.1] (13/01/2025)
 ## Fixed
 The `SONull` and `SPCNull` classes had inherited members that returned `System.NotImplementedException` which caused problems when creating an instance of these classes.
