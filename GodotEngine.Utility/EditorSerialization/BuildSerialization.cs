@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using Cobilas.Collections;
 
 namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Class allows to build a serialization list of properties of a node class.</summary>
@@ -38,7 +39,7 @@ public static class BuildSerialization {
 
     private static List<SerializedObject> Build(object obj, Type type, SerializedObject root, string id) {
         List<SerializedObject> result = [];
-        foreach (MemberInfo? item in type.GetMembers(flags))
+        foreach (MemberInfo? item in GetMembers(type))
             if (IsSerialized(item)) {
                 if (PrimitiveTypeCustom.IsPrimitiveType(GetMemberType(item))) {
                     SerializedProperty property = new(item.Name, root, id) {
@@ -99,6 +100,11 @@ public static class BuildSerialization {
             PropertyInfo pti => new(pti.GetValue(parent), pti.PropertyType),
             _ => new()
         };
+
+    private static MemberInfo[] GetMembers(Type? type) {
+        if (type is null) return Array.Empty<MemberInfo>();
+        return ArrayManipulation.Add(type.GetMembers(flags), GetMembers(type.BaseType));
+    }
 
     private static bool TryGetSerializedObject(string id, out SerializedNode? result) {
         for (int I = 0; I < serializeds.Count; I++)
