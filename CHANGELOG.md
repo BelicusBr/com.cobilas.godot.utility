@@ -1,3 +1,11 @@
+# [4.5.1] (19/01/2025)
+## Fixed
+### Get members of a type
+The `BuildSerialization.Build` method had the problem of searching for the members of the type but did not search for the members of the types inherited by the child class, which caused inherited members not to be serialized in the editor.
+
+### Converting json values
+The `PropertyCustom` class in the `PropertyCustom.CacheValueToObject(string?, string?)` method may throw a `FormatException` because it does not handle an empty json value.
+
 # [4.5.0] (16/01/2025)
 ## Changed
 The `BuildSerialization.Build(Godot.Object)` method now accepts objects of type `Godot.Node` and `Godot.Resource`.
