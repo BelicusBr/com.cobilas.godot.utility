@@ -13,6 +13,8 @@ public abstract class PropertyCustom : ISerializedPropertyManipulation {
     /// <value>Defines a new member.</value>
     /// <returns>Returns the manipulated member.</returns>
     public abstract MemberItem Member { get; set; }
+    /// <summary>The serialization attribute of the property.</summary>
+    /// <returns>Returns the serialization attribute that tells the editor how to display the property.</returns>
     public SerializeFieldAttribute Attribute => Member.Menber.GetCustomAttribute<SerializeFieldAttribute>();
     /// <inheritdoc/>
     public abstract object? Get(string? propertyName);
