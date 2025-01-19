@@ -31,7 +31,7 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
         else if (Member.TypeMenber.CompareType(typeof(float), typeof(double))) type = Variant.Type.Real;
 
         return new PropertyItem[] {
-            new(PropertyPath, type, usage:flags)
+            new(PropertyPath, type, Attribute.Hint.Hint, Attribute.Hint.HintString, flags)
         };
     }
     /// <inheritdoc/>
