@@ -1,3 +1,8 @@
+# [4.6.0] (19/01/2025)
+## Added
+### Custom hint
+Now `SerializeField` attributes in their parameters can receive `CustomHint`.
+
 # [4.5.1] (19/01/2025)
 ## Fixed
 ### Get members of a type
