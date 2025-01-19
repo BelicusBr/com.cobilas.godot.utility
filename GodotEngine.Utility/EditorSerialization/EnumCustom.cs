@@ -16,6 +16,7 @@ public sealed class EnumCustom : PropertyCustom {
     /// <inheritdoc/>
     public override object? CacheValueToObject(string? propertyName, string? value) {
         if (value is null) return null;
+        else if (string.IsNullOrEmpty(value)) return value;
         else if (Member.TypeMenber.CompareType<Enum>()) return Enum.Parse(Member.TypeMenber, value);
         return value;
     }

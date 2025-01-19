@@ -51,6 +51,7 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
     /// <inheritdoc/>
     public override object? CacheValueToObject(string? propertyName, string? value) {
         if (value is null) return null;
+        else if (string.IsNullOrEmpty(value)) return value;
         else if (Member.TypeMenber.CompareType<bool>()) return bool.Parse(value);
         else if (Member.TypeMenber.CompareType<sbyte>()) return value.ToSByte();
         else if (Member.TypeMenber.CompareType<byte>()) return value.ToByte();
