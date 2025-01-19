@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Base class for custom properties.</summary>
 public abstract class PropertyCustom : ISerializedPropertyManipulation {
@@ -11,6 +13,7 @@ public abstract class PropertyCustom : ISerializedPropertyManipulation {
     /// <value>Defines a new member.</value>
     /// <returns>Returns the manipulated member.</returns>
     public abstract MemberItem Member { get; set; }
+    public SerializeFieldAttribute Attribute => Member.Menber.GetCustomAttribute<SerializeFieldAttribute>();
     /// <inheritdoc/>
     public abstract object? Get(string? propertyName);
     /// <inheritdoc/>

@@ -9,11 +9,28 @@ public class ShowPropertyAttribute : SerializeFieldAttribute {
     public override bool SaveInCache { get; protected set; }
     /// <inheritdoc/>
     public override PropertyUsageFlags Flags { get; protected set; }
-    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool)"/>
+    public override CustomHint Hint { get; protected set; }
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(bool saveInCache, int min, int max) : this(saveInCache, new RangeHint(min, max)) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(int min, int max) : this(false, new RangeHint(min, max)) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(bool saveInCache, float min, float max) : this(saveInCache, new RangeHint(min, max)) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(float min, float max) : this(false, new RangeHint(min, max)) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(bool saveInCache, CustomHint hint) : base(
+        PropertyUsageFlags.ScriptVariable |
+        PropertyUsageFlags.Storage, saveInCache, hint) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
+    public ShowPropertyAttribute(CustomHint hint) : base(
+        PropertyUsageFlags.ScriptVariable |
+        PropertyUsageFlags.Storage, false, hint) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
     public ShowPropertyAttribute(bool saveInCache) : base(
         PropertyUsageFlags.ScriptVariable |
         PropertyUsageFlags.Storage |
-        PropertyUsageFlags.Editor, saveInCache) {}
-    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool)"/>
+        PropertyUsageFlags.Editor, saveInCache, new NoneHint()) {}
+    /// <inheritdoc cref="SerializeFieldAttribute(PropertyUsageFlags, bool, CustomHint)"/>
     public ShowPropertyAttribute() : this(false) {}
 }
