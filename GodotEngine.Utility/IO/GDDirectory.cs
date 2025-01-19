@@ -4,7 +4,6 @@ using System.Text;
 using Cobilas.Collections;
 
 using SYSPath = System.IO.Path;
-using System.Linq;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>Represents a directory file.</summary>
@@ -203,7 +202,7 @@ public sealed class GDDirectory : GDFileBase {
 
     private static GDDirectory GetGDDirectory(string? relativePath, GDFileBase? parent) {
         if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
-
+        
         using Directory directory = new();
         if (directory.Open(relativePath) == Error.Ok) {
             GDDirectory gDDirectory = new(parent, relativePath);
