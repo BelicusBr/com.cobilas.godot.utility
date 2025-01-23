@@ -108,11 +108,11 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
         => other.x == this.x && other.y == this.y && other.z == this.z && other.w == this.w;
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})", this.x, this.y, this.z, this.w);
+        => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3} w:{3:N3})", this.x, this.y, this.z, this.w);
     /// <inheritdoc/>
     public readonly string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
     /// <inheritdoc/>
-    public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})");
+    public override readonly string ToString() => ToString("(x:{0:N3} y:{1:N3} z:{2:N3} w:{3:N3})");
     /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj is Vector3D other && Equals(other);
