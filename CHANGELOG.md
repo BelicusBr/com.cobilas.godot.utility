@@ -1,3 +1,7 @@
+# [4.6.1](23/01/2025)
+## Fixed
+The formatting of the `Vector4D` structure in the `ToString()` method where the `w` axis was not displayed, instead the `z` axis was displayed.
+
 # [4.6.0] (19/01/2025)
 ## Added
 ### Custom hint
