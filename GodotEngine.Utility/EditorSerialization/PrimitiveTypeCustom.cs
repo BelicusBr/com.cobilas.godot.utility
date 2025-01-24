@@ -53,16 +53,16 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
         if (value is null) return null;
         else if (string.IsNullOrEmpty(value)) return value;
         else if (Member.TypeMenber.CompareType<bool>()) return bool.Parse(value);
-        else if (Member.TypeMenber.CompareType<sbyte>()) return value.ToSByte();
-        else if (Member.TypeMenber.CompareType<byte>()) return value.ToByte();
-        else if (Member.TypeMenber.CompareType<ushort>()) return value.ToUShort();
-        else if (Member.TypeMenber.CompareType<short>()) return value.ToShort();
-        else if (Member.TypeMenber.CompareType<uint>()) return value.ToUInt();
-        else if (Member.TypeMenber.CompareType<int>()) return String_CB_Extension.ToInt(value);
-        else if (Member.TypeMenber.CompareType<ulong>()) return value.ToULong();
-        else if (Member.TypeMenber.CompareType<long>()) return value.ToLong();
-        else if (Member.TypeMenber.CompareType<float>()) return value.ToFloat(CultureInfo.CurrentCulture);
-        else if (Member.TypeMenber.CompareType<double>()) return value.ToDouble(CultureInfo.CurrentCulture);
+        else if (Member.TypeMenber.CompareType<sbyte>()) return sbyte.Parse(value);
+        else if (Member.TypeMenber.CompareType<byte>()) return byte.Parse(value);
+        else if (Member.TypeMenber.CompareType<ushort>()) return ushort.Parse(value);
+        else if (Member.TypeMenber.CompareType<short>()) return short.Parse(value);
+        else if (Member.TypeMenber.CompareType<uint>()) return uint.Parse(value);
+        else if (Member.TypeMenber.CompareType<int>()) return int.Parse(value);
+        else if (Member.TypeMenber.CompareType<ulong>()) return ulong.Parse(value);
+        else if (Member.TypeMenber.CompareType<long>()) return long.Parse(value);
+        else if (Member.TypeMenber.CompareType<float>()) return float.Parse(value, CultureInfo.InvariantCulture);
+        else if (Member.TypeMenber.CompareType<double>()) return double.Parse(value, CultureInfo.InvariantCulture);
         return value;
     }
 }
