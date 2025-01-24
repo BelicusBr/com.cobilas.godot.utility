@@ -1,3 +1,14 @@
+# [4.7.1] (23/01/2025)
+## Fixed
+### System.Number.ThrowOverflowOrFormatException
+The `PrimitiveTypeCustom.CacheValueToObject(string?, string?)` method had a `System.Number.ThrowOverflowOrFormatException` issue caused by some extensions of the `String_CB_Extension` class.
+
+### Single cache
+Now the cache has been separated for editor mode and player mode to prevent editor and simulation mode from changing the same cache file.
+
+### Extra cache check
+An extra property name comparison check has been added to the `Get` and `Set` methods.
+
 # [4.7.0] (23/01/2025)
 ## Added
 Color structures such as `Color32` and `ColorF` have now been added. \
