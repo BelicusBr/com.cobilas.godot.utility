@@ -24,7 +24,6 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// </code>
 /// </example>
 public class RunTimeInitialization : Node {
-
     /// <inheritdoc/>
     public override void _Ready() {
         RunTime.ExecutionMode = ExecutionMode.PlayerMode;

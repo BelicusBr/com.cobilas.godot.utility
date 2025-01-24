@@ -1,4 +1,5 @@
 using System;
+using Godot;
 
 namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Property serialization class in inspector.</summary>
@@ -24,7 +25,7 @@ public class SerializedProperty : SerializedObject {
         if (Custom is null) return null;
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
-        if (Member.IsSaveCache && GDFeature.HasEditor)
+        if (Member.IsSaveCache && GDFeature.HasEditor && propertyName == PropertyPath)
             if (SerializationCache.GetValueInCache(RootNodeId, propertyName, out string value))
                 return Custom.CacheValueToObject(propertyName, value);
         return Custom.Get(propertyName);
@@ -34,7 +35,7 @@ public class SerializedProperty : SerializedObject {
         if (Custom is null) return false;
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
-        if (Member.IsSaveCache && GDFeature.HasEditor)
+        if (Member.IsSaveCache && GDFeature.HasEditor && propertyName == PropertyPath)
             _ = SerializationCache.SetValueInCache(RootNodeId, propertyName, value);
         return Custom.Set(propertyName, value);
     }
