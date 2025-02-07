@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
-using Cobilas.GodotEngine.Utility.Runtime;
+// using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Class to handle property caching.</summary>
@@ -17,10 +17,10 @@ public static class SerializationCache {
         if (id is null) throw new ArgumentNullException(nameof(id));
         else if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
 
-        string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
+        //string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
 
         value = string.Empty;
-        using GDDirectory directory = GDDirectory.GetGDDirectory(res);
+        using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
         GDFile file = directory.GetFile($"id_{id}.cache");
         if (file == GDIONull.FileNull) {
             SetValueInCache(id, propertyName, value = string.Empty);
@@ -41,9 +41,9 @@ public static class SerializationCache {
         else if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         CreateFileCache($"id_{id}.cache");
 
-        string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
+        //string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
 
-        using GDDirectory directory = GDDirectory.GetGDDirectory(res);
+        using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
         GDFile file = directory.GetFile($"id_{id}.cache");
         Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(file.Read());
         if (cache is null) return false;
@@ -56,7 +56,7 @@ public static class SerializationCache {
 
     private static void CreateFileCache(string fileName) {
         string dir = Path.Combine(Environment.CurrentDirectory, "cache");
-        dir = Path.Combine(dir, RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor");
+        //dir = Path.Combine(dir, RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor");
         fileName = Path.Combine(dir, fileName);
 
         if (!Directory.Exists(dir))

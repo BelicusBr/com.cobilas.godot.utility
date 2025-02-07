@@ -30,7 +30,7 @@ public static class BuildSerialization {
 
     private static SerializedNode? Build(Resource node) {
         string id = GetID(node);
-        CopyToPlayer();
+        //CopyToPlayer();
         if (TryGetSerializedObject(id, out SerializedNode? result)) return result;
         else serializeds.Add(result = new(id));
         result.Add(Build(node, node.GetType(), SONull.Null, id));
@@ -39,7 +39,7 @@ public static class BuildSerialization {
 
     private static SerializedNode? Build(Node node) {
         string id = GetID(node);
-        CopyToPlayer();
+        //CopyToPlayer();
         if (TryGetSerializedObject(id, out SerializedNode? result)) return result;
         else serializeds.Add(result = new(id));
         result.Add(Build(node, node.GetType(), SONull.Null, id));
@@ -99,7 +99,7 @@ public static class BuildSerialization {
         return false;
     }
 
-    private static string GetID(Node node) => node.GetPathTo(node).StringHash();
+    private static string GetID(Node node) => node.IsInsideTree() ? node.GetPath().StringHash() : string.Empty;
 
     private static string GetID(Resource resource) => resource.ResourcePath.StringHash();
 
