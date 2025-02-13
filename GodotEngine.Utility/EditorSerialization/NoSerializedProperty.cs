@@ -7,17 +7,23 @@ namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObject> {
     private readonly List<SerializedObject> properties;
     /// <inheritdoc/>
+    public override SNInfo RootInfo { get; protected set; }
+    /// <inheritdoc/>
     public override MemberItem Member { get; set; } = MemberItem.Null;
     /// <inheritdoc/>
     public override string Name { get; protected set; } = string.Empty;
     /// <inheritdoc/>
     public override string PropertyPath => GetPath(this);
     /// <inheritdoc/>
-    public override string RootNodeId { get; protected set; } = string.Empty;
-    /// <inheritdoc/>
     public override SerializedObject Parent { get; protected set; } = SONull.Null;
+
     /// <summary>Creates a new instance of this object.</summary>
+    [System.Obsolete("Use SerializedProperty(string, SerializedObject, SOInfo) constructor!")]
     public NoSerializedProperty(string name, SerializedObject parent, string rootNodeId) : base(name, parent, rootNodeId) {
+        properties = [];
+    }
+    /// <summary>Creates a new instance of this object.</summary>
+    public NoSerializedProperty(string name, SerializedObject parent, SNInfo info) : base(name, parent, info) {
         properties = [];
     }
     /// <summary>Allows you to add a new <seealso cref="SerializedObject"/> object.</summary>
