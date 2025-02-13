@@ -29,24 +29,24 @@ public static class BuildSerialization {
 
 
     private static SerializedNode? Build(Resource node) {
-        string id = GetID(node);
-        CopyToPlayer();
+        SNInfo id = GetID(node);
+        //CopyToPlayer();
         if (TryGetSerializedObject(id, out SerializedNode? result)) return result;
-        else serializeds.Add(result = new(id));
+        else serializeds.Add(result = new((string)id[0]));
         result.Add(Build(node, node.GetType(), SONull.Null, id));
         return result;
     }
 
     private static SerializedNode? Build(Node node) {
-        string id = GetID(node);
-        CopyToPlayer();
+        SNInfo id = GetID(node);
+        //CopyToPlayer();
         if (TryGetSerializedObject(id, out SerializedNode? result)) return result;
-        else serializeds.Add(result = new(id));
+        else serializeds.Add(result = new((string)id[0]));
         result.Add(Build(node, node.GetType(), SONull.Null, id));
         return result;
     }
 
-    private static List<SerializedObject> Build(object obj, Type type, SerializedObject root, string id) {
+    private static List<SerializedObject> Build(object obj, Type type, SerializedObject root, SNInfo id) {
         List<SerializedObject> result = [];
         foreach (MemberInfo? item in GetMembers(type))
             if (IsSerialized(item)) {
@@ -99,9 +99,15 @@ public static class BuildSerialization {
         return false;
     }
 
-    private static string GetID(Node node) => node.GetPathTo(node).StringHash();
+    private static SNInfo GetID(Node node) {
+        string path = node.IsInsideTree() ? node.GetPath() : string.Empty;
+        string id = path.StringHash();
+        return SNInfo.Create(id, path);
+    }
 
-    private static string GetID(Resource resource) => resource.ResourcePath.StringHash();
+    private static SNInfo GetID(Resource resource)
+        => SNInfo.Create(resource.ResourcePath.StringHash(), resource.ResourcePath);
+    //=> resource.ResourcePath.StringHash();
 
     private static void CopyToPlayer() {
         if (_copyToPlayer && GDFeature.HasEditor) return;
@@ -133,9 +139,9 @@ public static class BuildSerialization {
         return ArrayManipulation.Add(type.GetMembers(flags), GetMembers(type.BaseType));
     }
 
-    private static bool TryGetSerializedObject(string id, out SerializedNode? result) {
+    private static bool TryGetSerializedObject(SNInfo info, out SerializedNode? result) {
         for (int I = 0; I < serializeds.Count; I++)
-            if (id == serializeds[I].Id) {
+            if ((string)info[0] == serializeds[I].Id) {
                 result = serializeds[I];
                 return true;
             }

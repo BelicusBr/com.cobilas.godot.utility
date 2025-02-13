@@ -1,5 +1,4 @@
 using System;
-using Godot;
 
 namespace Cobilas.GodotEngine.Utility.EditorSerialization;
 /// <summary>Property serialization class in inspector.</summary>
@@ -15,18 +14,22 @@ public class SerializedProperty : SerializedObject {
     /// <inheritdoc/>
     public override string PropertyPath => GetPath(this);
     /// <inheritdoc/>
-    public override string RootNodeId { get; protected set; } = string.Empty;
+    public override SNInfo RootInfo { get; protected set; }
     /// <inheritdoc/>
     public override SerializedObject Parent { get; protected set; } = SONull.Null;
+
     /// <summary>Creates a new instance of this object.</summary>
+    [Obsolete("Use SerializedProperty(string, SerializedObject, SOInfo) constructor!")]
     public SerializedProperty(string name, SerializedObject parent, string rootNodeId) : base(name, parent, rootNodeId) {}
+    /// <summary>Creates a new instance of this object.</summary>
+    public SerializedProperty(string name, SerializedObject parent, SNInfo info) : base(name, parent, info) {}
     /// <inheritdoc cref="PropertyCustom.Get(string?)"/>
     public override object? Get(string? propertyName) {
         if (Custom is null) return null;
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
         if (Member.IsSaveCache && GDFeature.HasEditor && propertyName == PropertyPath)
-            if (SerializationCache.GetValueInCache(RootNodeId, propertyName, out string value))
+            if (SerializationCache.GetValueInCache(RootInfo, propertyName, out string value))
                 return Custom.CacheValueToObject(propertyName, value);
         return Custom.Get(propertyName);
     }
@@ -36,7 +39,7 @@ public class SerializedProperty : SerializedObject {
         Custom.PropertyPath = PropertyPath;
         Custom.Member = Member;
         if (Member.IsSaveCache && GDFeature.HasEditor && propertyName == PropertyPath)
-            _ = SerializationCache.SetValueInCache(RootNodeId, propertyName, value);
+            _ = SerializationCache.SetValueInCache(RootInfo, propertyName, value);
         return Custom.Set(propertyName, value);
     }
     /// <inheritdoc cref="PropertyCustom.GetPropertyList"/>
