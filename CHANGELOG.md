@@ -1,3 +1,8 @@
+# [4.8.0] (13/02/2025)
+## Added
+### PlayModeStateChange
+The package now provides the `RunTimeInitialization.PlayModeStateChanged` event that allows you to check which mode the editor is in, whether the editor is entering or exiting game or editor mode.
+
 # [4.7.1] (23/01/2025)
 ## Fixed
 ### System.Number.ThrowOverflowOrFormatException
