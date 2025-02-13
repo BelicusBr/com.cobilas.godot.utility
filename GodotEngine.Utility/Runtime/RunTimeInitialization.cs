@@ -24,6 +24,19 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// </code>
 /// </example>
 public class RunTimeInitialization : Node {
+    internal static bool _closePlayModeStateChanged;
+    private static event Action<PlayModeStateChange>? _playModeStateChanged;
+    /// <summary>Event that is raised whenever the Editor's play mode state changes.</summary>
+    public static event Action<PlayModeStateChange>? PlayModeStateChanged {
+        add {
+            if (!_closePlayModeStateChanged) {
+                if (GDFeature.HasEditor) value?.Invoke(PlayModeStateChange.ExitingEditMode);
+                value?.Invoke(PlayModeStateChange.EnteredPlayMode);
+            }
+            _playModeStateChanged += value;
+        }
+        remove => _playModeStateChanged -= value;
+    }
     /// <inheritdoc/>
     public override void _Ready() {
         RunTime.ExecutionMode = ExecutionMode.PlayerMode;
@@ -34,6 +47,13 @@ public class RunTimeInitialization : Node {
 
         Type[] components = TypeUtilitarian.GetTypes();
         StartRunTimeInitializationClass(this, components, false);
+    }
+    /// <inheritdoc/>
+    public override void _EnterTree() => _closePlayModeStateChanged = false;
+    /// <inheritdoc/>
+    public override void _ExitTree() {
+        _playModeStateChanged?.Invoke(PlayModeStateChange.ExitingPlayMode);
+        if (GDFeature.HasEditor) _playModeStateChanged?.Invoke(PlayModeStateChange.EnteredEditMode);
     }
     /// <summary>Initializes all classes that are marked with the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</summary>
     /// <param name="taget">The node that will receive the components.</param>
