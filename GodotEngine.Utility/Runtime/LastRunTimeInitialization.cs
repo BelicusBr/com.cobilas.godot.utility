@@ -15,6 +15,8 @@ internal class LastRunTimeInitialization : Node {
         RunTimeInitialization.StartRunTimeInitializationClass(this, components, true);
     }
 
+    public override void _EnterTree() => RunTimeInitialization._closePlayModeStateChanged = true;
+
     public override void _Process(float delta) {
         if (status == 0) status = 1;
         if (status == 1) {
