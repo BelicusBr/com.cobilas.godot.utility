@@ -1,3 +1,9 @@
+# [4.8.1] (13/02/2025)
+## Fixed
+### SerializationCache
+There was a problem creating cache files due to the use of the `Node.GetPathTo(Node)` method, which was used incorrectly, resulting in the same cache being used in game and editor mode. \
+The solution was to create two caches for each mode where the editor cache is copied to the player cache.
+
 # [4.8.0] (13/02/2025)
 ## Added
 ### PlayModeStateChange
