@@ -3,15 +3,16 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using Cobilas.GodotEngine.Utility;
 using Cobilas.IO.Serialization.Json;
+using Cobilas.GodotEngine.Utility.Runtime;
 
 using IOPath = System.IO.Path;
 using IOFile = System.IO.File;
 using IODirectory = System.IO.Directory;
 using SYSEnvironment = System.Environment;
-using Cobilas.GodotEngine.Utility.Runtime;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>Class to handle property caching.</summary>
 public static class SerializationCache {
     private static readonly char[] separator = { '/' };

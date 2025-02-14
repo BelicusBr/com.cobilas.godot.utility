@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.Hints;
 /// <summary>The <seealso cref="NoneHint"/> class is an empty representation of a <seealso cref="CustomHint"/>.</summary>
 public sealed class NoneHint : CustomHint {
     /// <inheritdoc/>

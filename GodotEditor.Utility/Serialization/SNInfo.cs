@@ -1,5 +1,5 @@
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
-/// <summary>Represents the information of a <seealso cref="SerializedNode"/>.</summary>
+namespace Cobilas.GodotEditor.Utility.Serialization;
+/// <summary>Represents the information of a <see cref="RenderObjects.SerializedNode"/>.</summary>
 public readonly struct SNInfo {
     private readonly string id;
     private readonly string nodePath;
