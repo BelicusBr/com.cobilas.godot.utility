@@ -2,6 +2,7 @@ using System;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>This is a base class for other classes that represent files or directory files.</summary>
+[Obsolete("Use DataBase class")]
 public abstract class GDFileBase : IDisposable {
     /// <summary>Item name.</summary>
     /// <returns>Returns the name of the item.</returns>

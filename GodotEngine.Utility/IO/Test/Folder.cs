@@ -3,46 +3,47 @@ using System;
 using System.Text;
 using System.Collections;
 using Cobilas.Collections;
+using System.Globalization;
 using System.Collections.Generic;
 
 using IOFile = System.IO.File;
 
 namespace Cobilas.GodotEngine.Utility.IO.Test;
-
+/// <summary>A representation of a system folder.</summary>
 public class Folder : DataBase, IEnumerable<DataBase> {
     private bool discarded;
-    private DataBase[] datas;
+    private DataBase[] datas = [];
 
-    private static bool _noPrintInfo;
-
-    public override string? Path { get; protected set; }
+    private static readonly char[] separator = { '/' };
+    /// <inheritdoc/>
+    public override string Path => GetDataPath(this);
+    /// <inheritdoc/>
     public override DataBase? Parent { get; protected set; }
+    /// <inheritdoc/>
     public override ArchiveAttributes Attributes { get; protected set; }
-    public override string Name => GetDataBaseName(Path ?? string.Empty);
+    /// <inheritdoc/>
+    public override string? Name { get; protected set; }
 
     private static readonly Folder @null = new(null, string.Empty, ArchiveAttributes.Null);
-
+    /// <summary>A null representation of the <seealso cref="Folder"/> object.</summary>
+    /// <returns>Returns a null representation of the <seealso cref="Folder"/> object.</returns>
     public static Folder Null => @null;
+    /// <summary>Creates a new instance of this object.</summary>
+    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {}
 
-    public Folder(DataBase? parent, string? path, ArchiveAttributes attributes) : base(parent, path, attributes) {}
-
-    public Folder CreateFolder(string folderName) {
-        using Directory directory = new();
-        return directory.Open(Path) switch {
-            Error.Ok => directory.MakeDir(folderName) switch {
-                Error.Ok => new(this, GodotPath.Combine(Path ?? string.Empty, folderName), ArchiveAttributes.Directory),
-                _ => @null,
-            },
-            Error.FileCantRead => throw new System.InvalidOperationException("Error.FileCantRead"),
-            Error.FileCantWrite => throw new System.InvalidOperationException("Error.FileCantWrite"),
-            Error.FileNotFound => throw new System.IO.FileNotFoundException("File Not Found", Path),
-            _ => @null
-        };
+    public Folder CreateFolder(string? folderName, bool recursive = false) {
+        if (folderName is null) throw new ArgumentNullException(nameof(folderName));
+        Folder result = CreateRecursiveFolder(this, 0, recursive ? folderName.Split(separator, StringSplitOptions.RemoveEmptyEntries) : new string[] { folderName });
+        ReorderList();
+        return result;
     }
 
-    public Archive CreateArchive(string fileName) {
-        if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+    public Archive CreateArchive(string? fileName) {
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
             throw new System.InvalidOperationException("Is ReadOnly");
+        else if (GodotPath.IsInvalidFileName(fileName, out char ic))
+            throw new System.InvalidOperationException($"The name '{fileName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
 
         if (Path is null) return Archive.Null;
         fileName = GodotPath.Combine(Path, fileName);
@@ -53,9 +54,84 @@ public class Folder : DataBase, IEnumerable<DataBase> {
             throw new System.InvalidOperationException($"path '{fileName}' does not belong to the same root as '{Path}'.");
 
         IOFile.Create(fpath).Dispose();
-
-        return new(this, fileName, ArchiveAttributes.File);
+        Archive result = new(this, fileName, ArchiveAttributes.File);
+        ArrayManipulation.Add(result, ref datas);
+        ReorderList();
+        return result;
     }
+
+    public bool RenameFolder(string? oldName, string? newName) {
+        if (oldName is null) throw new ArgumentNullException(nameof(oldName));
+        else if (newName is null) throw new ArgumentNullException(nameof(newName));
+        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+            throw new System.InvalidOperationException("Is ReadOnly");
+        else if (GodotPath.IsInvalidFileName(newName, out char ic))
+            throw new System.InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
+    
+        using Directory directory = new();
+        if (oldName == newName || directory.Open(Path) != Error.Ok) return false;
+        Folder folder = GetFolder(oldName);
+        oldName = GodotPath.Combine(Path ?? string.Empty, oldName);
+        newName = GodotPath.Combine(Path ?? string.Empty, newName);
+        if (directory.Rename(oldName, newName) == Error.Ok) {
+            folder.Name = GodotPath.GetFileName(newName);
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveFolder(string? folderName) {
+        if (folderName is null) throw new ArgumentNullException(nameof(folderName));
+        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+            throw new System.InvalidOperationException("Is ReadOnly");
+
+        using Directory directory = new();
+        if (directory.Open(Path) != Error.Ok) return false;
+        Folder folder = GetFolder(folderName);
+        folderName = GodotPath.Combine(Path ?? string.Empty, folderName);
+
+        if (directory.Remove(folderName) == Error.Ok) {
+            datas = ArrayManipulation.Remove(folder, datas);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool RemoveArchive(string? archiveName) {
+        if (archiveName is null) throw new ArgumentNullException(nameof(archiveName));
+        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+            throw new System.InvalidOperationException("Is ReadOnly");
+
+        Archive archive = GetArchive(archiveName);
+        if (archive == Archive.Null) return false;
+        else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
+
+        IOFile.Delete(GodotPath.GlobalizePath(archive.Path));
+        datas = ArrayManipulation.Remove(archive, datas);
+        
+        return true;
+    }
+
+    public bool RenameArchive(string? oldName, string? newName) {
+        if (oldName is null) throw new ArgumentNullException(nameof(oldName));
+        else if (newName is null) throw new ArgumentNullException(nameof(newName));
+        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+            throw new System.InvalidOperationException("Is ReadOnly");
+        else if (GodotPath.IsInvalidFileName(newName, out char ic))
+            throw new System.InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
+
+        if (oldName == newName) return false;
+        
+        Archive archive = GetArchive(oldName);
+        if (archive == Archive.Null || !IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
+
+        return Archive.RenameArchive(archive, newName);
+    }
+
+    public bool FolderExists(string folderName) => DataExists(folderName, typeof(Folder));
+
+    public bool ArchiveExists(string archiveName) => DataExists(archiveName, typeof(Archive));
 
     public Folder[] GetFolders() {
         Folder[] result = [];
@@ -66,16 +142,17 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     }
 
     public Folder GetFolder(string? folderName, bool recursive = false) {
+        if (folderName is null) return @null;
         foreach (DataBase item in datas)
             if (item is Folder fd) {
                 if (fd.Name == folderName)
                     return fd;
                 if (recursive) {
                     Folder temp = fd.GetFolder(folderName);
-                    if (temp != Null)  return temp;
+                    if (temp != @null)  return temp;
                 }
             }
-        return Null;
+        return @null;
     }
 
     public Archive[] GetArchives(string? search, bool recursive = false) {
@@ -125,37 +202,29 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         return Archive.Null;
     }
-
-    public override string ToString() {
-        StringBuilder builder = new();
-        if (!_noPrintInfo) {
-            _noPrintInfo = true;
-            builder.AppendFormat("@>{0}\r\n", Name);
-            builder.AppendFormat("@>{0}\r\n", Attributes);
-            builder.AppendFormat("#>{0}\r\n", Parent is null ? string.Empty : Parent.Name);
-            builder.AppendLine("=================================================");
-            builder.AppendLine(Path);
-            foreach (DataBase item in this)
-                switch (item) {
-                    case Folder fd: builder.Append(fd.ToString()); break;
-                    case Archive ac: builder.AppendLine(ac.Path); break;
-                }
-        } else {
-            builder.AppendLine(Path);
-            foreach (DataBase item in this)
-                switch (item) {
-                    case Folder fd: builder.Append(fd.ToString()); break;
-                    case Archive ac: builder.AppendLine(ac.Path); break;
-                }
-        }
-        return builder.ToString();
-    }
-
+    /// <inheritdoc cref="ToString()"/>
+    public string ToString(bool recursive) => ToString(recursive ? "PR" : "PN", CultureInfo.CurrentCulture);
+    /// <inheritdoc/>
+    public override string ToString() => ToString(false);
+    /// <inheritdoc/>
+    public override string ToString(string format, IFormatProvider formatProvider) 
+        => format switch {
+            "PR" => ToString(true, true, formatProvider),
+            "PN" => ToString(false, true, formatProvider),
+            "PP" => string.Format(formatProvider, "path:'{0}'", Path),
+            "PA" => string.Format(formatProvider, "attributes:'{0}'", Attributes),
+            "PDN" => string.Format(formatProvider, "name:'{0}'", Name),
+            "PPN" => string.Format(formatProvider, "parent_name:'{0}'", Parent?.Name),
+            "PDC" => string.Format(formatProvider, "data_count:'{0}'", ArrayManipulation.ArrayLength(datas)),
+            _ => throw new FormatException($"The format '{format}' is not recognized!"),
+        };
+    /// <inheritdoc/>
     public IEnumerator<DataBase> GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas);
-
+    /// <inheritdoc/>
     public override void Dispose() {
         if (discarded) throw new ObjectDisposedException(nameof(Folder));
-        foreach (DataBase item in datas)
+        discarded = true;
+        foreach (DataBase item in this)
             item.Dispose();
         Attributes = ArchiveAttributes.Null;
         ArrayManipulation.ClearArraySafe(ref datas);
@@ -163,24 +232,105 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
     IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas);
 
-    public static Folder Create(string? path, Folder root) {
+    private bool DataExists(string dataName, Type dataType) {
+        foreach (DataBase item in this)
+            if (item.CompareType(dataType) && item.Name == dataName)
+                return true;
+        return false;
+    }
+
+    private string ToString(bool recursive, bool printInfo, IFormatProvider formatProvider) {
+        StringBuilder builder = new();
+        if (printInfo) {
+            builder.AppendFormat(formatProvider, "@>{0}\r\n", Name);
+            builder.AppendFormat(formatProvider, "@>{0}\r\n", Attributes);
+            builder.AppendFormat(formatProvider, "#>{0}\r\n", Parent is null ? string.Empty : Parent.Name);
+            builder.AppendLine("=================================================");
+        }
+        builder.AppendFormat(formatProvider, "{0}\r\n", Path);
+        foreach (DataBase item in this)
+            switch (item) {
+                case Folder fd: builder.AppendFormat(formatProvider, "{0}", recursive ? fd.ToString(recursive, false, formatProvider) : $"{fd.Path}\r\n"); break;
+                case Archive ac: builder.AppendFormat(formatProvider, "{0}\r\n", ac.Path); break;
+            }
+        return builder.ToString();
+    }
+
+    private void ReorderList() {
+        DataBase[] result = new DataBase[ArrayManipulation.ArrayLength(datas)];
+        int folderCount = 0;
+        int folderIndex = 0;
+        int fileIndex = 0;
+
+        for (int I = 0; I < result.Length; I++)
+            if (datas[I] is Folder) folderCount++;
+
+        for (int I = 0; I < result.Length; I++)
+            switch (datas[I]) {
+                case Folder fd:
+                    result[folderIndex++] = fd;
+                    break;
+                case Archive ac:
+                    result[folderCount + fileIndex] = ac;
+                    ++fileIndex;
+                    break;
+            }
+        datas = result;
+    }
+
+    private static Folder CreateRecursiveFolder(Folder root, int index, string[] names) {
+        if (index >= names.Length) return @null;
+        string name = names[index];
+
+        if (root.Attributes.HasFlag(ArchiveAttributes.ReadOnly))
+            throw new System.InvalidOperationException("Is ReadOnly");
+        else if (GodotPath.IsInvalidFileName(name, out char ic))
+            throw new System.InvalidOperationException($"The name '{name}' has the invalid character '{ic.EscapeSequenceToString()}'.");
+
+        using Directory directory = new();
+        switch (directory.Open(root.Path)) {
+            case Error.Ok:
+                switch (directory.MakeDir(name)) {
+                    case Error.Ok:
+                        Folder folder = new(root, GodotPath.Combine(root.Path ?? string.Empty, name), ArchiveAttributes.Directory);
+                        ArrayManipulation.Add((DataBase)folder, ref root.datas);
+                        Folder temp = CreateRecursiveFolder(folder, index + 1, names);
+                        if (temp != @null) return temp;
+                        return folder;
+                    default: return @null;
+                }
+            case Error.FileCantRead: throw new System.InvalidOperationException("Error.FileCantRead");
+            case Error.FileCantWrite: throw new System.InvalidOperationException("Error.FileCantWrite");
+            case Error.FileNotFound: throw new System.IO.FileNotFoundException("File Not Found", root.Path);
+            default: return @null;
+        }
+    }
+
+    public static Folder CreateRes() => Create("res://", @null);
+
+    public static Folder CreateUser() => Create("user://", @null);
+
+    public static Folder Create(string? path) => Create(path, @null);
+
+    private static Folder Create(string? path, Folder root) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         Folder result = Null;
 
         using Directory directory = new();
         if (directory.Open(path) == Error.Ok) {
             ArchiveAttributes attributes = GDFeature.HasEditor ? ArchiveAttributes.Directory : ArchiveAttributes.Directory | ArchiveAttributes.ReadOnly;
-            result = new(root, path, attributes);
+            string npath = GodotPath.GetFileName(path);
+            result = new(root, string.IsNullOrEmpty(npath) ? path : npath, attributes);
 
             directory.ListDirBegin(true, true);
             string fileName = directory.GetNext();
 
             while (!string.IsNullOrEmpty(fileName)) {
-                if (directory.CurrentIsDir())
+                if (directory.CurrentIsDir()) {
                     result.datas = ArrayManipulation.Add((DataBase)Create(GodotPath.Combine(path, fileName), result), result.datas);
-                else {
+                } else {
                     attributes = GDFeature.HasEditor ? ArchiveAttributes.File : ArchiveAttributes.File | ArchiveAttributes.ReadOnly;
-                    Archive archive = new(result, GodotPath.Combine(path, fileName), attributes);
+                    Archive archive = new(result, fileName, attributes);
                     result.datas = ArrayManipulation.Add(archive, result.datas);
                 }
                 fileName = directory.GetNext();
@@ -188,7 +338,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
             directory.ListDirEnd();
         }
-
+        result.ReorderList();
         return result;
     }
 }

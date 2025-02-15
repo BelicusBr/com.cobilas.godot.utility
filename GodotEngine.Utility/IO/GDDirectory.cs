@@ -7,6 +7,7 @@ using SYSPath = System.IO.Path;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>Represents a directory file.</summary>
+[Obsolete("Use Folder class")]
 public sealed class GDDirectory : GDFileBase {
 
     private bool disposedValue;

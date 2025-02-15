@@ -31,6 +31,24 @@ public static class GodotPath {
     public static string GetDirectoryName(string path) => Path.GetDirectoryName(path);
     public static string GetFileNameWithoutExtension(string path) => Path.GetFileNameWithoutExtension(path);
 
+    public static bool IsInvalidFileName(string name, out char invalidChar) {
+        invalidChar = char.MinValue;
+        if (string.IsNullOrEmpty(name)) return false;
+        char[] chars = GetInvalidFileNameChars();
+        for (int I = 0, J = 0; I < name.Length; J++) {
+            if (J >= chars.Length) {
+                J = -1;
+                I++;
+                continue;
+            }
+            if (name[I] == chars[J]) {
+                invalidChar = chars[J];
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static string GlobalizePath(string path) 
         => IGetPathRoot(path) switch {
                 "res://" => GDFeature.HasEditor ? Godot.ProjectSettings.GlobalizePath(path) : ICombine(CurrentDirectory, Godot.ProjectSettings.GlobalizePath(path)),

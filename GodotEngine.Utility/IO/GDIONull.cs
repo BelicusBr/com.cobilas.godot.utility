@@ -1,5 +1,6 @@
 namespace Cobilas.GodotEngine.Utility;
 /// <summary>This class is a representation of a null file.</summary>
+[System.Obsolete]
 public sealed class GDIONull : GDFileBase {
     /// <inheritdoc/>
     public override string Name => string.Empty;

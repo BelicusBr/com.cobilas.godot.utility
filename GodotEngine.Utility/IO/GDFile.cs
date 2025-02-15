@@ -6,6 +6,7 @@ using IOPath = System.IO.Path;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>This class is a representation of a file.</summary>
+[Obsolete("Use Archive class")]
 public class GDFile : GDFileBase {
     private bool disposedValue;
     /// <inheritdoc/>
