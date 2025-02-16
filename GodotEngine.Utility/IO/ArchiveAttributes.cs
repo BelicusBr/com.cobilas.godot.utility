@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.IO.Test;
+namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Represents the attributes of a file or folder.</summary>
 [Flags]
 public enum ArchiveAttributes : uint {

@@ -1,4 +1,5 @@
 using System;
+using Cobilas.GodotEngine.Utility.IO;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>This is a base class for other classes that represent files or directory files.</summary>
@@ -22,7 +23,7 @@ public abstract class GDFileBase : IDisposable {
     /// <para><c>File</c>: Indicates that the item is a representation of a file.</para>
     /// <para><c>Directory</c>: Indicates that the item is a representation of a directory file.</para>
     /// </returns>
-    public abstract GDFileAttributes Attribute { get; protected set; }
+    public abstract ArchiveAttributes Attribute { get; protected set; }
     /// <summary>A null item.</summary>
     /// <returns>Returns a representation of a null item.</returns>
     public static GDFileBase Null => new GDIONull();

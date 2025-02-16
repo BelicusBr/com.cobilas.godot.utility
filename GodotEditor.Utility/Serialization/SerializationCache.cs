@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility;
 using Cobilas.IO.Serialization.Json;
+using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.Runtime;
 
 using IOPath = System.IO.Path;
@@ -27,13 +28,14 @@ public static class SerializationCache {
         //string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
 
         value = string.Empty;
-        using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
-        GDFile file = directory.GetFile($"id_{GetID(info)}.cache");
-        if (file == GDIONull.FileNull) {
+        using Folder directory = Folder.Create("res://cache");
+        Archive file = directory.GetArchive($"id_{GetID(info)}.cache");
+        if (file == Archive.Null) {
             SetValueInCache(info, propertyName, value = string.Empty);
             return false;
         }
-        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(file.Read());
+        file.Read(out string stg);
+        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
 
         if (cache is not null && cache.TryGetValue(propertyName, out value)) return true;
         return false;
@@ -48,9 +50,10 @@ public static class SerializationCache {
         if (string.IsNullOrEmpty((string)info[1])) return false;
         CreateFileCache($"id_{info["id"]}.cache");
 
-        using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
-        GDFile file = directory.GetFile($"id_{info["id"]}.cache");
-        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(file.Read());
+        using Folder directory = Folder.Create("res://cache");
+        Archive file = directory.GetArchive($"id_{info["id"]}.cache");
+        file.Read(out string stg);
+        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
         if (cache is null) return false;
         if (!cache.ContainsKey("nodePath"))
             cache.Add("nodePath", (string)info[1]);
@@ -65,10 +68,11 @@ public static class SerializationCache {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return (string)info[0];
         else if (_cache.Contains((string)info[0])) return (string)info[0];
         _cache.Add((string)info[0]);
-        using GDDirectory directory = GDDirectory.GetGDDirectory("res://cache");
+        using Folder directory = Folder.Create("res://cache");
         List<Dictionary<string, string>> list = [];
-        foreach (GDFile file in directory.GetFiles()) {
-            Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(file.Read());
+        foreach (Archive file in directory.GetArchives()) {
+            file.Read(out string stg);
+            Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
             if (cache is null) continue;
             foreach (string? item in cache["nodePath"].Split(separator, StringSplitOptions.RemoveEmptyEntries))
                 if (item == "EditorNode") {

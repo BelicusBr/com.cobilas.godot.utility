@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Cobilas.GodotEngine.Utility.IO;
 
 using GDTFile = Godot.File;
 using IOPath = System.IO.Path;
@@ -16,11 +17,11 @@ public class GDFile : GDFileBase {
     /// <inheritdoc/>
     public override GDFileBase Parent { get; protected set; }
     /// <inheritdoc/>
-    public override GDFileAttributes Attribute { get; protected set; }
+    public override ArchiveAttributes Attribute { get; protected set; }
     /// <inheritdoc/>
     public override string NameWithoutExtension => IOPath.GetFileNameWithoutExtension(Path);
 
-    internal GDFile(GDFileBase? parent, string? path, GDFileAttributes attributes) {
+    internal GDFile(GDFileBase? parent, string? path, ArchiveAttributes attributes) {
         if (parent is null) throw new ArgumentNullException(nameof(parent));
         if (path is null) throw new ArgumentNullException(nameof(path));
         this.Path = path;
@@ -28,7 +29,7 @@ public class GDFile : GDFileBase {
         this.Attribute = attributes;
     }
 
-    internal GDFile(GDFileBase? parent, string? path) : this(parent, path, GDFileAttributes.File) {}
+    internal GDFile(GDFileBase? parent, string? path) : this(parent, path, ArchiveAttributes.File) {}
     /// <summary>The finalizer allows the disposal of unmanageable code.</summary>
     ~GDFile()
         => Dispose(disposing: false);

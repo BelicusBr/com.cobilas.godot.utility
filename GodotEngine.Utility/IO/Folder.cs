@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Text;
+using System.Data;
 using System.Collections;
 using Cobilas.Collections;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 
 using IOFile = System.IO.File;
 
-namespace Cobilas.GodotEngine.Utility.IO.Test;
+namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>A representation of a system folder.</summary>
 public class Folder : DataBase, IEnumerable<DataBase> {
     private bool discarded;
@@ -30,28 +31,33 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     public static Folder Null => @null;
     /// <summary>Creates a new instance of this object.</summary>
     public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {}
-
+    /// <summary>Allows the creation of a new folder in the current folder.</summary>
+    /// <param name="folderName">The name of the new folder.</param>
+    /// <param name="recursive">Allows the creation of a folder within another in a cascade fashion. <c>(exp: Folder1/Folder2/Folder3/Folder4)</c></param>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="folderName"/> parameter is null.</exception>
+    /// <returns>Returns the newly created folder.</returns>
     public Folder CreateFolder(string? folderName, bool recursive = false) {
         if (folderName is null) throw new ArgumentNullException(nameof(folderName));
         Folder result = CreateRecursiveFolder(this, 0, recursive ? folderName.Split(separator, StringSplitOptions.RemoveEmptyEntries) : new string[] { folderName });
         ReorderList();
         return result;
     }
-
+    /// <summary>Allows you to create a new file in the current folder.</summary>
+    /// <param name="fileName">The name of this new file.</param>
+    /// <returns>Returns the new file that was created in the current folder.</returns>
+    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="fileName"/> parameter is null.</exception>
+    /// <exception cref="System.InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
     public Archive CreateArchive(string? fileName) {
         if (fileName is null) throw new ArgumentNullException(nameof(fileName));
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
+            throw new ReadOnlyException("Is ReadOnly");
         else if (GodotPath.IsInvalidFileName(fileName, out char ic))
             throw new System.InvalidOperationException($"The name '{fileName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
 
         if (Path is null) return Archive.Null;
         fileName = GodotPath.Combine(Path, fileName);
         string fpath = GodotPath.GlobalizePath(fileName);
-        string root1 = GodotPath.GetPathRoot(Path);
-        string root2 = GodotPath.GetPathRoot(fileName);
-        if (root1 != root2) 
-            throw new System.InvalidOperationException($"path '{fileName}' does not belong to the same root as '{Path}'.");
 
         IOFile.Create(fpath).Dispose();
         Archive result = new(this, fileName, ArchiveAttributes.File);
@@ -59,7 +65,14 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         ReorderList();
         return result;
     }
-
+    /// <summary>Allows you to rename the folder.</summary>
+    /// <param name="oldName">The name of the folder.</param>
+    /// <param name="newName">The new name of the folder.</param>
+    /// <returns>Returns <c>true</c> when the rename operation was successful.</returns>
+    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="oldName"/> parameter is null.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="newName"/> parameter is null.</exception>
+    /// <exception cref="System.InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
     public bool RenameFolder(string? oldName, string? newName) {
         if (oldName is null) throw new ArgumentNullException(nameof(oldName));
         else if (newName is null) throw new ArgumentNullException(nameof(newName));
@@ -67,7 +80,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
             throw new System.InvalidOperationException("Is ReadOnly");
         else if (GodotPath.IsInvalidFileName(newName, out char ic))
             throw new System.InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
-    
+        
         using Directory directory = new();
         if (oldName == newName || directory.Open(Path) != Error.Ok) return false;
         Folder folder = GetFolder(oldName);
@@ -79,11 +92,15 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         }
         return false;
     }
-
+    /// <summary>Allows the removal of a folder.</summary>
+    /// <param name="folderName">The name of the folder.</param>
+    /// <returns>Returns <c>true</c> when the remove operation is successful.</returns>
+    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="folderName"/> parameter is null.</exception>
     public bool RemoveFolder(string? folderName) {
         if (folderName is null) throw new ArgumentNullException(nameof(folderName));
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
+            throw new ReadOnlyException("Is ReadOnly");
 
         using Directory directory = new();
         if (directory.Open(Path) != Error.Ok) return false;
@@ -97,11 +114,15 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         return false;
     }
-
+    /// <summary>Allows you to remove a file in the current folder.</summary>
+    /// <param name="archiveName">The name of the archive.</param>
+    /// <returns>Returns <c>true</c> when the remove operation is successful.</returns>
+    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="archiveName"/> parameter is null.</exception>
     public bool RemoveArchive(string? archiveName) {
         if (archiveName is null) throw new ArgumentNullException(nameof(archiveName));
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
+            throw new ReadOnlyException("Is ReadOnly");
 
         Archive archive = GetArchive(archiveName);
         if (archive == Archive.Null) return false;
@@ -112,14 +133,21 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         
         return true;
     }
-
+    /// <summary>Allows renaming of a file in the current folder.</summary>
+    /// <param name="oldName">The name of the archive.</param>
+    /// <param name="newName">The new name of the archive.</param>
+    /// <returns>Returns <c>true</c> when the rename operation was successful.</returns>
+    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="oldName"/> parameter is null.</exception>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="newName"/> parameter is null.</exception>
+    /// <exception cref="InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
     public bool RenameArchive(string? oldName, string? newName) {
         if (oldName is null) throw new ArgumentNullException(nameof(oldName));
         else if (newName is null) throw new ArgumentNullException(nameof(newName));
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
+            throw new ReadOnlyException("Is ReadOnly");
         else if (GodotPath.IsInvalidFileName(newName, out char ic))
-            throw new System.InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
+            throw new InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
 
         if (oldName == newName) return false;
         
@@ -128,11 +156,16 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         return Archive.RenameArchive(archive, newName);
     }
-
+    /// <summary>Checks if a folder exists.</summary>
+    /// <param name="folderName">The name of the folder.</param>
+    /// <returns>Returns <c>true</c> when the specified element exists.</returns>
     public bool FolderExists(string folderName) => DataExists(folderName, typeof(Folder));
-
+    /// <summary>Checks if a file exists.</summary>
+    /// <param name="archiveName">The name of the archive.</param>
+    /// <returns>Returns <c>true</c> when the specified element exists.</returns>
     public bool ArchiveExists(string archiveName) => DataExists(archiveName, typeof(Archive));
-
+    /// <summary>Gets all folders in the current folder.</summary>
+    /// <returns>Returns a list of all folders in the current folder.</returns>
     public Folder[] GetFolders() {
         Folder[] result = [];
         foreach (DataBase item in datas)
@@ -140,7 +173,10 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                 ArrayManipulation.Add(fd, ref result);
         return result;
     }
-
+    /// <summary>Gets the target folder from the current folder.</summary>
+    /// <param name="folderName">The name of the folder.</param>
+    /// <param name="recursive">Allows you to get a specified folder in the current folder or its subfolders.</param>
+    /// <returns>Returns the specified folder. If not found, a null representation will be returned.</returns>
     public Folder GetFolder(string? folderName, bool recursive = false) {
         if (folderName is null) return @null;
         foreach (DataBase item in datas)
@@ -154,7 +190,10 @@ public class Folder : DataBase, IEnumerable<DataBase> {
             }
         return @null;
     }
-
+    /// <summary>Gets all archives in the current folder.</summary>
+    /// <param name="search">Allows you to collect specific files. Use '|' to separate search conditions. (exp:".jpeg|.png|.txt")</param>
+    /// <param name="recursive">Allows you to get a specified archives in the current folder or its subfolders.</param>
+    /// <returns>Returns a list of all archives in the current folder.</returns>
     public Archive[] GetArchives(string? search, bool recursive = false) {
         search ??= string.Empty;
         string[] research = search.Split(new char[] { '|' }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -165,7 +204,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                 case Archive ac:
                     if (research.Length != 0) {
                         for (var I = 0; I < research.Length; I++)
-                            if (ac.Name.Contains(research[I])) {
+                            if ((ac.Name ?? string.Empty).Contains(research[I])) {
                                 result = ArrayManipulation.Add(ac, result);
                                 break;
                             }
@@ -180,7 +219,12 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         return result;
     }
-
+    /// <inheritdoc cref="GetArchive(string?, bool)"/>
+    public Archive[] GetArchives(bool recursive = false) => GetArchives(string.Empty, recursive);
+    /// <summary>Gets the target archive from the current folder.</summary>
+    /// <param name="fileName">The name of the archive.</param>
+    /// <param name="recursive">Allows you to get a specified archive in the current folder or its subfolders</param>
+    /// <returns>Returns the specified archive. If not found, a null representation will be returned.</returns>
     public Archive GetArchive(string? fileName, bool recursive = false) {
         if (fileName is null) return Archive.Null;
 
@@ -305,16 +349,21 @@ public class Folder : DataBase, IEnumerable<DataBase> {
             default: return @null;
         }
     }
-
+    /// <summary>Creates a new instance containing a representation of the <c>res://</c> folder.</summary>
+    /// <inheritdoc cref="Create(string?)"/>
     public static Folder CreateRes() => Create("res://", @null);
-
+    /// <summary>Creates a new instance containing a representation of the <c>user://</c> folder.</summary>
+    /// <inheritdoc cref="Create(string?)"/>
     public static Folder CreateUser() => Create("user://", @null);
-
+    /// <summary>Creates a new instance containing a specified directory.</summary>
+    /// <param name="path">The path that will be instantiated.</param>
+    /// <returns>Returns the representation of a folder.</returns>
+    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="path"/> parameter is null.</exception>
     public static Folder Create(string? path) => Create(path, @null);
 
     private static Folder Create(string? path, Folder root) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        Folder result = Null;
+        Folder result = @null;
 
         using Directory directory = new();
         if (directory.Open(path) == Error.Ok) {

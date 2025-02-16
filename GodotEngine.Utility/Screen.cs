@@ -4,6 +4,7 @@ using System.IO;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
+using Cobilas.GodotEngine.Utility.IO;
 
 using IOFile = System.IO.File;
 using IOPath = System.IO.Path;
@@ -67,17 +68,21 @@ public static class Screen {
                 Displays = temp;
             }
         }
-        using (GDDirectory directory = GDDirectory.GetGDDirectory()!) {
-            using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file is not null)
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
+        using (Folder folder = Folder.CreateRes()) {
+            Archive archive = folder.GetArchive("AddResolution.json");
+            if (!archive.IsNull) {
+                archive.Read(out string stg);
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+            }
         }
 
         if (GDFeature.HasRelease) {
-            using GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!;
-            using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file is not null)
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
+            using Folder folder = Folder.Create(SYSEnvironment.CurrentDirectory);
+            Archive archive = folder.GetArchive("AddResolution.json");
+            if (!archive.IsNull) {
+                archive.Read(out string stg);
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+            }
         }
     }
     /// <summary>Add a custom resolution.</summary>

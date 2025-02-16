@@ -1,7 +1,6 @@
 using System;
-using Godot;
 
-namespace Cobilas.GodotEngine.Utility.IO.Test;
+namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Base class for classes that represent system data files.</summary>
 public abstract class DataBase : IDisposable, IFormattable {
     /// <summary>Data file name.</summary>
