@@ -34,6 +34,7 @@ public static class SerializationCache {
             SetValueInCache(info, propertyName, value = string.Empty);
             return false;
         }
+        file.RefreshBuffer();
         file.Read(out string stg);
         Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
 
@@ -60,7 +61,8 @@ public static class SerializationCache {
         if (!cache.ContainsKey(propertyName))
             cache.Add(propertyName, value is null ? string.Empty : value.ToString());
         else cache[propertyName] = value is null ? string.Empty : value.ToString();
-        file.Write(Encoding.UTF8.GetBytes(Json.Serialize(cache)));
+        file.ReplaceBuffer(Encoding.UTF8.GetBytes(Json.Serialize(cache)));
+        file.Flush();
         return true;
     }
 

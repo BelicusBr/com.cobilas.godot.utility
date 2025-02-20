@@ -1,14 +1,10 @@
 using Godot;
 using System;
-using System.IO;
+using System.Text;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
 using Cobilas.GodotEngine.Utility.IO;
-
-using IOFile = System.IO.File;
-using IOPath = System.IO.Path;
-using SYSEnvironment = System.Environment;
 
 namespace Cobilas.GodotEngine.Utility; 
 
@@ -77,7 +73,7 @@ public static class Screen {
         }
 
         if (GDFeature.HasRelease) {
-            using Folder folder = Folder.Create(SYSEnvironment.CurrentDirectory);
+            using Folder folder = Folder.Create(GodotPath.CurrentDirectory);
             Archive archive = folder.GetArchive("AddResolution.json");
             if (!archive.IsNull) {
                 archive.Read(out string stg);
@@ -99,10 +95,11 @@ public static class Screen {
         Displays[GetIndexDisplay(OS.CurrentScreen)] = display =
             DisplayInfo.AddCustonResolution(new(new Numerics.Vector2D(width, height), refreshRate), display);
         
-        string filePath = IOPath.Combine(SYSEnvironment.CurrentDirectory, "AddResolution.json");
-        using FileStream stream = IOFile.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-        stream.SetLength(0L);
-        CustonResolutionList.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), stream);
+        using Folder folder = Folder.CreateRes();
+        Archive archive = folder.GetArchive("AddResolution.json");
+        if (archive.IsNull) archive = folder.CreateArchive("AddResolution.json");
+        archive.ReplaceBuffer(Encoding.UTF8.GetBytes(Json.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), true)));
+        archive.Flush();
     }
     /// <summary>Defines which screen will be used.</summary>
     /// <param name="index">The target index of the screen.</param>

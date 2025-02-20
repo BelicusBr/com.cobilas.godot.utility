@@ -163,6 +163,20 @@ public class Archive : DataBase {
             default: throw new InvalidOperationException(error.ToString());
         }
     }
+    /// <summary>The method allows you to refresh the buffer if the file is changed.</summary>
+    /// <exception cref="InvalidOperationException">It will occur when there is another invalid operation.</exception>
+    /// <exception cref="ObjectDisposedException">Will occur when the method is called after the object has been disposed.</exception>
+    /// <exception cref="System.IO.FileNotFoundException">It will occur when the path of the file that this object represents does not exist.</exception>
+    public void RefreshBuffer() {
+        CheckDisposal();
+        using File file = new();
+        Error error;
+        buffer = (error = file.Open(Path, File.ModeFlags.Read)) switch {
+            Error.Ok => file.GetBuffer((long)file.GetLen()),
+            Error.FileNotFound => throw new System.IO.FileNotFoundException("File Not Found", Path),
+            _ => throw new InvalidOperationException(error.ToString()),
+        };
+    }
     /// <inheritdoc/>
     public override string ToString() => ToString("PP", CultureInfo.CurrentCulture);
     /// <inheritdoc/>
@@ -179,11 +193,9 @@ public class Archive : DataBase {
     /// <inheritdoc/>
     public override void Dispose() {
         CheckDisposal();
-        discarded = true;
-        if (!Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            Flush();
         Attributes = ArchiveAttributes.Null;
         ArrayManipulation.ClearArraySafe(ref buffer);
+        discarded = true;
     }
 
     private void CheckDisposal() {

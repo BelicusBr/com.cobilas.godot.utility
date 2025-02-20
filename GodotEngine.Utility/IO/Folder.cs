@@ -11,6 +11,7 @@ using IOFile = System.IO.File;
 
 namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>A representation of a system folder.</summary>
+[Obsolete]
 public class Folder : DataBase, IEnumerable<DataBase> {
     private bool discarded;
     private DataBase[] datas = [];
