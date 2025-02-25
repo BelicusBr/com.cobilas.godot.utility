@@ -32,8 +32,8 @@ public class SceneManager : Node {
             int_root = GetParent<RunTimeInitialization>();
             SceneTree scnt = GetTree();
             CurrentSceneNode = scnt.CurrentScene;
-            scnt.Connect("node_added", this, "nodeaddedevent");
-            scnt.Connect("node_removed", this, "noderemovedevent");
+            scnt.Connect("node_added", this, nameof(nodeaddedevent));
+            scnt.Connect("node_removed", this, nameof(noderemovedevent));
 
             using Folder folder = Folder.Create("res://Scenes/");
             Archive[] archives = folder.GetArchives();
