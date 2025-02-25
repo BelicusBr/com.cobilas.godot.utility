@@ -2,8 +2,8 @@ using System.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
-/// <summary>Represents a property that does not have a <seealso cref="PropertyCustom"/>.</summary>
+namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
+/// <summary>Represents a property that does not have a <see cref="Properties.PropertyCustom"/>.</summary>
 public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObject> {
     private readonly List<SerializedObject> properties;
     /// <inheritdoc/>
@@ -35,7 +35,7 @@ public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObje
     /// <inheritdoc/>
     public IEnumerator<SerializedObject> GetEnumerator() => ((IEnumerable<SerializedObject>)properties).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)properties).GetEnumerator();
-    /// <inheritdoc cref="PropertyCustom.Get(string?)"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.Get(string?)"/>
     public override object? Get(string? propertyName) {
         foreach (SerializedObject item in properties) {
             object? result = item.Get(propertyName);
@@ -43,7 +43,7 @@ public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObje
         }
         return null;
     }
-    /// <inheritdoc cref="PropertyCustom.Set(string?, object?)"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.Set(string?, object?)"/>
     public override bool Set(string? propertyName, object? value) {
         foreach (SerializedObject item in properties)
             if (item.Set(propertyName, value)) {
@@ -53,7 +53,7 @@ public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObje
             }
         return false;
     }
-    /// <inheritdoc cref="PropertyCustom.GetPropertyList"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.GetPropertyList"/>
     public override PropertyItem[] GetPropertyList() {
         PropertyItem[] result = [];
         foreach (SerializedObject item in properties)

@@ -3,17 +3,12 @@ using System;
 using System.Reflection;
 using Cobilas.Collections;
 using System.Collections.Generic;
-using Cobilas.GodotEngine.Utility.Runtime;
+using Cobilas.GodotEditor.Utility.Serialization.Properties;
+using Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 
-using IOPath = System.IO.Path;
-using IOFile = System.IO.File;
-using IODirectory = System.IO.Directory;
-using SYSEnvironment = System.Environment;
-
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>Class allows to build a serialization list of properties of a node class.</summary>
 public static class BuildSerialization {
-    private static bool _copyToPlayer = false;
     private const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     private static readonly List<SerializedNode> serializeds = [];
     private static readonly Dictionary<Type, PropertyCustom> propertyCustom = [];
@@ -108,24 +103,6 @@ public static class BuildSerialization {
     private static SNInfo GetID(Resource resource)
         => SNInfo.Create(resource.ResourcePath.StringHash(), resource.ResourcePath);
     //=> resource.ResourcePath.StringHash();
-
-    private static void CopyToPlayer() {
-        if (_copyToPlayer && GDFeature.HasEditor) return;
-        _copyToPlayer = true;
-        string dir = IOPath.Combine(SYSEnvironment.CurrentDirectory, "cache");
-        string dir2 = IOPath.Combine(dir, "player");
-        string dir3 = IOPath.Combine(dir, "editor");
-
-        string[] files = IODirectory.GetFiles(dir3);
-
-        if (!IODirectory.Exists(dir2))
-            IODirectory.CreateDirectory(dir2);
-
-        foreach (string item in files) {
-            string fileName = IOPath.GetFileName(item);
-            IOFile.Copy(item, IOPath.Combine(dir2, fileName), true);
-        }
-    }
 
     private static KeyValuePair<object, Type> GetValue(object parent, MemberInfo member)
         => member switch {

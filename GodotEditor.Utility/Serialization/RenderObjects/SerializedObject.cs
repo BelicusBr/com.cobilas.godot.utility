@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>Base class for serialization properties.</summary>
 public abstract class SerializedObject : ISerializedPropertyManipulation {
     /// <summary>Contains information about the root object.</summary>

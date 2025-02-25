@@ -3,7 +3,7 @@ using Godot.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>The class is a serialization representation of a node.</summary>
 public class SerializedNode : ISerializedPropertyManipulation {
     private readonly string id;
@@ -20,7 +20,7 @@ public class SerializedNode : ISerializedPropertyManipulation {
     public void Add(SerializedObject obj) => properties.Add(obj);
     /// <inheritdoc cref="NoSerializedProperty.Add(IEnumerable{SerializedObject})"/>
     public void Add(IEnumerable<SerializedObject> objs) => properties.AddRange(objs);
-    /// <inheritdoc cref="PropertyCustom.Get(string?)"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.Get(string?)"/>
     public object? Get(string? propertyName) {
         foreach (SerializedObject item in properties) {
             object? result = item.Get(propertyName);
@@ -28,7 +28,7 @@ public class SerializedNode : ISerializedPropertyManipulation {
         }
         return null;
     }
-    /// <inheritdoc cref="PropertyCustom.Set(string?, object?)"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.Set(string?, object?)"/>
     public bool Set(string? propertyName, object? value) {
         foreach (SerializedObject item in properties) {
             if (item.Set(propertyName, value)) 
@@ -36,7 +36,7 @@ public class SerializedNode : ISerializedPropertyManipulation {
         }
         return false;
     }
-    /// <inheritdoc cref="PropertyCustom.GetPropertyList"/>
+    /// <inheritdoc cref="Properties.PropertyCustom.GetPropertyList"/>
     public PropertyItem[] GetPropertyList() {
         PropertyItem[] result = [];
         foreach (SerializedObject item in properties)

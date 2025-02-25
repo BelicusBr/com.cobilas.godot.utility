@@ -4,13 +4,13 @@
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
         <RootNamespace>Cobilas</RootNamespace>
-        <NoWarn>IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056</NoWarn>
+        <NoWarn>IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
     </PropertyGroup>
     <PropertyGroup>
         <Authors>BélicusBr</Authors>
         <Title>Cobilas Godot Utility</Title>
         <PackageId>Cobilas.Godot.Utility</PackageId>
-        <PackageVersion>4.8.1</PackageVersion>
+        <PackageVersion>5.0.0</PackageVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <RepositoryType>git</RepositoryType>

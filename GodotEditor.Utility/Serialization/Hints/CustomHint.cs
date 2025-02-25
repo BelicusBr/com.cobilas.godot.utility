@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.Hints;
 /// <summary>Base class for generating custom hints.</summary>
 public abstract class CustomHint {
     /// <summary>The type of hint of the property.</summary>
