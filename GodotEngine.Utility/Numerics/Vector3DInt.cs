@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Globalization;
-using Cobilas.GodotEngine.Utility.EditorSerialization;
+using Cobilas.GodotEditor.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility.Numerics;
 /// <summary>Representation of a three-dimensional vector using integers.</summary>

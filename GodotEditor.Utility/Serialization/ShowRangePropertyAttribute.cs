@@ -1,4 +1,6 @@
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+using Cobilas.GodotEditor.Utility.Serialization.Hints;
+
+namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>The attribute allows you to display a field or property in the editor in range form.</summary>
 public class ShowRangePropertyAttribute : ShowPropertyAttribute {
 #pragma warning disable CS1573 // O parâmetro não tem nenhuma tag param correspondente no comentário XML (mas outros parâmetros têm)

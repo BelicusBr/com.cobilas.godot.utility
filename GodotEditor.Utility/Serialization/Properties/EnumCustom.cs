@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
 /// <summary>Provides a customizable class for <seealso cref="Enum"/>.</summary>
 [PropertyCustom(typeof(Enum), true)]
 public sealed class EnumCustom : PropertyCustom {

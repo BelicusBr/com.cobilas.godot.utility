@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
 /// <summary>This attribute indicates to <seealso cref="BuildSerialization"/> 
 /// that the <seealso cref="PropertyCustom"/> class belongs to a certain type.</summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]

@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Globalization;
 using Cobilas.GodotEngine.Utility.Numerics;
-using Cobilas.GodotEngine.Utility.EditorSerialization;
+using Cobilas.GodotEditor.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility;
 /// <summary>Represents an ARGB value between (0 and 255).</summary>

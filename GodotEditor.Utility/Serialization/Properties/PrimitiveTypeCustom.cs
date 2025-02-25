@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Globalization;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
 /// <summary>Allows customization of a primitive type in the inspector.</summary>
 public sealed class PrimitiveTypeCustom : PropertyCustom {
     /// <inheritdoc/>

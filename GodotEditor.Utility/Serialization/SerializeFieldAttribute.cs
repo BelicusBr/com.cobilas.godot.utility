@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using Cobilas.GodotEditor.Utility.Serialization.Hints;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
+namespace Cobilas.GodotEditor.Utility.Serialization; 
 /// <summary>Base attribute for field and property serialization attributes.</summary>
 public abstract class SerializeFieldAttribute : Attribute {
     /// <summary>Custom property custom hint.</summary>

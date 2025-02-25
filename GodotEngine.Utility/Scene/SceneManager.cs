@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Cobilas.Collections;
+using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility.Scene;
@@ -31,21 +32,23 @@ public class SceneManager : Node {
             int_root = GetParent<RunTimeInitialization>();
             SceneTree scnt = GetTree();
             CurrentSceneNode = scnt.CurrentScene;
-            scnt.Connect("node_added", this, "nodeaddedevent");
-            scnt.Connect("node_removed", this, "noderemovedevent");
+            scnt.Connect("node_added", this, nameof(nodeaddedevent));
+            scnt.Connect("node_removed", this, nameof(noderemovedevent));
 
-            using GDDirectory gdd = GDDirectory.GetGDDirectory()!;
-            GDFile[] files = gdd.GetDirectory("res://Scenes/")!.GetFiles();
-            scenes = new Scene[ArrayManipulation.ArrayLength(files)];
-            for (int I = 0; I < ArrayManipulation.ArrayLength(files); I++)
-                scenes[I] = new Scene(files[I].Path, I, NullNode.Null);
+            using Folder folder = Folder.Create("res://Scenes/");
+            Archive[] archives = folder.GetArchives();
+            scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
+            for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
+                scenes[I] = new Scene(archives[I].Path, I, NullNode.Null);
         }
     }
+    
     private void nodeaddedevent(Node node) {
         Scene scn = GetCurrentScene(node);
         if (scn != Scene.Empty)
             LoadedScene?.Invoke(scn);
     }
+
     private void noderemovedevent(Node node) {
         Scene scn = GetCurrentScene(node);
         if (scn != Scene.Empty)

@@ -1,13 +1,10 @@
 using Godot;
 using System;
-using System.IO;
+using System.Text;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
-
-using IOFile = System.IO.File;
-using IOPath = System.IO.Path;
-using SYSEnvironment = System.Environment;
+using Cobilas.GodotEngine.Utility.IO;
 
 namespace Cobilas.GodotEngine.Utility; 
 
@@ -67,17 +64,21 @@ public static class Screen {
                 Displays = temp;
             }
         }
-        using (GDDirectory directory = GDDirectory.GetGDDirectory()!) {
-            using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file is not null)
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
+        using (Folder folder = Folder.CreateRes()) {
+            Archive archive = folder.GetArchive("AddResolution.json");
+            if (!archive.IsNull) {
+                archive.Read(out string stg);
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+            }
         }
 
         if (GDFeature.HasRelease) {
-            using GDDirectory directory = GDDirectory.GetGDDirectory(SYSEnvironment.CurrentDirectory)!;
-            using GDFile file = directory.GetFile("AddResolution.json")!;
-            if (file is not null)
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(file.Read()));
+            using Folder folder = Folder.Create(GodotPath.CurrentDirectory);
+            Archive archive = folder.GetArchive("AddResolution.json");
+            if (!archive.IsNull) {
+                archive.Read(out string stg);
+                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+            }
         }
     }
     /// <summary>Add a custom resolution.</summary>
@@ -94,10 +95,11 @@ public static class Screen {
         Displays[GetIndexDisplay(OS.CurrentScreen)] = display =
             DisplayInfo.AddCustonResolution(new(new Numerics.Vector2D(width, height), refreshRate), display);
         
-        string filePath = IOPath.Combine(SYSEnvironment.CurrentDirectory, "AddResolution.json");
-        using FileStream stream = IOFile.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-        stream.SetLength(0L);
-        CustonResolutionList.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), stream);
+        using Folder folder = Folder.CreateRes();
+        Archive archive = folder.GetArchive("AddResolution.json");
+        if (archive.IsNull) archive = folder.CreateArchive("AddResolution.json");
+        archive.ReplaceBuffer(Encoding.UTF8.GetBytes(Json.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), true)));
+        archive.Flush();
     }
     /// <summary>Defines which screen will be used.</summary>
     /// <param name="index">The target index of the screen.</param>

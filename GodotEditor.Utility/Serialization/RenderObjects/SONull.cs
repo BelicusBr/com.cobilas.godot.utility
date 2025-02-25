@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>SerializedObjectNull; Represents a null <seealso cref="SerializedObject"/>.</summary>
 public sealed class SONull : SerializedObject, INullObject {
     private static readonly SONull @null = new(string.Empty, null!, SNInfo.Empty);
