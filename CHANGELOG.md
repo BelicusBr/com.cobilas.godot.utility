@@ -1,3 +1,19 @@
+# [5.0.0] (16/02/2025)
+### Added
+- **`Folder` class:** Introduced to replace the `GDDirectory` class. The new `Folder` class offers optimized methods for manipulating directories and files within the Godot project, providing greater efficiency and usability.
+- **`Archive` class:** Replaces the `GDFile` class, with improved functionality for file management, including reading and writing data.
+- **`GodotPath` class:** Added to make path manipulation in Godot easier. `GodotPath` allows for path merging and verification operations.
+
+### Deprecate
+- **`GDDirectory` class:** Declared obsolete and replaced by the new `Folder` class. All old methods are now implemented more efficiently in the `Folder` class.
+- **`GDFile` class:** Marked as obsolete and replaced by the `Archive` class. The new `Archive` class inherits the functionality of `GDFile`, with significant improvements.
+
+### Removed
+- **`GDFileAttributes` enum:** Removed from the package and replaced with the `ArchiveAttributes` enum, which offers a more comprehensive set of attributes and is better aligned with the new `Archive` class.
+
+### Changed
+- **Relocation of serialization classes:** Classes such as `BuildSerialization`, responsible for property serialization, have been moved to the `Cobilas.GodotEditor.Utility.Serialization` namespace. This change better organizes the code and improves the modularity of the project.
+
 # [4.8.1] (13/02/2025)
 ## Fixed
 ### SerializationCache

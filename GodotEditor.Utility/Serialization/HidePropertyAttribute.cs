@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using Cobilas.GodotEditor.Utility.Serialization.Hints;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
+namespace Cobilas.GodotEditor.Utility.Serialization; 
 /// <summary>The attribute allows you to hide and save the value of a field or property in the editor.</summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class HidePropertyAttribute : SerializeFieldAttribute {

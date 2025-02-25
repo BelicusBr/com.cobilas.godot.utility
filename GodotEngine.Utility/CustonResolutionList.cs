@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using System.Collections;
 using Cobilas.Collections;
 using System.Collections.Generic;
@@ -10,21 +11,21 @@ using Cobilas.IO.Serialization.Json;
 namespace Cobilas.GodotEngine.Utility;
 /// <summary>Stores custom resolutions.</summary>
 /// <remarks>Stores all custom resolutions defined in the application to be used.</remarks>
-[Serializable]
+[Serializable, JsonObject]
 public readonly struct CustonResolutionList : IEnumerable<Resolution> {
 
     private readonly int hash;
-    private readonly Resolution[] list;
+    private readonly Resolution[] resolutions;
 
     /// <summary>Starts a new instance of the object.</summary>
-    public CustonResolutionList(in int hash, in Resolution[] list) {
+    public CustonResolutionList(in int hash, in Resolution[] resolutions) {
         this.hash = hash;
-        this.list = list;
+        this.resolutions = resolutions;
     }
 
     /// <summary>Starts a new instance of the object.</summary>
-    public CustonResolutionList(in int hash, in IEnumerable<Resolution> list) :
-        this(hash, list.ToArray()) {}
+    public CustonResolutionList(in int hash, in IEnumerable<Resolution> resolutions) :
+        this(hash, resolutions.ToArray()) {}
     /// <summary>Serializes a list of objects to a specified file.</summary>
     /// <param name="list">The list to be serialized.</param>
     /// <param name="stream">The file that will receive the list.</param>
@@ -47,9 +48,9 @@ public readonly struct CustonResolutionList : IEnumerable<Resolution> {
     }
 
     /// <inheritdoc/>
-    public readonly IEnumerator<Resolution> GetEnumerator() => new ArrayToIEnumerator<Resolution>(list);
+    public readonly IEnumerator<Resolution> GetEnumerator() => new ArrayToIEnumerator<Resolution>(resolutions);
 
-    readonly IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<Resolution>(list);
+    readonly IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<Resolution>(resolutions);
     /// <summary>Explicit conversion operator.(<seealso cref="CustonResolutionList"/> to <seealso cref="Int32"/>)</summary>
     /// <param name="R">Object to be converted.</param>
     public static explicit operator int(CustonResolutionList R) => R.hash;

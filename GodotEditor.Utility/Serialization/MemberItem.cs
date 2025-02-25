@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Cobilas.GodotEngine.Utility.EditorSerialization; 
+namespace Cobilas.GodotEditor.Utility.Serialization; 
 /// <summary>Represents a property or field.</summary>
 public sealed class MemberItem : INullObject {
     /// <summary>The parent object of the member.</summary>

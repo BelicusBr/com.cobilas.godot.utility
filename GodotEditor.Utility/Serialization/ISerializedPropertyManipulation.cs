@@ -1,4 +1,4 @@
-namespace Cobilas.GodotEngine.Utility.EditorSerialization;
+namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>The interface allows property manipulation.</summary>
 public interface ISerializedPropertyManipulation {
     /// <summary>The method allows you to get the value of the property.</summary>
