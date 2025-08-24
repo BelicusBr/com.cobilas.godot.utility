@@ -13,7 +13,7 @@ namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>A representation of a system folder.</summary>
 public class Folder : DataBase, IEnumerable<DataBase> {
     private bool discarded;
-    private DataBase[] datas = [];
+    private DataBase[]? datas = [];
 
     private static readonly char[] separator = { '/' };
     /// <inheritdoc/>
@@ -83,7 +83,9 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         
         using Directory directory = new();
         if (oldName == newName || directory.Open(Path) != Error.Ok) return false;
-        Folder folder = GetFolder(oldName);
+        Folder? folder = GetFolder(oldName);
+        if (folder is null || folder == @null) return false;
+
         oldName = GodotPath.Combine(Path ?? string.Empty, oldName);
         newName = GodotPath.Combine(Path ?? string.Empty, newName);
         if (directory.Rename(oldName, newName) == Error.Ok) {
@@ -104,7 +106,9 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         using Directory directory = new();
         if (directory.Open(Path) != Error.Ok) return false;
-        Folder folder = GetFolder(folderName);
+        Folder? folder = GetFolder(folderName);
+        if (folder is null || folder == @null) return false;
+
         folderName = GodotPath.Combine(Path ?? string.Empty, folderName);
 
         if (directory.Remove(folderName) == Error.Ok) {
@@ -124,8 +128,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
             throw new ReadOnlyException("Is ReadOnly");
 
-        Archive archive = GetArchive(archiveName);
-        if (archive == Archive.Null) return false;
+        Archive? archive = GetArchive(archiveName);
+        if (archive is null || archive == Archive.Null) return false;
         else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
 
         IOFile.Delete(GodotPath.GlobalizePath(archive.Path));
@@ -151,8 +155,9 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         if (oldName == newName) return false;
         
-        Archive archive = GetArchive(oldName);
-        if (archive == Archive.Null || !IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
+        Archive? archive = GetArchive(oldName);
+        if (archive is null || archive == Archive.Null) return false;
+        else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
 
         return Archive.RenameArchive(archive, newName);
     }
@@ -166,25 +171,26 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     public bool ArchiveExists(string archiveName) => DataExists(archiveName, typeof(Archive));
     /// <summary>Gets all folders in the current folder.</summary>
     /// <returns>Returns a list of all folders in the current folder.</returns>
-    public Folder[] GetFolders() {
-        Folder[] result = [];
-        foreach (DataBase item in datas)
-            if (item is Folder fd)
-                ArrayManipulation.Add(fd, ref result);
+    public Folder[]? GetFolders() {
+        Folder[]? result = [];
+        if (datas is not null)
+            foreach (DataBase item in datas)
+                if (item is Folder fd)
+                    ArrayManipulation.Add(fd, ref result);
         return result;
     }
     /// <summary>Gets the target folder from the current folder.</summary>
     /// <param name="folderName">The name of the folder.</param>
     /// <param name="recursive">Allows you to get a specified folder in the current folder or its subfolders.</param>
     /// <returns>Returns the specified folder. If not found, a null representation will be returned.</returns>
-    public Folder GetFolder(string? folderName, bool recursive = false) {
-        if (folderName is null) return @null;
+    public Folder? GetFolder(string? folderName, bool recursive = false) {
+        if (folderName is null || datas is null) return @null;
         foreach (DataBase item in datas)
             if (item is Folder fd) {
                 if (fd.Name == folderName)
                     return fd;
                 if (recursive) {
-                    Folder temp = fd.GetFolder(folderName);
+                    Folder? temp = fd.GetFolder(folderName);
                     if (temp != @null)  return temp;
                 }
             }
@@ -194,10 +200,12 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     /// <param name="search">Allows you to collect specific files. Use '|' to separate search conditions. (exp:".jpeg|.png|.txt")</param>
     /// <param name="recursive">Allows you to get a specified archives in the current folder or its subfolders.</param>
     /// <returns>Returns a list of all archives in the current folder.</returns>
-    public Archive[] GetArchives(string? search, bool recursive = false) {
+    public Archive[]? GetArchives(string? search, bool recursive = false) {
         search ??= string.Empty;
         string[] research = search.Split(new char[] { '|' }, System.StringSplitOptions.RemoveEmptyEntries);
-        Archive[] result = [];
+        Archive[]? result = (Archive[]?)null;
+
+        if (datas is null) return result;
 
         for (var A = 0; A < datas.Length; A++) {
             switch (datas[A]) {
@@ -208,7 +216,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                                 result = ArrayManipulation.Add(ac, result);
                                 break;
                             }
-                    } else result = ArrayManipulation.Add(ac, result);
+                    }
+                    else result = ArrayManipulation.Add(ac, result);
                     break;
                 case Folder fd:
                     if (recursive)
@@ -220,13 +229,13 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         return result;
     }
     /// <inheritdoc cref="GetArchive(string?, bool)"/>
-    public Archive[] GetArchives(bool recursive = false) => GetArchives(string.Empty, recursive);
+    public Archive[]? GetArchives(bool recursive = false) => GetArchives(string.Empty, recursive);
     /// <summary>Gets the target archive from the current folder.</summary>
     /// <param name="fileName">The name of the archive.</param>
     /// <param name="recursive">Allows you to get a specified archive in the current folder or its subfolders</param>
     /// <returns>Returns the specified archive. If not found, a null representation will be returned.</returns>
-    public Archive GetArchive(string? fileName, bool recursive = false) {
-        if (fileName is null) return Archive.Null;
+    public Archive? GetArchive(string? fileName, bool recursive = false) {
+        if (fileName is null || datas is null) return Archive.Null;
 
         for (var A = 0; A < datas.Length; A++) {
             switch (datas[A]) {
@@ -236,7 +245,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                     break;
                 case Folder fd:
                     if (recursive) {
-                        Archive temp = fd.GetArchive(fileName, recursive);
+                        Archive? temp = fd.GetArchive(fileName, recursive);
                         if (temp != Archive.Null)
                             return temp;
                     }
@@ -263,7 +272,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
             _ => throw new FormatException($"The format '{format}' is not recognized!"),
         };
     /// <inheritdoc/>
-    public IEnumerator<DataBase> GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas);
+    public IEnumerator<DataBase> GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas ?? []);
     /// <inheritdoc/>
     public override void Dispose() {
         if (discarded) throw new ObjectDisposedException(nameof(Folder));
@@ -274,7 +283,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         ArrayManipulation.ClearArraySafe(ref datas);
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas);
+    IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas ?? []);
 
     private bool DataExists(string dataName, Type dataType) {
         foreach (DataBase item in this)
@@ -301,6 +310,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     }
 
     private void ReorderList() {
+        if (datas is null) return;
         DataBase[] result = new DataBase[ArrayManipulation.ArrayLength(datas)];
         int folderCount = 0;
         int folderIndex = 0;
