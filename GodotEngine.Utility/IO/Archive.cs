@@ -10,11 +10,11 @@ using IOFile = System.IO.File;
 namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Represents a system file.</summary>
 public class Archive : DataBase {
-    private byte[] buffer = [];
+    private byte[]? buffer = [];
     private bool discarded;
     /// <summary>Allows you to check the length of the allocated buffer.</summary>
     /// <returns>Returns the length of the allocated buffer.</returns>
-    public long bufferLength => buffer.LongLength;
+    public long bufferLength => ArrayManipulation.ArrayLongLength(buffer);
     /// <inheritdoc/>
     public override string Path => GetDataPath(this);
     /// <inheritdoc/>
@@ -37,8 +37,9 @@ public class Archive : DataBase {
     public Guid GetGuid {
         get {
             byte[] bytes = new byte[16];
-            for (long I = 0; I < bufferLength; I++)
-                bytes[I % 16] ^= buffer[I];
+            if (buffer is not null)
+                for (long I = 0; I < bufferLength; I++)
+                    bytes[I % 16] ^= buffer[I];
             return new(bytes);
         }
     }

@@ -92,9 +92,9 @@ public readonly struct DisplayInfo : IEquatable<DisplayInfo> {
     /// <param name="display">The target <seealso cref="DisplayInfo"/>.</param>
     /// <returns>Returns a new, modified instance of <seealso cref="DisplayInfo"/>.</returns>
     public static DisplayInfo AddCustonResolution(in Resolution resolution, in DisplayInfo display) {
-        Resolution[] temp = [.. display.c_resolutions];
+        Resolution[]? temp = [.. display.c_resolutions];
         ArrayManipulation.Add(resolution, ref temp);
-        return new(display.index, display.resolutions, new((int)display.c_resolutions, temp), resolution);
+        return new(display.index, display.resolutions, new((int)display.c_resolutions, temp ?? []), resolution);
     }
     /// <summary>Allows you to change the current resolution of this display.</summary>
     /// <param name="resolution">The new resolution.</param>

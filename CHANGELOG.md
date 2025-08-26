@@ -1,3 +1,23 @@
+# [5.1.0-ch.2;5.1.0] (24-26/08/2025)
+## Changed
+This push was focused on resolving possible null references and documenting classes or methods.
+
+# [5.1.0-ch.1] (21/08/2025)
+## Added
+Two attributes, `ExportRangeAttribute` and `RunInEditorAttribute`, have been added.
+Extensions for the `Godot.Object` and `Godot.Vector2` classes.
+The methods `Node_GD_CB_Extension.Duplicate<T>(this Node, int) where T : Node`, `Node_GD_CB_Extension.ContainsNode(this Node, Node)`,
+`Vector2_CB_GD_Extensions.Neg(this Vector2, bool, bool)`, and `Rect2_GD_CB_Extension.Contains(this Rect2, in Vector2D)` have been added to the extension classes.
+
+### ExportRangeAttribute
+Allows integer or floating-point values ​​to take on a Range element format in the Godot inspector.
+
+### RunInEditorAttribute
+This attribute has the same function as ToolAttribute.
+
+## Changed
+The `Node_GD_CB_Extension.Print(this Node, params object[])` method has been moved to the `Object_CB_GD_Extension` extension class.
+
 # [5.0.0] (16/02/2025)
 ### Added
 - **`Folder` class:** Introduced to replace the `GDDirectory` class. The new `Folder` class offers optimized methods for manipulating directories and files within the Godot project, providing greater efficiency and usability.

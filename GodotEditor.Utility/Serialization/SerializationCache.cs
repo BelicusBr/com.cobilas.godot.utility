@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.IO;
 using System.Text;
+using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility;
 using Cobilas.IO.Serialization.Json;
@@ -72,7 +73,11 @@ public static class SerializationCache {
         _cache.Add((string)info[0]);
         using Folder directory = Folder.Create("res://cache");
         List<Dictionary<string, string>> list = [];
-        foreach (Archive file in directory.GetArchives()) {
+        Archive[]? archives = directory.GetArchives();
+
+        if (ArrayManipulation.EmpytArray(archives)) return string.Empty;
+        
+        foreach (Archive file in archives) {
             file.Read(out string stg);
             Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
             if (cache is null) continue;
