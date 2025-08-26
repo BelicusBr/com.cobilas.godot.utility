@@ -83,8 +83,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         
         using Directory directory = new();
         if (oldName == newName || directory.Open(Path) != Error.Ok) return false;
-        Folder? folder = GetFolder(oldName);
-        if (folder is null || folder == @null) return false;
+        Folder folder = GetFolder(oldName);
+        if (folder == @null) return false;
 
         oldName = GodotPath.Combine(Path ?? string.Empty, oldName);
         newName = GodotPath.Combine(Path ?? string.Empty, newName);
@@ -106,8 +106,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         using Directory directory = new();
         if (directory.Open(Path) != Error.Ok) return false;
-        Folder? folder = GetFolder(folderName);
-        if (folder is null || folder == @null) return false;
+        Folder folder = GetFolder(folderName);
+        if (folder == @null) return false;
 
         folderName = GodotPath.Combine(Path ?? string.Empty, folderName);
 
@@ -128,8 +128,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
         else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
             throw new ReadOnlyException("Is ReadOnly");
 
-        Archive? archive = GetArchive(archiveName);
-        if (archive is null || archive == Archive.Null) return false;
+        Archive archive = GetArchive(archiveName);
+        if (archive == Archive.Null) return false;
         else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
 
         IOFile.Delete(GodotPath.GlobalizePath(archive.Path));
@@ -155,8 +155,8 @@ public class Folder : DataBase, IEnumerable<DataBase> {
 
         if (oldName == newName) return false;
         
-        Archive? archive = GetArchive(oldName);
-        if (archive is null || archive == Archive.Null) return false;
+        Archive archive = GetArchive(oldName);
+        if (archive == Archive.Null) return false;
         else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
 
         return Archive.RenameArchive(archive, newName);
@@ -183,14 +183,14 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     /// <param name="folderName">The name of the folder.</param>
     /// <param name="recursive">Allows you to get a specified folder in the current folder or its subfolders.</param>
     /// <returns>Returns the specified folder. If not found, a null representation will be returned.</returns>
-    public Folder? GetFolder(string? folderName, bool recursive = false) {
+    public Folder GetFolder(string? folderName, bool recursive = false) {
         if (folderName is null || datas is null) return @null;
         foreach (DataBase item in datas)
             if (item is Folder fd) {
                 if (fd.Name == folderName)
                     return fd;
                 if (recursive) {
-                    Folder? temp = fd.GetFolder(folderName);
+                    Folder temp = fd.GetFolder(folderName);
                     if (temp != @null)  return temp;
                 }
             }
@@ -234,7 +234,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     /// <param name="fileName">The name of the archive.</param>
     /// <param name="recursive">Allows you to get a specified archive in the current folder or its subfolders</param>
     /// <returns>Returns the specified archive. If not found, a null representation will be returned.</returns>
-    public Archive? GetArchive(string? fileName, bool recursive = false) {
+    public Archive GetArchive(string? fileName, bool recursive = false) {
         if (fileName is null || datas is null) return Archive.Null;
 
         for (var A = 0; A < datas.Length; A++) {
@@ -245,7 +245,7 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                     break;
                 case Folder fd:
                     if (recursive) {
-                        Archive? temp = fd.GetArchive(fileName, recursive);
+                        Archive temp = fd.GetArchive(fileName, recursive);
                         if (temp != Archive.Null)
                             return temp;
                     }

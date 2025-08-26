@@ -59,9 +59,9 @@ public static class Screen {
         for (int I = 0; I < 5; I++) {
             OpenTK.DisplayDevice display = OpenTK.DisplayDevice.GetDisplay((OpenTK.DisplayIndex)I);
             if (display is not null) {
-                DisplayInfo[] temp = Displays;
+                DisplayInfo[]? temp = Displays;
                 ArrayManipulation.Add(new DisplayInfo(I, display), ref temp);
-                Displays = temp;
+                Displays = temp ?? [];
             }
         }
         using (Folder folder = Folder.CreateRes()) {
@@ -179,8 +179,8 @@ public static class Screen {
 
     private static void AddResolution(in CustonResolutionList[]? resolutions) {
         if (resolutions is null) return;
-        CustonResolutionList[] orphanList = resolutions;
-        int[] hashs = [];
+        CustonResolutionList[]? orphanList = resolutions;
+        int[]? hashs = [];
         for (int I = 0; I < DisplayCount; I++) {
             int hash = DisplayInfo.GetHash(Displays[I]);
             foreach (CustonResolutionList item2 in resolutions)
@@ -191,14 +191,20 @@ public static class Screen {
                     break;
                 }
         }
+
+        if (ArrayManipulation.EmpytArray(hashs)) {
+            OrphanList = [];
+            return;
+        }
+
         for (int A = 0; A < hashs.Length; A++)
             for (int B = 0; B < ArrayManipulation.ArrayLength(orphanList); B++)
-                if (hashs[A] == (int)orphanList[B]) {
+                if (hashs[A] == (int)orphanList![B]) {
                     ArrayManipulation.Remove(B, ref orphanList);
                     break;
                 }
 
-        OrphanList = orphanList;
+        OrphanList = orphanList!;
         ArrayManipulation.ClearArray(ref hashs);
     }
 
