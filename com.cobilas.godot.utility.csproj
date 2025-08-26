@@ -1,6 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/3.3.0">
     <PropertyGroup>
         <TargetFrameworks>net472;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <!-- <TargetFramework>net472</TargetFramework> -->
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
         <RootNamespace>Cobilas</RootNamespace>
@@ -10,7 +11,7 @@
         <Authors>BélicusBr</Authors>
         <Title>Cobilas Godot Utility</Title>
         <PackageId>Cobilas.Godot.Utility</PackageId>
-        <PackageVersion>5.0.0</PackageVersion>
+        <PackageVersion>5.1.0</PackageVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <RepositoryType>git</RepositoryType>
@@ -21,6 +22,15 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>DEBUG;TOOLS;TRACE;GODOT_EDITOR</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>TRACE;</DefineConstants>
+	</PropertyGroup>
+
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
         <None Include="LICENSE.md" Pack="true" PackagePath="\" />
@@ -28,6 +38,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="OpenTK" Version="3.3.3" />
-        <PackageReference Include="Cobilas.Core.Net4x" Version="2.1.0" />
+        <PackageReference Include="Cobilas.Core.Net4x" Version="2.5.0" />
     </ItemGroup>
 </Project>

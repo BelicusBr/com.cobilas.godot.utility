@@ -36,10 +36,10 @@ public class SceneManager : Node {
             scnt.Connect("node_removed", this, nameof(noderemovedevent));
 
             using Folder folder = Folder.Create("res://Scenes/");
-            Archive[] archives = folder.GetArchives();
+            Archive[]? archives = folder.GetArchives();
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
-                scenes[I] = new Scene(archives[I].Path, I, NullNode.Null);
+                scenes[I] = new(archives![I].Path, I, NullNode.Null);
         }
     }
     
