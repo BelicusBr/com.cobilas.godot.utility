@@ -12,7 +12,7 @@ namespace Cobilas.GodotEngine.Utility;
 public sealed class GDDirectory : GDFileBase {
 
     private bool disposedValue;
-    private GDFileBase[] subDir = Array.Empty<GDFileBase>();
+    private GDFileBase[]? subDir = Array.Empty<GDFileBase>();
 
     private static readonly char[] separatorChar = {
         SYSPath.DirectorySeparatorChar,
@@ -60,7 +60,7 @@ public sealed class GDDirectory : GDFileBase {
         if (relativePath is null) throw new ArgumentNullException(nameof(relativePath));
 
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++) {
-            if (subDir[I].Attribute == ArchiveAttributes.Directory &&
+            if (subDir![I].Attribute == ArchiveAttributes.Directory &&
             (subDir[I].Path == relativePath || subDir[I].Path.TrimEnd('/') == relativePath))
                 return subDir[I] as GDDirectory;
             else if (subDir[I].Attribute == ArchiveAttributes.Directory && isSubdirectory) {
@@ -74,10 +74,10 @@ public sealed class GDDirectory : GDFileBase {
     /// <summary>Get all directories.</summary>
     /// <remarks>Subdirectories of directories already obtained will not be included.</remarks>
     /// <returns>If no directory is found an empty list will be returned.</returns>
-    public GDDirectory[] GetDirectories() {
-        GDDirectory[] res = Array.Empty<GDDirectory>();
+    public GDDirectory[]? GetDirectories() {
+        GDDirectory[]? res = Array.Empty<GDDirectory>();
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-            if (subDir[I].Attribute == ArchiveAttributes.Directory)
+            if (subDir![I].Attribute == ArchiveAttributes.Directory)
                 ArrayManipulation.Add((subDir[I] as GDDirectory)!, ref res);
         return res;
     }
@@ -105,7 +105,7 @@ public sealed class GDDirectory : GDFileBase {
         if (directory.Open(Path) == Error.Ok)
             if (directory.Remove(directoryName) == Error.Ok) {
                 for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-                    if (subDir[I].Attribute == ArchiveAttributes.Directory && subDir[I].Name.TrimEnd('/') == directoryName) {
+                    if (subDir![I].Attribute == ArchiveAttributes.Directory && subDir[I].Name.TrimEnd('/') == directoryName) {
                         ArrayManipulation.Remove(I, ref subDir);
                         break;
                     }
@@ -123,7 +123,7 @@ public sealed class GDDirectory : GDFileBase {
         if (directory.Open(Path) == Error.Ok)
             if (directory.Remove(fileName) == Error.Ok) {
                 for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-                    if (subDir[I].Attribute == ArchiveAttributes.File &&
+                    if (subDir![I].Attribute == ArchiveAttributes.File &&
                     (subDir[I].Name == fileName || subDir[I].NameWithoutExtension == fileName)) {
                         ArrayManipulation.Remove(I, ref subDir);
                         break;
@@ -135,10 +135,10 @@ public sealed class GDDirectory : GDFileBase {
     /// <summary>Gets multiple files in the same directory.</summary>
     /// <param name="isSubdirectory">Allows the method to search subdirectories.</param>
     /// <returns>If no files are found, an empty list will be returned.</returns>
-    public GDFile[] GetFiles(bool isSubdirectory = false) {
-        GDFile[] res = Array.Empty<GDFile>();
+    public GDFile[]? GetFiles(bool isSubdirectory = false) {
+        GDFile[]? res = Array.Empty<GDFile>();
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-            switch (subDir[I].Attribute) {
+            switch (subDir![I].Attribute) {
                 case ArchiveAttributes.File:
                     ArrayManipulation.Add((subDir[I] as GDFile)!, ref res);
                     break;
@@ -156,7 +156,7 @@ public sealed class GDDirectory : GDFileBase {
     public GDFile GetFile(string? name, bool isSubdirectory = false) {
         if (name is null) throw new ArgumentNullException(nameof(name));
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-            switch (subDir[I].Attribute) {
+            switch (subDir![I].Attribute) {
                 case ArchiveAttributes.File:
                     if (subDir[I].Name == name || subDir[I].NameWithoutExtension == name)
                         return subDir[I] is GDFile gdf ? gdf : GDIONull.FileNull;
@@ -174,7 +174,7 @@ public sealed class GDDirectory : GDFileBase {
         StringBuilder builder = new();
         builder.AppendFormat("[{0}]{1}\r\n", Attribute, Path);
         for (int I = 0; I < ArrayManipulation.ArrayLength(subDir); I++)
-            builder.Append(subDir[I].ToString());
+            builder.Append(subDir![I].ToString());
         return builder.ToString();
     }
 
@@ -182,7 +182,7 @@ public sealed class GDDirectory : GDFileBase {
         if (!disposedValue) {
             if (disposing) {
                 for (int I = 0; I < Count; I++)
-                    subDir[I].Dispose();
+                    subDir![I].Dispose();
                 Path = null!;
                 Attribute = default;
                 Parent = null!;

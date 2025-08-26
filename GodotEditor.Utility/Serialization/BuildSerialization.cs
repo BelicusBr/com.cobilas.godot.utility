@@ -43,38 +43,40 @@ public static class BuildSerialization {
 
     private static List<SerializedObject> Build(object obj, Type type, SerializedObject root, SNInfo id) {
         List<SerializedObject> result = [];
-        foreach (MemberInfo? item in GetMembers(type))
-            if (IsSerialized(item)) {
-                if (PrimitiveTypeCustom.IsPrimitiveType(GetMemberType(item))) {
-                    SerializedProperty property = new(item.Name, root, id) {
-                        Member = new MemberItem() {
-                            Parent = obj,
-                            Menber = item
-                        },
-                        Custom = new PrimitiveTypeCustom()
-                    };
-                    result.Add(property);
-                } else if (IsPropertyCustom(GetMemberType(item))) {
-                    SerializedProperty property = new(item.Name, root, id) {
-                        Member = new MemberItem() {
-                            Parent = obj,
-                            Menber = item
-                        },
-                        Custom = propertyCustom[GetMemberType(item)]
-                    };
-                    result.Add(property);
-                } else {
-                    NoSerializedProperty property = new(item.Name, root, id) {
-                        Member = new MemberItem() {
-                            Parent = obj,
-                            Menber = item
-                        }
-                    };
-                    result.Add(property);
-                    KeyValuePair<object, Type> pair = GetValue(obj, item);
-                    property.Add(Build(pair.Key, pair.Value, property, id));
+        MemberInfo[]? memberInfos = GetMembers(type);
+        if (memberInfos is not null)
+            foreach (MemberInfo? item in memberInfos)
+                if (IsSerialized(item)) {
+                    if (PrimitiveTypeCustom.IsPrimitiveType(GetMemberType(item))) {
+                        SerializedProperty property = new(item.Name, root, id) {
+                            Member = new MemberItem() {
+                                Parent = obj,
+                                Menber = item
+                            },
+                            Custom = new PrimitiveTypeCustom()
+                        };
+                        result.Add(property);
+                    } else if (IsPropertyCustom(GetMemberType(item))) {
+                        SerializedProperty property = new(item.Name, root, id) {
+                            Member = new MemberItem() {
+                                Parent = obj,
+                                Menber = item
+                            },
+                            Custom = propertyCustom[GetMemberType(item)]
+                        };
+                        result.Add(property);
+                    } else {
+                        NoSerializedProperty property = new(item.Name, root, id) {
+                            Member = new MemberItem() {
+                                Parent = obj,
+                                Menber = item
+                            }
+                        };
+                        result.Add(property);
+                        KeyValuePair<object, Type> pair = GetValue(obj, item);
+                        property.Add(Build(pair.Key, pair.Value, property, id));
+                    }
                 }
-            }
         return result;
     }
     /// <summary>Checks if the type has a <seealso cref="PropertyCustom"/>.</summary>
@@ -102,7 +104,6 @@ public static class BuildSerialization {
 
     private static SNInfo GetID(Resource resource)
         => SNInfo.Create(resource.ResourcePath.StringHash(), resource.ResourcePath);
-    //=> resource.ResourcePath.StringHash();
 
     private static KeyValuePair<object, Type> GetValue(object parent, MemberInfo member)
         => member switch {
@@ -111,7 +112,7 @@ public static class BuildSerialization {
             _ => new()
         };
 
-    private static MemberInfo[] GetMembers(Type? type) {
+    private static MemberInfo[]? GetMembers(Type? type) {
         if (type is null) return Array.Empty<MemberInfo>();
         return ArrayManipulation.Add(type.GetMembers(flags), GetMembers(type.BaseType));
     }

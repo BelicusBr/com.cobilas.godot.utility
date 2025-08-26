@@ -38,9 +38,10 @@ public class SerializedNode : ISerializedPropertyManipulation {
     }
     /// <inheritdoc cref="Properties.PropertyCustom.GetPropertyList"/>
     public PropertyItem[] GetPropertyList() {
-        PropertyItem[] result = [];
+        PropertyItem[]? result = [];
         foreach (SerializedObject item in properties)
             ArrayManipulation.Add(item.GetPropertyList(), ref result);
+        if (result is null) return [];
         return result;
     }
     /// <inheritdoc/>

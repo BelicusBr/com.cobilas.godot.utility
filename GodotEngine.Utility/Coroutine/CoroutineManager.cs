@@ -9,7 +9,7 @@ namespace Cobilas.GodotEngine.Utility;
 /// <summary>This class is responsible for managing all coroutines.</summary>
 [RunTimeInitializationClass(nameof(CoroutineManager))]
 public class CoroutineManager : Node {
-    private CoroutineItem[] waits = System.Array.Empty<CoroutineItem>();
+    private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 
     private static CoroutineManager? _Coroutine = null;
     private static readonly char[] chars = { 'a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -19,21 +19,29 @@ public class CoroutineManager : Node {
     }
     /// <inheritdoc/>
     public override void _Process(float delta) {
-        for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++)
-            if (!waits[I].IsPhysicsProcess)
-                if (!waits[I].Run()) {
+        for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
+#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
+            CoroutineItem? coroutine = waits[I];
+#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
+            if (!coroutine.IsPhysicsProcess)
+                if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
                     --I;
                 }
+        }
     }
     /// <inheritdoc/>
     public override void _PhysicsProcess(float delta) {
-        for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++)
-            if (waits[I].IsPhysicsProcess)
-                if (!waits[I].Run()) {
+        for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
+#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
+            CoroutineItem? coroutine = waits[I];
+#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
+            if (coroutine.IsPhysicsProcess)
+                if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
                     --I;
                 }
+        }
     }
     /// <summary>Starts a collating process from an <seealso cref="IEnumerator"/>.</summary>
     /// <param name="enumerator">The <seealso cref="IEnumerator"/> that will be used to start the <seealso cref="Coroutine"/>.</param>
@@ -53,17 +61,24 @@ public class CoroutineManager : Node {
     /// <param name="Coroutine">The <seealso cref="Coroutine"/> that will be closed.</param>
     public static void StopCoroutine(Coroutine? Coroutine) {
         if (Coroutine is null) throw new ArgumentNullException(nameof(Coroutine));
+        else if (_Coroutine is null) throw new ArgumentNullException("CoroutineManager is set to null.", (Exception?)null);
+        CoroutineItem[]? waits = _Coroutine.waits;
 
-        foreach (var item in _Coroutine!.waits)
-            if (item.ID == Coroutine.ID) {
-                item.Cancel();
-                break;
-            }
+        if (waits is not null)
+            foreach (var item in waits)
+                if (item.ID == Coroutine.ID) {
+                    item.Cancel();
+                    break;
+                }
     }
     /// <summary>Ends all open Coroutines.</summary>
     public static void StopAllCoroutines() {
-        foreach (var item in _Coroutine!.waits)
-            item.Cancel();
+        if (_Coroutine is null) throw new ArgumentNullException("CoroutineManager is set to null.", (Exception?)null);
+        CoroutineItem[]? waits = _Coroutine.waits;
+
+        if (waits is not null)
+            foreach (var item in waits)
+                item.Cancel();
         LastCoroutineManager.StopAllCoroutines();
     }
     /// <summary>Generates an ID to be used in a <seealso cref="Coroutine"/>.</summary>
