@@ -1,3 +1,7 @@
+# [5.1.1] (18/09/2025)
+## Fixed
+The `NodePath_GD_CB_Extension.GetNode(NodePath?)` extension method could encounter a 'path not found' issue because the extension method does not correctly handle relative paths.
+
 # [5.1.0-ch.2;5.1.0] (24-26/08/2025)
 ## Changed
 This push was focused on resolving possible null references and documenting classes or methods.
