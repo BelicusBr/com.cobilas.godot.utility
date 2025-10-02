@@ -7,11 +7,11 @@ using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>This class is responsible for managing all coroutines.</summary>
-[RunTimeInitializationClass(nameof(CoroutineManager))]
-public class CoroutineManager : Node {
+[RunTimeInitializationClass(nameof(InternalCoroutineManager))]
+internal class InternalCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 
-    private static CoroutineManager? _Coroutine = null;
+    private static InternalCoroutineManager? _Coroutine = null;
     private static readonly char[] chars = { 'a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
     /// <inheritdoc/>
     public override void _Ready() {
@@ -47,7 +47,7 @@ public class CoroutineManager : Node {
     /// <param name="enumerator">The <seealso cref="IEnumerator"/> that will be used to start the <seealso cref="Coroutine"/>.</param>
     /// <exception cref="ArgumentNullException">When the object is null.</exception>
     /// <returns>Returns the <seealso cref="Coroutine"/> process that was started.</returns>
-    public static Coroutine StartCoroutine(IEnumerator? enumerator) {
+    internal static Coroutine StartCoroutine(IEnumerator? enumerator) {
         if (enumerator is null) throw new ArgumentNullException(nameof(enumerator));
         Coroutine Coroutine = new(enumerator, GenID());
 
@@ -59,7 +59,7 @@ public class CoroutineManager : Node {
     }
     /// <summary>Ends all open Coroutines.</summary>
     /// <param name="Coroutine">The <seealso cref="Coroutine"/> that will be closed.</param>
-    public static void StopCoroutine(Coroutine? Coroutine) {
+    internal static void StopCoroutine(Coroutine? Coroutine) {
         if (Coroutine is null) throw new ArgumentNullException(nameof(Coroutine));
         else if (_Coroutine is null) throw new ArgumentNullException("CoroutineManager is set to null.", (Exception?)null);
         CoroutineItem[]? waits = _Coroutine.waits;
@@ -72,7 +72,7 @@ public class CoroutineManager : Node {
                 }
     }
     /// <summary>Ends all open Coroutines.</summary>
-    public static void StopAllCoroutines() {
+    internal static void StopAllCoroutines() {
         if (_Coroutine is null) throw new ArgumentNullException("CoroutineManager is set to null.", (Exception?)null);
         CoroutineItem[]? waits = _Coroutine.waits;
 
@@ -83,7 +83,7 @@ public class CoroutineManager : Node {
     }
     /// <summary>Generates an ID to be used in a <seealso cref="Coroutine"/>.</summary>
     /// <returns>Returns in <seealso cref="string"/> form the ID generated.</returns>
-    public static string GenID() {
+    internal static string GenID() {
         StringBuilder builder = new();
         Random random = new();
         for (int I = 0; I < 64; I++)
