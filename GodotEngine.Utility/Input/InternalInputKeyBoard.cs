@@ -11,6 +11,7 @@ internal class InternalInputKeyBoard : Node {
     private readonly List<PeripheralItem> periferics = [];
     private static MouseInfo mouseInfo = new();
     private static InternalInputKeyBoard? keyBoard = null;
+    private static ChangeState doubleClickLock = ChangeState.None;
     /// <summary>The mouse trigger index.</summary>
     /// <returns>Returns an <see cref="System.Int32"/> containing the index of the mouse trigger.</returns>
     internal static int MouseIndex => mouseInfo.mouseIndex;
@@ -36,7 +37,7 @@ internal class InternalInputKeyBoard : Node {
     public override void _Input(InputEvent @event) {
         switch (@event) {
             case InputEventKey input:
-                PeripheralItem key = periferics.GetKeyCode(input.Scancode);//GetKeyItem(input.Scancode);
+                PeripheralItem key = periferics.GetKeyCode(input.Scancode);
                 if (input.Pressed) {
                     if (key.KeyCode == KeyCode.None)
                         key = new((KeyCode)input.Scancode, KeyStatus.Down | KeyStatus.Press) {
@@ -46,7 +47,7 @@ internal class InternalInputKeyBoard : Node {
                     key.Status = KeyStatus.Up;
                     key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
                 }
-                periferics.SetKeyCode(input.Scancode, key);//SetKeyItem(input.Scancode, key);
+                periferics.SetKeyCode(input.Scancode, key);
                 break;
             case InputEventMouseMotion mouseMotion:
                 mouseInfo.mousePosition = mouseMotion.Position;
@@ -59,7 +60,7 @@ internal class InternalInputKeyBoard : Node {
                     case MouseButton.MouseLeft: case MouseButton.MouseMiddle: case MouseButton.MouseRight:
                     case MouseButton.MouseXB1: case MouseButton.MouseXB2: case MouseButton.MouseXB3:
                     case MouseButton.MouseXB4: case MouseButton.MouseXB5: case MouseButton.MouseXB6:
-                        mouseInfo.mouseIndex = mouseButton.ButtonIndex;
+                        mouseInfo.mouseIndex = index;
                         if (mouseInfo.changeState.HasFlag(ChangeState.C_Index)) {
                             mouseInfo.changeState ^= ChangeState.C_Index;
                             mouseInfo.changeState |= ChangeState.D_Index;
@@ -74,7 +75,7 @@ internal class InternalInputKeyBoard : Node {
                         break;
                 }
                 if (MouseIndex == 0) return;
-                key = periferics.GetKeyCode((ulong)MouseIndex);//GetKeyItem((ulong)MouseIndex);
+                key = periferics.GetKeyCode((ulong)MouseIndex);
                 if (mouseButton.Pressed) {
                     if (key.KeyCode == KeyCode.None)
                         key = new((KeyCode)MouseIndex, KeyStatus.Down | KeyStatus.Press) {
@@ -84,63 +85,16 @@ internal class InternalInputKeyBoard : Node {
                     key.Status = KeyStatus.Up;
                     key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
                 }
-                periferics.SetKeyCode((ulong)MouseIndex, key);//SetKeyItem((ulong)MouseIndex, key);
+                periferics.SetKeyCode((ulong)MouseIndex, key);
                 break;
         }
-        
-        
-        // if (@event is InputEventKey input) {
-        //     PeripheralItem key = GetKeyItem(input.Scancode);
-        //     if (input.Pressed) {
-        //         if (key.KeyCode == KeyCode.None)
-        //             key = new((KeyCode)input.Scancode, KeyStatus.Down | KeyStatus.Press) {
-        //                 PeripheralState = ChangeState.Delay | ChangeState.Press
-        //             };
-        //     } else {
-        //         key.Status = KeyStatus.Up;
-        //         key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
-        //     }
-        //     SetKeyItem(input.Scancode, key);
-        // } else if (@event is InputEventMouseMotion mouseMotion) {
-        //     mouseInfo.mousePosition = mouseMotion.Position;
-        //     mouseInfo.mouseGlobalPosition = mouseMotion.GlobalPosition;
-        // } else if (@event is InputEventMouseButton mouseButton) {
-        //     mouseInfo.doubleClick = mouseButton.Doubleclick;
-        //     int index = mouseButton.ButtonIndex;
-        //     switch ((MouseButton)index) {
-        //         case MouseButton.MouseLeft: case MouseButton.MouseMiddle: case MouseButton.MouseRight:
-        //         case MouseButton.MouseXB1: case MouseButton.MouseXB2: case MouseButton.MouseXB3:
-        //         case MouseButton.MouseXB4: case MouseButton.MouseXB5: case MouseButton.MouseXB6:
-        //             mouseInfo.mouseIndex = mouseButton.ButtonIndex;
-        //             if (mouseInfo.changeState.HasFlag(ChangeState.C_Index)) {
-        //                 mouseInfo.changeState ^= ChangeState.C_Index;
-        //                 mouseInfo.changeState |= ChangeState.D_Index;
-        //             } else mouseInfo.changeState |= ChangeState.D_Index;
-        //             break;
-        //         case MouseButton.MouseWheelUp: case MouseButton.MouseWheelDown:
-        //             mouseInfo.deltaScroll = (MouseButton)index == MouseButton.MouseWheelUp ? mouseButton.Factor : -mouseButton.Factor;
-        //             if (mouseInfo.changeState.HasFlag(ChangeState.C_Scroll)) {
-        //                 mouseInfo.changeState ^= ChangeState.C_Scroll;
-        //                 mouseInfo.changeState |= ChangeState.D_Scroll;
-        //             } else mouseInfo.changeState |= ChangeState.D_Scroll;
-        //             break;
-        //     }
-        //     if (MouseIndex == 0) return;
-        //     PeripheralItem key = GetKeyItem((ulong)MouseIndex);
-        //     if (mouseButton.Pressed) {
-        //         if (key.KeyCode == KeyCode.None)
-        //             key = new((KeyCode)MouseIndex, KeyStatus.Down | KeyStatus.Press) {
-        //                 PeripheralState = ChangeState.Delay | ChangeState.Press
-        //             };
-        //     } else {
-        //         key.Status = KeyStatus.Up;
-        //         key.PeripheralState = ChangeState.Delay | ChangeState.Destroy;
-        //     }
-        //     SetKeyItem((ulong)MouseIndex, key);
-        // }
     }
 
     private void ChangePeripheralSwitchingStatus() {
+        if (doubleClickLock == ChangeState.Delay) {
+            doubleClickLock = ChangeState.None;
+            mouseInfo.doubleClick = false;
+        } else if (mouseInfo.doubleClick) doubleClickLock = ChangeState.Delay;
         if (mouseInfo.changeState.HasFlag(ChangeState.D_Index)) {
             mouseInfo.changeState ^= ChangeState.D_Index;
             mouseInfo.changeState |= ChangeState.C_Index;
@@ -179,11 +133,6 @@ internal class InternalInputKeyBoard : Node {
     [System.Obsolete]
     private void SetKeyItem(KeyCode scancode, PeripheralItem value) {
         if (scancode == KeyCode.None) return;
-        // for (int I = 0; I < periferics.Count; I++)
-        //     if (periferics[I].KeyCode == scancode) {
-        //         periferics[I] = value;
-        //         return;
-        //     }
         int index = periferics.FindIndex(p => p.KeyCode == scancode);
         if (index != -1) {
             periferics[index] = value;
@@ -294,6 +243,8 @@ internal class InternalInputKeyBoard : Node {
     internal static bool GetMouseUp(MouseButton button)
         => GetKeyStatus((KeyCode)button, KeyStatus.Up);
 
-    private static bool GetKeyStatus(KeyCode key, KeyStatus status)
-        => keyBoard!.periferics.GetKeyCode(key).Status.HasFlag(status);//GetKeyItem(key).Status.HasFlag(status);
+    private static bool GetKeyStatus(KeyCode key, KeyStatus status) {
+        if (keyBoard is null) return false;
+        return keyBoard.periferics.GetKeyCode(key).Status.HasFlag(status);
+    }
 }

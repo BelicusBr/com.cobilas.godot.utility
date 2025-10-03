@@ -90,11 +90,10 @@ internal class InternalSceneManager : Node {
         => GetCurrentScene(CurrentSceneNode);
 
     private static Scene GetCurrentScene(Node? currentSceneNode) {
-        if (manager is not null && currentSceneNode is not null) {
-            Scene scene = ArrayManipulation.Find(manager.scenes, s => s == currentSceneNode.Filename);
-            if (scene != default(Scene))
-                return scene.SetSceneNode(currentSceneNode);
-        }
+        if (manager is not null && currentSceneNode is not null)
+            foreach (Scene scene in manager.scenes)
+                if (scene == currentSceneNode.Filename)
+                    return scene.SetSceneNode(currentSceneNode);
         return Scene.Empty;
     }
 }
