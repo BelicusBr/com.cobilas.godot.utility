@@ -8,17 +8,20 @@ namespace Cobilas.GodotEngine.Utility;
 internal class LastCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 
+    private static event Action? delayAction = null;
     private static LastCoroutineManager? lastCoroutine = null;
 
     public override void _Ready() {
         lastCoroutine ??= this;
+        if (delayAction is not null) {
+            delayAction();
+            delayAction = null;
+        }
     }
 
     public override void _Process(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
             CoroutineItem? coroutine = waits[I];
-#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
             if (!coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
@@ -29,9 +32,7 @@ internal class LastCoroutineManager : Node {
 
     public override void _PhysicsProcess(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
             CoroutineItem? coroutine = waits[I];
-#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
             if (coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
@@ -39,13 +40,40 @@ internal class LastCoroutineManager : Node {
                 }
         }
     }
-    /// <summary>Starts a collating process from an <seealso cref="System.Collections.IEnumerator"/>.</summary>
-    public static void StartCoroutine(Coroutine? enumerator) {
+    /// <summary>
+    /// Allows you to call internal class commands.
+    /// <para>start_c: StartCoroutine(Coroutine?)</para>
+    /// <para>stop_c: StopCoroutine(Coroutine?)</para>
+    /// <para>stop_all_c: StopAllCoroutines()</para>
+    /// </summary>
+    /// <param name="method">The command to use.</param>
+    /// <param name="args">Argument to be passed to the command.</param>
+    /// <exception cref="ArgumentException">Occurs when a command is not listed.</exception>
+    internal static void CallMethod(string method, params object[] args) {
+        switch (method) {
+            case "start_c":
+                if (lastCoroutine is null) delayAction += () => StartCoroutine((Coroutine)args[0]);
+                else StartCoroutine((Coroutine)args[0]);
+                break;
+            case "stop_c":
+                if (lastCoroutine is null) delayAction += () => StopCoroutine((Coroutine)args[0]);
+                else StopCoroutine((Coroutine)args[0]);
+                break;
+            case "stop_all_c":
+                if (lastCoroutine is null) delayAction += () => StopAllCoroutines();
+                else StopAllCoroutines();
+                break;
+            default: throw new ArgumentException($"The command {method} is not listed.");
+        }
+    }
+    
+    private static void StartCoroutine(Coroutine? enumerator) {
         if (enumerator is null) throw new ArgumentNullException(nameof(Coroutine));
+        else if (lastCoroutine is null) throw new ArgumentNullException("LastCoroutineManager is set to null.", (Exception?)null);
         ArrayManipulation.Add(new CoroutineItem(enumerator), ref lastCoroutine!.waits);
     }
-    /// <summary>Ends all open Coroutines.</summary>
-    internal static void StopCoroutine(Coroutine? Coroutine) {
+
+    private static void StopCoroutine(Coroutine? Coroutine) {
         if (Coroutine is null) throw new ArgumentNullException(nameof(Coroutine));
         else if (lastCoroutine is null) throw new ArgumentNullException("LastCoroutineManager is set to null.", (Exception?)null);
         CoroutineItem[]? waits = lastCoroutine.waits;
@@ -57,8 +85,8 @@ internal class LastCoroutineManager : Node {
                     break;
                 }
     }
-    /// <summary>Ends all open Coroutines.</summary>
-    internal static void StopAllCoroutines() {
+    
+    private static void StopAllCoroutines() {
         if (lastCoroutine is null) throw new ArgumentNullException("LastCoroutineManager is set to null.", (Exception?)null);
         CoroutineItem[]? waits = lastCoroutine.waits;
 

@@ -3,16 +3,16 @@ using System.IO;
 
 namespace Cobilas.GodotEngine.Utility.Scene; 
 /// <summary>Contains the scene information.</summary>
-public struct Scene : IEquatable<Scene>, IEquatable<int>, IEquatable<string> {
+public struct Scene : IEquatable<Scene>, IEquatable<int>, IEquatable<string?> {
     /// <summary>The scene index.</summary>
     /// <returns>Returns the scene index.</returns>
     public int Index { get; private set; }
     /// <summary>Stores the root <see cref="Godot.Node"/> of the scenario.</summary>
     /// <returns>Returns a <see cref="Godot.Node"/> type object that is the root of the scenario.</returns>
-    public Godot.Node SceneNode { get; private set; }
+    public Godot.Node? SceneNode { get; private set; }
     /// <summary>The path of the scene file.</summary>
     /// <returns>Returns the full or relative path of the scene file.</returns>
-    public string ScenePath { get; private set; }
+    public string? ScenePath { get; private set; }
     /// <summary>The name of the scene file.</summary>
     /// <returns>Returns a string containing the name of the scene file with its extension.</returns>
     /// <exception cref="ArgumentException">path contains one or more of the invalid characters defined in <seealso cref="Path.GetInvalidPathChars"/>.</exception>
@@ -37,7 +37,12 @@ public struct Scene : IEquatable<Scene>, IEquatable<int>, IEquatable<string> {
     /// <inheritdoc/>
     public readonly bool Equals(Scene other) => Equals(other.ScenePath) && Equals(other.Index);
     /// <inheritdoc/>
-    public readonly bool Equals(string other) => ScenePath.Equals(other) || Name.Equals(other) || NameWithoutExtension.Equals(other);
+    public readonly bool Equals(string? other) {
+        if (ScenePath is not null) return ScenePath.Equals(other);
+        else if (Name is not null) return Name.Equals(other);
+        else if (NameWithoutExtension is not null) return NameWithoutExtension.Equals(other);
+        return false;
+    }
     /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj switch {
@@ -91,5 +96,5 @@ public struct Scene : IEquatable<Scene>, IEquatable<int>, IEquatable<string> {
     public static explicit operator int(Scene scene) => scene.Index;
     /// <summary>Explicit conversion operator.(<seealso cref="Scene"/> to <seealso cref="String"/>)</summary>
     /// <param name="value">Object to be converted.</param>
-    public static explicit operator string(Scene value) => value.ScenePath;
+    public static explicit operator string(Scene value) => value.ScenePath ?? string.Empty;
 }

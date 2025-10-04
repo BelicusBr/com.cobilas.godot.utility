@@ -189,4 +189,14 @@ public static class Node_GD_CB_Extension
                 return true;
         return false;
     }
+    /// <summary>The method allows you to change the object's parent.</summary>
+    /// <param name="p">The target object.</param>
+    /// <param name="parent">The object that will be the parent of the target object.</param>
+    /// <exception cref="ArgumentNullException">Occurs when the target object parameter is passed as null.</exception>
+    public static void SetParent(this Node? p, Node? parent) {
+        if (p is null) throw new ArgumentNullException(nameof(p));
+        Node old_parent = p.GetParent();
+        old_parent?.RemoveChild(p);
+        parent?.AddChild(p);
+    }
 }
