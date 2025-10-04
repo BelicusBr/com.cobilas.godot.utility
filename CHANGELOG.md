@@ -1,3 +1,17 @@
+# [6.1.1] (03/10/2025)
+## Added
+The `Node_GD_CB_Extension.SetParent(this Node?, Node?)` extension method was added to the Node class.
+
+## Fixed
+The `InputKeyBoard.DoubleClick` property had an issue with remaining true while the mouse button was held down because the property was not reset correctly.
+
+## Changed
+The `CoroutineManager` class has been converted to an internal class, and its methods such as `StartCoroutine(IEnumerator?)`, `StopCoroutine(Coroutine?)`, and `StopAllCoroutines()` can now be accessed by the Coroutine class. \
+The `SceneManager`, `Gizmos`, `Physics2D`, and `InputKeyBoard` classes no longer inherit from the `Node` class and have become static classes. This was done so that these classes do not inherit methods or fields that derive from the Node class.
+
+## Removed
+Deprecated classes such as `GDDirectory`, `GDFile`, `GDFileBase`, and `GDIONull` have been removed. Use classes such as `Archive` and `Folder` to access folders and files.
+
 # [5.1.1] (18/09/2025)
 ## Fixed
 The `NodePath_GD_CB_Extension.GetNode(NodePath?)` extension method could encounter a 'path not found' issue because the extension method does not correctly handle relative paths.
