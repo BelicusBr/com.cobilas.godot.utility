@@ -69,4 +69,17 @@ public sealed class Coroutine : IEnumerable, IDisposable {
             disposedValue = true;
         }
     }
+    /// <summary>Starts a collating process from an <seealso cref="IEnumerator"/>.</summary>
+    /// <param name="enumerator">The <seealso cref="IEnumerator"/> that will be used to start the <seealso cref="Coroutine"/>.</param>
+    /// <exception cref="ArgumentNullException">When the object is null.</exception>
+    /// <returns>Returns the <seealso cref="Coroutine"/> process that was started.</returns>
+    public static Coroutine StartCoroutine(IEnumerator? enumerator) => InternalCoroutineManager.StartCoroutine(enumerator);
+    /// <summary>Ends all open Coroutines.</summary>
+    /// <param name="Coroutine">The <seealso cref="Coroutine"/> that will be closed.</param>
+    public static void StopCoroutine(Coroutine? Coroutine) => InternalCoroutineManager.StopCoroutine(Coroutine);
+    /// <summary>Ends all open Coroutines.</summary>
+    public static void StopAllCoroutines() => InternalCoroutineManager.StopAllCoroutines();
+    /// <summary>Generates an ID to be used in a <seealso cref="Coroutine"/>.</summary>
+    /// <returns>Returns in <seealso cref="string"/> form the ID generated.</returns>
+    public static string GenID() => InternalCoroutineManager.GenID();
 }
