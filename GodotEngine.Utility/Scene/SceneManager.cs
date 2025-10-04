@@ -11,8 +11,8 @@ public static class SceneManager {
     }
     /// <summary>This event is called when the current scene is unloaded.</summary>
     public static event Action<Scene>? UnloadedScene {
-        add => InternalSceneManager.LoadedScene += value;
-        remove => InternalSceneManager.LoadedScene -= value;
+        add => InternalSceneManager.UnloadedScene += value;
+        remove => InternalSceneManager.UnloadedScene -= value;
     }
 
     /// <summary>The current scene.</summary>

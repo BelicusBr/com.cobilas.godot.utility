@@ -43,7 +43,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
             
             for (long A = 0; A < ArrayManipulation.ArrayLength(list); A++) {
                 if (result is null) {
-                    ArrayManipulation.Add(list![A], ref result);
+                    ArrayManipulation.Add(list[A], ref result);
                     continue;
                 }
                 bool addInResult = true;

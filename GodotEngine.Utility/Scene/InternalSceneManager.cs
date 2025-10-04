@@ -39,7 +39,7 @@ internal class InternalSceneManager : Node {
             Archive[]? archives = folder.GetArchives();
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
-                scenes[I] = new(archives![I].Path, I, NullNode.Null);
+                scenes[I] = new(archives[I].Path, I, NullNode.Null);
         }
     }
     

@@ -20,9 +20,7 @@ internal class InternalCoroutineManager : Node {
     /// <inheritdoc/>
     public override void _Process(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
             CoroutineItem? coroutine = waits[I];
-#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
             if (!coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
@@ -33,9 +31,7 @@ internal class InternalCoroutineManager : Node {
     /// <inheritdoc/>
     public override void _PhysicsProcess(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
             CoroutineItem? coroutine = waits[I];
-#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
             if (coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
@@ -52,7 +48,7 @@ internal class InternalCoroutineManager : Node {
         Coroutine Coroutine = new(enumerator, GenID());
 
         if (enumerator.Current is IYieldCoroutine coroutine && coroutine.IsLastCoroutine)
-            LastCoroutineManager.StartCoroutine(Coroutine);
+            LastCoroutineManager.CallMethod("start_c", Coroutine);
         else ArrayManipulation.Add(new CoroutineItem(Coroutine), ref _Coroutine!.waits);
 
         return Coroutine;
@@ -70,6 +66,7 @@ internal class InternalCoroutineManager : Node {
                     item.Cancel();
                     break;
                 }
+        LastCoroutineManager.CallMethod("stop_c", Coroutine);
     }
     /// <summary>Ends all open Coroutines.</summary>
     internal static void StopAllCoroutines() {
@@ -79,7 +76,7 @@ internal class InternalCoroutineManager : Node {
         if (waits is not null)
             foreach (var item in waits)
                 item.Cancel();
-        LastCoroutineManager.StopAllCoroutines();
+        LastCoroutineManager.CallMethod("stop_all_c");
     }
     /// <summary>Generates an ID to be used in a <seealso cref="Coroutine"/>.</summary>
     /// <returns>Returns in <seealso cref="string"/> form the ID generated.</returns>
