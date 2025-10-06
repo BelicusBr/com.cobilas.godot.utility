@@ -1,3 +1,7 @@
+# [6.1.2] (06/10/2025)
+## Fixed
+The extension method `Camera2D_GD_CB_Extension.WorldToScreenPoint(this Camera2D, Vector2D)` had a convention problem where the method did not consider the zoom of the 2D camera.
+
 # [6.1.1] (03/10/2025)
 ## Added
 The `Node_GD_CB_Extension.SetParent(this Node?, Node?)` extension method was added to the Node class.

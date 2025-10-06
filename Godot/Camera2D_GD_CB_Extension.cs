@@ -17,10 +17,12 @@ public static class Camera2D_GD_CB_Extension {
     /// <param name="C">The 2D camera that will be used for conversion.</param>
     /// <param name="position">The position of the 2D world that will be converted.</param>
     /// <returns>Returns a two-dimensional vector with the result of converting the 2D world position to a screen position.</returns>
-    public static Vector2D WorldToScreenPoint(this Camera2D C, Vector2D position) {
-        Vector2D rect = C.Position;
-        if (C.AnchorMode == Camera2D.AnchorModeEnum.DragCenter)
-            rect = C.Position - (Vector2D)Screen.CurrentResolution * C.Zoom * .5f;
-        return position - rect;
-    }
+    public static Vector2D WorldToScreenPoint(this Camera2D C, Vector2D position)
+        => (position - (C.AnchorMode == Camera2D.AnchorModeEnum.DragCenter?
+        C.Position - (Vector2D)Screen.CurrentResolution * C.Zoom * .5f : (Vector2D)C.Position)) / C.Zoom;
+        // Vector2D rect = C.Position;
+        // if (C.AnchorMode == Camera2D.AnchorModeEnum.DragCenter)
+        //     rect = C.Position - (Vector2D)Screen.CurrentResolution * C.Zoom * .5f;
+        // return position - rect;
+
 }
