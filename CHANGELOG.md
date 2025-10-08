@@ -1,3 +1,13 @@
+# [6.2.1] (08/10/2025)
+## Fixed
+The Gizmos class had its `Gizmos.Color` property set to public again.
+
+## Changed
+Now vectors have methods for calculating modulus.
+
+## Added
+Extension methods like `Rect2_GD_CB_Extension.Width(this Rect2)` and `Rect2_GD_CB_Extension.Height(this Rect2)` have been added as well as the methods `Quaternion.GenerateDirection(Vector3D)`, `Quaternion.GenerateDirectionRight()`, `Quaternion.GenerateDirectionUp()`, `Quaternion.GenerateDirectionForward()`, `Quaternion.GenerateDirectionLeft()`, `Quaternion.GenerateDirectionDown()` and `Quaternion.GenerateDirectionBack()` have been added as well.
+
 # [6.1.2] (06/10/2025)
 ## Fixed
 The extension method `Camera2D_GD_CB_Extension.WorldToScreenPoint(this Camera2D, Vector2D)` had a convention problem where the method did not consider the zoom of the 2D camera.
