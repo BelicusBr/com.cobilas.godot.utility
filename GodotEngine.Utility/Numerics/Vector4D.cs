@@ -218,6 +218,11 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
     /// <param name="b">Second module.</param>
     /// <returns>The result of the division.</returns>
     public static Vector4D operator /(Vector4D a, Vector4D b) => new(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector4D"/> + <seealso cref="Vector4D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector4D operator %(Vector4D a, Vector4D b) => new(a.x % b.x, a.y % b.y, a.z % b.z, a.w % b.w);
     /// <summary>Multiplication operation between two values.(<seealso cref="Vector4D"/> * <seealso cref="Vector4D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
@@ -233,6 +238,16 @@ public struct Vector4D : IVectorGeneric<Vector4D> {
     /// <param name="b">Second module.</param>
     /// <returns>The result of the multiplication.</returns>
     public static Vector4D operator *(Vector4D a, float b) => new(a.x * b, a.y * b, a.z * b, a.w * b);
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector4D"/> + <seealso cref="float"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector4D operator %(Vector4D a, float b) => new(a.x % b, a.y % b, a.z % b, a.w % b);
+    /// <summary>Modulo operation between two values.(<seealso cref="float"/> + <seealso cref="Vector4D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector4D operator %(float a, Vector4D b) => new(a % b.x, a % b.y, a % b.z, a % b.w);
     /// <summary>Division operation between two values.(<seealso cref="float"/> / <seealso cref="Vector4D"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
