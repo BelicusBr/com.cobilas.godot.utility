@@ -325,11 +325,56 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
     /// <returns>The result of the multiplication.</returns>
-    public static Vector3D operator *(Vector3D a, float b) {
+    public static Vector3D operator *(Vector3D a, float b)
+    {
         Vector3D result = Vector3D._zero;
         result.x = a.x * b;
         result.y = a.y * b;
         result.z = a.z * b;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3D"/> + <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3D operator %(Vector3D a, Vector3D b) {
+        Vector3D result = Vector3D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        result.z = a.z % b.z;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3D"/> + <seealso cref="Vector3"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3D operator %(Vector3D a, Vector3 b) {
+        Vector3D result = Vector3D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        result.z = a.z % b.z;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3"/> + <seealso cref="Vector3D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3D operator %(Vector3 a, Vector3D b) {
+        Vector3D result = Vector3D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        result.z = a.z % b.z;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3D"/> + <seealso cref="float"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3D operator %(Vector3D a, float b) {
+        Vector3D result = Vector3D._zero;
+        result.x = a.x % b;
+        result.y = a.y % b;
+        result.z = a.z % b;
         return result;
     }
     /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>

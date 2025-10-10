@@ -165,6 +165,17 @@ public struct Vector2DInt : IIntVector {
         result.y = a.y * b.y;
         return result;
     }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2DInt"/> + <seealso cref="Vector2DInt"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2DInt operator %(Vector2DInt a, Vector2DInt b)
+    {
+        Vector2DInt result = Vector2DInt._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        return result;
+    }
     /// <summary>Division operation between two values.(<seealso cref="Vector2DInt"/> / <seealso cref="int"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
@@ -183,6 +194,16 @@ public struct Vector2DInt : IIntVector {
         Vector2DInt result = Vector2DInt._zero;
         result.x = a.x * b;
         result.y = a.y * b;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2DInt"/> + <seealso cref="int"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2DInt operator %(Vector2DInt a, int b) {
+        Vector2DInt result = Vector2DInt._zero;
+        result.x = a.x % b;
+        result.y = a.y % b;
         return result;
     }
     /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>
