@@ -20,9 +20,9 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// The <c>kEpsilon</c> constant is used to determine if two quaternions are nearly equal, accounting for floating-point precision errors.
     /// </remarks>
     public const float KEpsilon = 1E-06f;
-    /// <summary>Degrees-to-radians conversion constant (Read Only).</summary>
-    public const double Rad2Deg = 360d / (Math.PI * 2d);
     /// <summary>Radians-to-degrees conversion constant (Read Only).</summary>
+    public const double Rad2Deg = 360d / (Math.PI * 2d);
+    /// <summary>Degrees-to-radians conversion constant (Read Only).</summary>
     public const double Deg2Rad = (Math.PI * 2d) / 360d;
     /// <summary>Returns or sets the euler angle representation of the rotation.</summary>
     public readonly Vector3D Euler => ToEuler(this);

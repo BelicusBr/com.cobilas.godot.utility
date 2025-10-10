@@ -1,3 +1,4 @@
+using System;
 using Cobilas.GodotEngine.Utility.Numerics;
 
 namespace Godot;
@@ -32,11 +33,6 @@ public static class Rect2_GD_CB_Extension {
     /// <param name="rect">The 2D rectangle to be used.</param>
     /// <param name="mousePosition">The mouse position to be compared.</param>
     /// <returns>Returns <c>true</c> when the mouse position is inside the 2D rectangle.</returns>
-    public static bool Contains(this Rect2 rect, in Vector2D mousePosition)
-    {
-        if (mousePosition.x < rect.Right() && mousePosition.x > rect.Left() &&
-            mousePosition.y > rect.Top() && mousePosition.y < rect.Bottom())
-            return true;
-        return false;
-    }
+    [Obsolete("Use Rect2.HasPoint(Vector2)")]
+    public static bool Contains(this Rect2 rect, in Vector2D mousePosition) => rect.HasPoint(mousePosition);
 }
