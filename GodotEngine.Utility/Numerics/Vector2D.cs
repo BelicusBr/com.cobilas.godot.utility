@@ -313,6 +313,46 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
         result.y = a.y * b;
         return result;
     }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2D"/> % <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2D operator %(Vector2D a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2D"/> % <seealso cref="Vector2"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2D operator %(Vector2D a, Vector2 b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2"/> * <seealso cref="Vector2D"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2D operator %(Vector2 a, Vector2D b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector2D"/> * <seealso cref="float"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector2D operator %(Vector2D a, float b) {
+        Vector2D result = Vector2D._zero;
+        result.x = a.x % b;
+        result.y = a.y % b;
+        return result;
+    }
     #endregion
     /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>
     /// <param name="lhs">Object to be compared.</param>

@@ -1,3 +1,50 @@
+# [6.2.1] (08/10/2025)
+## Fixed
+- Made the `Gizmos.Color` property public again in the Gizmos class
+
+## Changed
+- Added modulus calculation methods to vector structures
+- Fixed documentation comments for `Quaternion.Rad2Deg` and `Quaternion.Deg2Rad` constants (previously swapped)
+- Marked `Rect2_GD_CB_Extension.Contains` as obsolete since it duplicates `Rect2.HasPoint(Vector2)` functionality
+
+## Added
+- **Extension Methods**:
+  - `Rect2_GD_CB_Extension.Width(this Rect2)` - Gets the width of a Rect2
+  - `Rect2_GD_CB_Extension.Height(this Rect2)` - Gets the height of a Rect2
+  - **Quaternion Direction Generation**:
+    - `GenerateDirection(Vector3D)` - Generates a direction based on a Vector3D
+    - `GenerateDirectionRight()` - Generates right direction
+    - `GenerateDirectionUp()` - Generates up direction  
+    - `GenerateDirectionForward()` - Generates forward direction
+    - `GenerateDirectionLeft()` - Generates left direction
+    - `GenerateDirectionDown()` - Generates down direction
+    - `GenerateDirectionBack()` - Generates back direction
+
+- **Vector Modulus Operators**:
+  - `Vector3D % float`, `Vector3D % Vector3`, `Vector3D % Vector3D`
+  - `Vector2D % float`, `Vector2D % Vector2`, `Vector2D % Vector2D`
+  - `Vector2DInt % int`, `Vector2DInt % Vector2DInt`
+  - `Vector3DInt % int`, `Vector3DInt % Vector3DInt`
+
+- **UI Extension Methods**:
+  - Comprehensive text manipulation extensions for `Label`, `Control`, `Sprite`, and `TextEdit` classes
+  - Includes Append, Insert, Remove, Replace, ClearText, and formatting methods
+  - Uses shared StringBuilder for performance in frequent text operations
+
+- **Enhanced Rectangle Structure**:
+  - Added `Rect2D` structure as an enhanced version of Godot's Rect2
+  - Provides additional properties for Control-derived classes and Sprite
+  - Includes rotation, scale, pivot, and minimum size support
+  - Advanced point detection considering transformations
+
+- **Color System Enhancements**:
+  - Added 140+ predefined color constants to `ColorF` structure
+  - Added comprehensive arithmetic operators (+, -, *, /) for ColorF
+  - Support for operations with Godot's Color type
+  - Enhanced color manipulation capabilities
+
+The update focuses on expanding mathematical utilities, improving UI component functionality, and providing more comprehensive color and transformation handling for Godot Engine development.
+
 # [6.1.2] (06/10/2025)
 ## Fixed
 The extension method `Camera2D_GD_CB_Extension.WorldToScreenPoint(this Camera2D, Vector2D)` had a convention problem where the method did not consider the zoom of the 2D camera.

@@ -20,9 +20,9 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// The <c>kEpsilon</c> constant is used to determine if two quaternions are nearly equal, accounting for floating-point precision errors.
     /// </remarks>
     public const float KEpsilon = 1E-06f;
-    /// <summary>Degrees-to-radians conversion constant (Read Only).</summary>
-    public const double Rad2Deg = 360d / (Math.PI * 2d);
     /// <summary>Radians-to-degrees conversion constant (Read Only).</summary>
+    public const double Rad2Deg = 360d / (Math.PI * 2d);
+    /// <summary>Degrees-to-radians conversion constant (Read Only).</summary>
     public const double Deg2Rad = (Math.PI * 2d) / 360d;
     /// <summary>Returns or sets the euler angle representation of the rotation.</summary>
     public readonly Vector3D Euler => ToEuler(this);
@@ -64,6 +64,28 @@ public struct Quaternion : IEquatable<Quaternion>, IFormattable {
     /// <inheritdoc/>
     public readonly string ToString(string format, IFormatProvider formatProvider)
         => string.Format(formatProvider, format ?? "(x:{0:N3} y:{1:N3} z:{2:N3} w:{2:N3})", this.x, this.y, this.z, this.w);
+        
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.</summary>
+    /// <param name="dir">direção.</param>
+    public readonly Vector3D GenerateDirection(Vector3D dir) => this * dir;
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.right.</summary>
+    public readonly Vector3D GenerateDirectionRight() => GenerateDirection(Vector3D.Right);
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.up.</summary>
+    public readonly Vector3D GenerateDirectionUp() => GenerateDirection(Vector3D.Up);
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.forward.</summary>
+    public readonly Vector3D GenerateDirectionForward() => GenerateDirection(Vector3D.Forward);
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.left.</summary>
+    public readonly Vector3D GenerateDirectionLeft() => GenerateDirection(Vector3D.Left);
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.down.</summary>
+    public readonly Vector3D GenerateDirectionDown() => GenerateDirection(Vector3D.Down);
+
+    /// <summary>Gera uma direção com base num <seealso cref="Vector3D"/>.back.</summary>
+    public readonly Vector3D GenerateDirectionBack() => GenerateDirection(Vector3D.Back);
 #endregion
 #region static methods
     /// <summary>Converts this quaternion to one with the same orientation but with a magnitude of 1.</summary>

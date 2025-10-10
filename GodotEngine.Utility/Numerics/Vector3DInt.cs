@@ -192,11 +192,23 @@ public struct Vector3DInt : IIntVector {
         result.z = a.z * b.z;
         return result;
     }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3DInt"/> + <seealso cref="Vector3DInt"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3DInt operator %(Vector3DInt a, Vector3DInt b) {
+        Vector3DInt result = Vector3DInt._zero;
+        result.x = a.x % b.x;
+        result.y = a.y % b.y;
+        result.z = a.z % b.z;
+        return result;
+    }
     /// <summary>Division operation between two values.(<seealso cref="Vector3DInt"/> / <seealso cref="int"/>)</summary>
     /// <param name="a">First module.</param>
     /// <param name="b">Second module.</param>
     /// <returns>The result of the division.</returns>
-    public static Vector3DInt operator /(Vector3DInt a, int b) {
+    public static Vector3DInt operator /(Vector3DInt a, int b)
+    {
         Vector3DInt result = Vector3DInt._zero;
         result.x = a.x / b;
         result.y = a.y / b;
@@ -212,6 +224,17 @@ public struct Vector3DInt : IIntVector {
         result.x = a.x * b;
         result.y = a.y * b;
         result.z = a.z * b;
+        return result;
+    }
+    /// <summary>Modulo operation between two values.(<seealso cref="Vector3DInt"/> + <seealso cref="int"/>)</summary>
+    /// <param name="a">First module.</param>
+    /// <param name="b">Second module.</param>
+    /// <returns>The result of the module.</returns>
+    public static Vector3DInt operator %(Vector3DInt a, int b) {
+        Vector3DInt result = Vector3DInt._zero;
+        result.x = a.x % b;
+        result.y = a.y % b;
+        result.z = a.z % b;
         return result;
     }
     /// <summary>Indicates whether this instance is equal to another instance of the same type.</summary>
