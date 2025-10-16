@@ -301,7 +301,7 @@ public struct Rect2D(float x,
     private static Vector2D InitVector2D(float x, float y) {
         Vector2D result = Vector2D.Zero;
         result[0] = x;
-        result[2] = x;
+        result[1] = y;
         return result;
     }
     /// <summary>Determines whether two structures <seealso cref="Rect2D"/> are equal.</summary>
