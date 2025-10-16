@@ -1,3 +1,34 @@
+# [6.2.3] (15/10/2025)
+## Fixed
+**Identified Issue:**
+The `GetDirectoryName` method exhibited incorrect behavior when processing special Godot paths, returning truncated values ​​such as "res:" and "user:" instead of the expected full paths.
+
+**Technical Description:**
+- **Affected Method:** `public static string GetDirectoryName(string path)`
+- **Defect Scenario:** When receiving paths with Godot prefixes ("res://" and "user://")
+- **Previous Behavior:** Returned "res:" and "user:" (incorrect truncation)
+- **Expected Behavior:** Maintained the full prefixes of special paths
+
+**Root Cause:**
+The method directly used .NET's `Path.GetDirectoryName`, which does not recognize Godot-specific URL schemes, resulting in improper truncation of the prefixes.
+
+**Implemented Solution:**
+Replaced the direct implementation with an intelligent substitution system that:
+- Preserves default behavior for conventional paths
+- Specifically detects and handles "res:" and "user:" cases
+- Maps to the appropriate constants (`res_path` and `user_path`)
+
+**Impact of the Fix:**
+- ✓ Correctly preserves Godot's special paths
+- ✓ Maintains compatibility with conventional system paths
+- ✓ Improved interoperability between file systems
+- ✓ Prevents errors in subsequent operations that rely on full paths
+
+**Area of ​​Impact:**
+- Manipulation of project resources (res://)
+- Access to user data (user://)
+- File system operations that use Godot paths
+
 # [6.2.2] (15/10/2025)
 ## Fixed
 **Problem:** The `Vector2D` properties (`Pivot`, `Scale`, `MinSize`, `Size` and `Position`) were throwing `ArgumentOutOfRangeException` due to an error in initializing the `Vector2D` structure.
