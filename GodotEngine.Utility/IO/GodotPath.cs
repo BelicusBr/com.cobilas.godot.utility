@@ -6,6 +6,10 @@ namespace Cobilas.GodotEngine.Utility.IO;
 public static class GodotPath {
     /// <summary>Contains the directory separator used in godot.</summary>
     public const char DirectorySeparatorChar = '/';
+
+    private const string res_path = "res://";
+    private const string user_path = "user://";
+
     /// <inheritdoc cref="Environment.CurrentDirectory"/>
     public static string CurrentDirectory => Environment.CurrentDirectory;
     /// <summary>The path to the project's root folder.</summary>
@@ -14,13 +18,13 @@ public static class GodotPath {
     public static string ProjectPath {
         get {
             if (GDFeature.HasEditor)
-                return Godot.ProjectSettings.GlobalizePath("res://");
+                return Godot.ProjectSettings.GlobalizePath(res_path);
             return CurrentDirectory;
         }
     }
     /// <summary>The path to the project's persistent files directory.</summary>
     /// <returns>Returns a string containing the path to the project's persistent files directory.</returns>
-    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath("user://");
+    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath(user_path);
     /// <inheritdoc cref="Path.Combine(string[])"/>
     public static string Combine(params string[] paths) => ICombine(paths);
     /// <inheritdoc cref="Path.Combine(string, string)"/>
@@ -42,7 +46,12 @@ public static class GodotPath {
     /// <inheritdoc cref="Path.GetInvalidFileNameChars"/>
     public static char[] GetInvalidFileNameChars() => Path.GetInvalidFileNameChars();
     /// <inheritdoc cref="Path.GetDirectoryName(string)"/>
-    public static string GetDirectoryName(string path) => Path.GetDirectoryName(path);
+    public static string GetDirectoryName(string path)
+        => (path = Path.GetDirectoryName(path)) switch {
+            "res:" => res_path,
+            "user:" => user_path,
+            _ => path
+        };
     /// <inheritdoc cref="Path.GetFileNameWithoutExtension(string)"/>
     public static string GetFileNameWithoutExtension(string path) => Path.GetFileNameWithoutExtension(path);
     /// <summary>Allows you to check if the system file name contains an invalid character.</summary>
