@@ -1,3 +1,23 @@
+# [6.2.2] (15/10/2025)
+## Fixed
+**Problem:** The `Vector2D` properties (`Pivot`, `Scale`, `MinSize`, `Size` and `Position`) were throwing `ArgumentOutOfRangeException` due to an error in initializing the `Vector2D` structure.
+
+**Root Cause:**
+- The `Vector2D` structure was being initialized incorrectly in the internal `InitVector2D` method
+- The code was assigning the value of the X axis (`x`) to both index 0 and index 2, leaving the Y axis (`y`) uninitialized
+- This affected all properties that depended on these vectors and any methods that used them
+
+**Implemented Solution:**
+- Fixed the `InitVector2D` method to correctly initialize both axes:
+  - Index 0: X axis (`x`)
+  - Index 1: Y axis (`y`)
+- Eliminated the incorrect assignment to index 2 (nonexistent in `Vector2D`)
+
+**Impact:**
+- Fixed `ArgumentOutOfRangeException` in all operations involving vector properties
+- Restored correct operation of methods that depend on these properties
+- Improved overall stability of 2D geometry manipulation
+
 # [6.2.1] (08/10/2025)
 ## Fixed
 - Made the `Gizmos.Color` property public again in the Gizmos class
