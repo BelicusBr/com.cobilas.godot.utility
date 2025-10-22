@@ -24,13 +24,17 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     public override ArchiveAttributes Attributes { get; protected set; }
     /// <inheritdoc/>
     public override string? Name { get; protected set; }
+    /// <inheritdoc/>
+    public override IDataInfo DataInfo { get; protected set; }
 
     private static readonly Folder @null = new(null, string.Empty, ArchiveAttributes.Null);
     /// <summary>A null representation of the <seealso cref="Folder"/> object.</summary>
     /// <returns>Returns a null representation of the <seealso cref="Folder"/> object.</returns>
     public static Folder Null => @null;
     /// <summary>Creates a new instance of this object.</summary>
-    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {}
+    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {
+        DataInfo = new FolderInfo(Path);
+    }
     /// <summary>Allows the creation of a new folder in the current folder.</summary>
     /// <param name="folderName">The name of the new folder.</param>
     /// <param name="recursive">Allows the creation of a folder within another in a cascade fashion. <c>(exp: Folder1/Folder2/Folder3/Folder4)</c></param>
@@ -369,9 +373,9 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     /// <param name="path">The path that will be instantiated.</param>
     /// <returns>Returns the representation of a folder.</returns>
     /// <exception cref="ArgumentNullException">Occurs if the <paramref name="path"/> parameter is null.</exception>
-    public static Folder Create(string? path) => Create(path, @null);
+    public static Folder Create(string? path) => Create(path, FolderNode.GetFolderNodeRoot(path, @null));
 
-    private static Folder Create(string? path, Folder root) {
+    private static Folder Create(string? path, DataBase root) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         Folder result = @null;
 

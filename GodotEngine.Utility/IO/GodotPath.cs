@@ -2,14 +2,20 @@ using System;
 using System.IO;
 
 namespace Cobilas.GodotEngine.Utility.IO;
-/// <summary>The class allows manipulation of system paths in godot.</summary>
+/// <summary>Provides utilities for manipulating file system paths in Godot.</summary>
+/// <remarks>
+/// This class handles both regular file system paths and Godot-specific paths (res:// and user://).
+/// It provides methods for path manipulation while maintaining Godot's path conventions.
+/// </remarks>
 public static class GodotPath {
     /// <summary>Contains the directory separator used in godot.</summary>
     public const char DirectorySeparatorChar = '/';
-
-    private const string res_path = "res://";
-    private const string user_path = "user://";
-
+    /// <summary>The prefix for resource paths in Godot.</summary>
+    /// <remarks>Resources with this prefix are loaded from the project's resource directory.</remarks>
+    public const string ResPath = "res://";
+    /// <summary>The prefix for user data paths in Godot.</summary>
+    /// <remarks>Files with this prefix are stored in the user's persistent data directory.</remarks>
+    public const string UserPath = "user://";
     /// <inheritdoc cref="Environment.CurrentDirectory"/>
     public static string CurrentDirectory => Environment.CurrentDirectory;
     /// <summary>The path to the project's root folder.</summary>
@@ -18,13 +24,13 @@ public static class GodotPath {
     public static string ProjectPath {
         get {
             if (GDFeature.HasEditor)
-                return Godot.ProjectSettings.GlobalizePath(res_path);
+                return Godot.ProjectSettings.GlobalizePath(ResPath);
             return CurrentDirectory;
         }
     }
     /// <summary>The path to the project's persistent files directory.</summary>
     /// <returns>Returns a string containing the path to the project's persistent files directory.</returns>
-    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath(user_path);
+    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath(UserPath);
     /// <inheritdoc cref="Path.Combine(string[])"/>
     public static string Combine(params string[] paths) => ICombine(paths);
     /// <inheritdoc cref="Path.Combine(string, string)"/>
@@ -48,8 +54,8 @@ public static class GodotPath {
     /// <inheritdoc cref="Path.GetDirectoryName(string)"/>
     public static string GetDirectoryName(string path)
         => (path = Path.GetDirectoryName(path)) switch {
-            "res:" => res_path,
-            "user:" => user_path,
+            "res:" => ResPath,
+            "user:" => UserPath,
             _ => path
         };
     /// <inheritdoc cref="Path.GetFileNameWithoutExtension(string)"/>
@@ -88,6 +94,10 @@ public static class GodotPath {
     private static string IGetPathRoot(string path) {
         int index = path.IndexOf("://");
         if (index != -1) return $"{path.Remove(index)}://";
-        return Path.GetPathRoot(path);
+        index = path.IndexOf(":\\");
+        if (index != -1) return $"{path.Remove(index)}:\\";
+        index = path.IndexOf(":/");
+        if (index != -1) return $"{path.Remove(index)}:/";
+        throw new ArgumentException($"The path '{path}' does not have a valid root!");
     }
 }

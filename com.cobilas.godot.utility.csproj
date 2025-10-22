@@ -10,7 +10,7 @@
         <Authors>BélicusBr</Authors>
         <Title>Cobilas Godot Utility</Title>
         <PackageId>Cobilas.Godot.Utility</PackageId>
-        <PackageVersion>6.2.3</PackageVersion>
+        <PackageVersion>6.3.0</PackageVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <RepositoryType>git</RepositoryType>
