@@ -11,19 +11,27 @@ namespace Cobilas.GodotEngine.Utility.IO;
 public readonly struct ArchiveInfo(string path) : IDataInfo {
     private readonly string _path = path;
     /// <inheritdoc/>
-    public bool IsInternal => !File.Exists(GodotPath.GlobalizePath(_path));
+    public bool IsInternal => _IsInternal(_path);
     /// <inheritdoc/>
     public bool IsGodotRoot => GodotPath.IsGodotRoot(_path);
     /// <inheritdoc/>
-    public DateTime GetCreationTime => IsInternal ? DateTime.MinValue : File.GetCreationTime(_path);
+    public DateTime GetCreationTime => IsInternal ? DateTime.MinValue : File.GetCreationTime(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
-    public DateTime GetCreationTimeUtc => IsInternal ? DateTime.MinValue : File.GetCreationTimeUtc(_path);
+    public DateTime GetCreationTimeUtc => IsInternal ? DateTime.MinValue : File.GetCreationTimeUtc(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
-    public DateTime GetLastAccessTime => IsInternal ? DateTime.MinValue : File.GetLastAccessTime(_path);
+    public DateTime GetLastAccessTime => IsInternal ? DateTime.MinValue : File.GetLastAccessTime(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
-    public DateTime GetLastAccessTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastAccessTimeUtc(_path);
+    public DateTime GetLastAccessTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastAccessTimeUtc(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
-    public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : File.GetLastWriteTime(_path);
+    public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : File.GetLastWriteTime(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
-    public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastWriteTimeUtc(_path);
+    public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastWriteTimeUtc(GodotPath.GlobalizePath(_path));
+
+    internal static bool _IsInternal(in string path) {
+        if (GDFeature.HasDebug) return false;
+        return GodotPath.GetPathRoot(path) switch {
+            GodotPath.ResPath => !File.Exists(GodotPath.GlobalizePath(path)),
+            _ => true
+        };
+    }
 }
