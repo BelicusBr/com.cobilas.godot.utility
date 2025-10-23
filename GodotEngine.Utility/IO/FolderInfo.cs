@@ -13,6 +13,8 @@ public readonly struct FolderInfo(string path) : IDataInfo {
     /// <inheritdoc/>
     public bool IsInternal => !Directory.Exists(GodotPath.GlobalizePath(_path));
     /// <inheritdoc/>
+    public bool IsGodotRoot => GodotPath.IsGodotRoot(_path);
+    /// <inheritdoc/>
     public DateTime GetCreationTime => IsInternal ? DateTime.MinValue : Directory.GetCreationTime(_path);
     /// <inheritdoc/>
     public DateTime GetCreationTimeUtc => IsInternal ? DateTime.MinValue : Directory.GetCreationTimeUtc(_path);

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Base class for classes that represent system data files.</summary>
@@ -14,7 +15,7 @@ public abstract class DataBase : IDisposable, IFormattable {
     public abstract DataBase? Parent { get; protected set; }
     /// <summary>Gets or sets the data information object for this data file.</summary>
     /// <returns>An <see cref="IDataInfo"/> object containing information about the data file.</returns>
-    public abstract IDataInfo DataInfo { get; protected set; }
+    public abstract IDataInfo? DataInfo { get; protected set; }
     /// <summary>The attributes of the data file.</summary>
     /// <returns>Returns the attributes of the data file.</returns>
     public abstract ArchiveAttributes Attributes { get; protected set; }
@@ -38,10 +39,5 @@ public abstract class DataBase : IDisposable, IFormattable {
         if (data is null) return string.Empty;
         else if (data.Attributes == ArchiveAttributes.Null) return string.Empty;
         return GodotPath.Combine(GetDataPath(data.Parent), data.Name ?? string.Empty);
-    }
-    
-    public static string ToString(DataBase? data)
-    {
-        throw new NotImplementedException();
     }
 }

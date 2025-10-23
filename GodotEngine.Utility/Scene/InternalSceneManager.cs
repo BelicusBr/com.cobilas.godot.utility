@@ -35,7 +35,7 @@ internal class InternalSceneManager : Node {
             scnt.Connect("node_added", this, nameof(nodeaddedevent));
             scnt.Connect("node_removed", this, nameof(noderemovedevent));
 
-            using Folder folder = Folder.Create("res://Scenes/");
+            using Folder folder = Folder.Create("res://Scenes");
             Archive[]? archives = folder.GetArchives();
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)

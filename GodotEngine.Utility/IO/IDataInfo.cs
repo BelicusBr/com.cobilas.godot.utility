@@ -7,6 +7,13 @@ public interface IDataInfo {
     /// <remarks>This property determines whether <seealso cref="IDataInfo"/> is embedded into the compiled godot project.</remarks>
     /// <returns>true if the data is internal; otherwise, false.</returns>
     bool IsInternal { get; }
+    /// <summary>Gets a value indicating whether this data is at the root of the Godot project.</summary>
+    /// <remarks>
+    /// The root of a Godot project is typically the directory containing the project.godot file.
+    /// This property helps identify resources that are directly in the project's root folder.
+    /// </remarks>
+    /// <returns><c>true</c> if this data is at the root of the Godot project; otherwise, <c>false</c>.</returns>
+    bool IsGodotRoot { get; }
     /// <summary>Gets the creation time of the data.</summary>
     /// <returns>A <see cref="DateTime"/> representing the creation time.</returns>
     DateTime GetCreationTime { get; }

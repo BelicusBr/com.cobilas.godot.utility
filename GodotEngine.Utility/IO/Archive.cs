@@ -25,7 +25,7 @@ public class Archive : DataBase {
     /// <inheritdoc/>
     public override string? Name { get; protected set; }
     /// <inheritdoc/>
-    public override IDataInfo DataInfo { get; protected set; }
+    public override IDataInfo? DataInfo { get; protected set; }
     /// <summary>Determines whether the object is a null representation.</summary>
     /// <returns>Returns <c>true</c> if the object is a null representation.</returns>
     public bool IsNull => this == @null;
@@ -175,8 +175,10 @@ public class Archive : DataBase {
     /// <exception cref="System.IO.FileNotFoundException">It will occur when the path of the file that this object represents does not exist.</exception>
     public void RefreshBuffer() {
         CheckDisposal();
-        if (DataInfo.IsInternal) return;
-        else if (_LastWriteTime == (_LastWriteTime = DataInfo.GetLastWriteTime)) return;
+        if (GDFeature.HasRelease) {
+            if (DataInfo!.IsInternal) return;
+            else if (_LastWriteTime == (_LastWriteTime = DataInfo.GetLastWriteTime)) return;
+        } else if (_LastWriteTime == (_LastWriteTime = DataInfo!.GetLastWriteTime)) return;
         using File file = new();
         Error error;
         buffer = (error = file.Open(Path, File.ModeFlags.Read)) switch {
