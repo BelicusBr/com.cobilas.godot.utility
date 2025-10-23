@@ -61,6 +61,7 @@ public class Archive : DataBase {
             case Error.FileCantRead: throw new ReadOnlyException("Error.FileCantRead");
             case Error.FileNotFound: throw new System.IO.FileNotFoundException("File Not Found", filePath);
         }
+        DebugLog.Log(GodotPath.GlobalizePath(filePath));
         DataInfo = new ArchiveInfo(filePath);
     }
     /// <summary>This method allows reading the system file loaded in this object.</summary>
