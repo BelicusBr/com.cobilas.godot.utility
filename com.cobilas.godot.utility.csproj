@@ -40,6 +40,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="OpenTK" Version="3.3.3" />
-        <PackageReference Include="Cobilas.Core.Net4x" Version="2.6.0" />
+        <PackageReference Include="Cobilas.Core.Net4x" Version="2.7.0" />
     </ItemGroup>
 </Project>
