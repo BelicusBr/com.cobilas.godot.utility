@@ -2,29 +2,37 @@ using System;
 using System.IO;
 
 namespace Cobilas.GodotEngine.Utility.IO;
-/// <summary>The class allows manipulation of system paths in godot.</summary>
+/// <summary>Provides utilities for manipulating file system paths in Godot.</summary>
+/// <remarks>
+/// This class handles both regular file system paths and Godot-specific paths (res:// and user://).
+/// It provides methods for path manipulation while maintaining Godot's path conventions.
+/// </remarks>
 public static class GodotPath {
     /// <summary>Contains the directory separator used in godot.</summary>
     public const char DirectorySeparatorChar = '/';
-
-    private const string res_path = "res://";
-    private const string user_path = "user://";
-
+    /// <summary>The prefix for resource paths in Godot.</summary>
+    /// <remarks>Resources with this prefix are loaded from the project's resource directory.</remarks>
+    public const string ResPath = "res://";
+    /// <summary>The prefix for user data paths in Godot.</summary>
+    /// <remarks>Files with this prefix are stored in the user's persistent data directory.</remarks>
+    public const string UserPath = "user://";
     /// <inheritdoc cref="Environment.CurrentDirectory"/>
     public static string CurrentDirectory => Environment.CurrentDirectory;
+
+    private static readonly char[] DirectorySeparatorsChar = { '\\', '/' };
     /// <summary>The path to the project's root folder.</summary>
     /// <returns>Returns the root path of the project folder. 
     /// When the project is compiled the property will use the <seealso cref="GodotPath.CurrentDirectory"/> property.</returns>
     public static string ProjectPath {
         get {
             if (GDFeature.HasEditor)
-                return Godot.ProjectSettings.GlobalizePath(res_path);
+                return Godot.ProjectSettings.GlobalizePath(ResPath);
             return CurrentDirectory;
         }
     }
     /// <summary>The path to the project's persistent files directory.</summary>
     /// <returns>Returns a string containing the path to the project's persistent files directory.</returns>
-    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath(user_path);
+    public static string PersistentFilePath => Godot.ProjectSettings.GlobalizePath(UserPath);
     /// <inheritdoc cref="Path.Combine(string[])"/>
     public static string Combine(params string[] paths) => ICombine(paths);
     /// <inheritdoc cref="Path.Combine(string, string)"/>
@@ -47,10 +55,10 @@ public static class GodotPath {
     public static char[] GetInvalidFileNameChars() => Path.GetInvalidFileNameChars();
     /// <inheritdoc cref="Path.GetDirectoryName(string)"/>
     public static string GetDirectoryName(string path)
-        => (path = Path.GetDirectoryName(path)) switch {
-            "res:" => res_path,
-            "user:" => user_path,
-            _ => path
+        => IGetPathRoot(path) switch {
+            ResPath => path == ResPath ? ResPath : path.Remove(path.LastIndexOfAny(DirectorySeparatorsChar) + 1),
+            UserPath => path == UserPath ? UserPath : path.Remove(path.LastIndexOfAny(DirectorySeparatorsChar) + 1),
+            _ => Path.GetDirectoryName(path)
         };
     /// <inheritdoc cref="Path.GetFileNameWithoutExtension(string)"/>
     public static string GetFileNameWithoutExtension(string path) => Path.GetFileNameWithoutExtension(path);
@@ -78,16 +86,35 @@ public static class GodotPath {
     /// <inheritdoc cref="Godot.ProjectSettings.GlobalizePath(string)"/>
     public static string GlobalizePath(string path) 
         => IGetPathRoot(path) switch {
-                "res://" => GDFeature.HasEditor ? Godot.ProjectSettings.GlobalizePath(path) : ICombine(CurrentDirectory, Godot.ProjectSettings.GlobalizePath(path)),
-                "user://" => Godot.ProjectSettings.GlobalizePath(path),
-                _ => path,
-            };
+            ResPath => GDFeature.HasDebug ? Godot.ProjectSettings.GlobalizePath(path) : 
+                ICombine(CurrentDirectory, Godot.ProjectSettings.GlobalizePath(path)),
+            UserPath => Godot.ProjectSettings.GlobalizePath(path),
+            _ => path,
+        };
+
+    /// <summary>Determines whether the specified path is a Godot root path.</summary>
+    /// <remarks>
+    /// This method checks if a path is one of Godot's special root paths (res:// or user://).
+    /// It is useful for determining if a path refers to a Godot resource or user data.
+    /// </remarks>
+    /// <param name="path">The path to check.</param>
+    /// <returns><c>true</c> if the path starts with either <see cref="ResPath"/> or <see cref="UserPath"/>; otherwise, <c>false</c>.</returns>
+    public static bool IsGodotRoot(string path) {
+        path = IGetPathRoot(path);
+        return path == ResPath || path == UserPath;
+    }
 
     private static string ICombine(params string[] paths) => Path.Combine(paths).Replace('\\', DirectorySeparatorChar);
+
+
 
     private static string IGetPathRoot(string path) {
         int index = path.IndexOf("://");
         if (index != -1) return $"{path.Remove(index)}://";
-        return Path.GetPathRoot(path);
+        index = path.IndexOf(":\\");
+        if (index != -1) return $"{path.Remove(index)}:\\";
+        index = path.IndexOf(":/");
+        if (index != -1) return $"{path.Remove(index)}:/";
+        throw new ArgumentException($"The path '{path}' does not have a valid root!");
     }
 }

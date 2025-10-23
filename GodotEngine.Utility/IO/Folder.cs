@@ -24,13 +24,17 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     public override ArchiveAttributes Attributes { get; protected set; }
     /// <inheritdoc/>
     public override string? Name { get; protected set; }
+    /// <inheritdoc/>
+    public override IDataInfo? DataInfo { get; protected set; }
 
     private static readonly Folder @null = new(null, string.Empty, ArchiveAttributes.Null);
     /// <summary>A null representation of the <seealso cref="Folder"/> object.</summary>
     /// <returns>Returns a null representation of the <seealso cref="Folder"/> object.</returns>
     public static Folder Null => @null;
     /// <summary>Creates a new instance of this object.</summary>
-    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {}
+    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {
+        DataInfo = new FolderInfo(Path);
+    }
     /// <summary>Allows the creation of a new folder in the current folder.</summary>
     /// <param name="folderName">The name of the new folder.</param>
     /// <param name="recursive">Allows the creation of a folder within another in a cascade fashion. <c>(exp: Folder1/Folder2/Folder3/Folder4)</c></param>
@@ -236,7 +240,6 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     /// <returns>Returns the specified archive. If not found, a null representation will be returned.</returns>
     public Archive GetArchive(string? fileName, bool recursive = false) {
         if (fileName is null || datas is null) return Archive.Null;
-
         for (var A = 0; A < datas.Length; A++) {
             switch (datas[A]) {
                 case Archive ac:
@@ -252,7 +255,6 @@ public class Folder : DataBase, IEnumerable<DataBase> {
                     break;
             }
         }
-
         return Archive.Null;
     }
     /// <inheritdoc cref="ToString()"/>
@@ -361,43 +363,15 @@ public class Folder : DataBase, IEnumerable<DataBase> {
     }
     /// <summary>Creates a new instance containing a representation of the <c>res://</c> folder.</summary>
     /// <inheritdoc cref="Create(string?)"/>
-    public static Folder CreateRes() => Create("res://", @null);
+    public static Folder CreateRes() => FolderBuilder.CreateRes();
     /// <summary>Creates a new instance containing a representation of the <c>user://</c> folder.</summary>
     /// <inheritdoc cref="Create(string?)"/>
-    public static Folder CreateUser() => Create("user://", @null);
+    public static Folder CreateUser() => FolderBuilder.CreateUser();
     /// <summary>Creates a new instance containing a specified directory.</summary>
     /// <param name="path">The path that will be instantiated.</param>
     /// <returns>Returns the representation of a folder.</returns>
     /// <exception cref="ArgumentNullException">Occurs if the <paramref name="path"/> parameter is null.</exception>
-    public static Folder Create(string? path) => Create(path, @null);
+    public static Folder Create(string? path) => FolderBuilder.Create(path);
 
-    private static Folder Create(string? path, Folder root) {
-        if (path is null) throw new ArgumentNullException(nameof(path));
-        Folder result = @null;
-
-        using Directory directory = new();
-        if (directory.Open(path) == Error.Ok) {
-            ArchiveAttributes attributes = GDFeature.HasEditor ? ArchiveAttributes.Directory : ArchiveAttributes.Directory | ArchiveAttributes.ReadOnly;
-            string npath = GodotPath.GetFileName(path);
-            result = new(root, string.IsNullOrEmpty(npath) ? path : npath, attributes);
-
-            directory.ListDirBegin(true, true);
-            string fileName = directory.GetNext();
-
-            while (!string.IsNullOrEmpty(fileName)) {
-                if (directory.CurrentIsDir()) {
-                    result.datas = ArrayManipulation.Add((DataBase)Create(GodotPath.Combine(path, fileName), result), result.datas);
-                } else {
-                    attributes = GDFeature.HasEditor ? ArchiveAttributes.File : ArchiveAttributes.File | ArchiveAttributes.ReadOnly;
-                    Archive archive = new(result, fileName, attributes);
-                    result.datas = ArrayManipulation.Add(archive, result.datas);
-                }
-                fileName = directory.GetNext();
-            }
-
-            directory.ListDirEnd();
-        }
-        result.ReorderList();
-        return result;
-    }
+    internal static void SetDataList(Folder folder, DataBase[]? datas) => folder.datas = datas;
 }

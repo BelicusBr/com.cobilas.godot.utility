@@ -1,0 +1,37 @@
+using System;
+using System.IO;
+
+namespace Cobilas.GodotEngine.Utility.IO;
+/// <summary>Represents information about an archive file or resource in the Godot engine.</summary>
+/// <remarks>
+/// This structure provides access to timestamp information for both filesystem files and internal Godot resources.
+/// For internal resources (those with paths starting with GodotPath.ResPath), all timestamp methods return DateTime.MinValue.
+/// </remarks>
+/// <param name="path">The path to the archive file or resource.</param>
+public readonly struct ArchiveInfo(string path) : IDataInfo {
+    private readonly string _path = path;
+    /// <inheritdoc/>
+    public bool IsInternal => _IsInternal(_path);
+    /// <inheritdoc/>
+    public bool IsGodotRoot => GodotPath.IsGodotRoot(_path);
+    /// <inheritdoc/>
+    public DateTime GetCreationTime => IsInternal ? DateTime.MinValue : File.GetCreationTime(GodotPath.GlobalizePath(_path));
+    /// <inheritdoc/>
+    public DateTime GetCreationTimeUtc => IsInternal ? DateTime.MinValue : File.GetCreationTimeUtc(GodotPath.GlobalizePath(_path));
+    /// <inheritdoc/>
+    public DateTime GetLastAccessTime => IsInternal ? DateTime.MinValue : File.GetLastAccessTime(GodotPath.GlobalizePath(_path));
+    /// <inheritdoc/>
+    public DateTime GetLastAccessTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastAccessTimeUtc(GodotPath.GlobalizePath(_path));
+    /// <inheritdoc/>
+    public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : File.GetLastWriteTime(GodotPath.GlobalizePath(_path));
+    /// <inheritdoc/>
+    public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : File.GetLastWriteTimeUtc(GodotPath.GlobalizePath(_path));
+
+    internal static bool _IsInternal(in string path) {
+        if (GDFeature.HasDebug) return false;
+        return GodotPath.GetPathRoot(path) switch {
+            GodotPath.ResPath => !File.Exists(GodotPath.GlobalizePath(path)),
+            _ => true
+        };
+    }
+}

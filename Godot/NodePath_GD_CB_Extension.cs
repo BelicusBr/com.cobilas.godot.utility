@@ -32,9 +32,9 @@ public static class NodePath_GD_CB_Extension {
         if (np is null) throw new ArgumentNullException(nameof(np));
         if (!np.IsAbsolute()) {
             StringBuilder builder = new(scene.GetPath());
-            for (int I = 1; I < np.GetNameCount(); I++) {
+            for (int I = 0; I < np.GetNameCount(); I++) {
                 string name = np.GetName(I);
-                if (string.IsNullOrEmpty(name)) continue;
+                if (string.IsNullOrEmpty(name) || name == ".") continue;
                 builder.AppendFormat("/{0}", name);
             }
             return scene.GetNode(builder.ToString());

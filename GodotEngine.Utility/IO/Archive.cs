@@ -12,6 +12,7 @@ namespace Cobilas.GodotEngine.Utility.IO;
 public class Archive : DataBase {
     private byte[]? buffer = [];
     private bool discarded;
+    private DateTime _LastWriteTime;
     /// <summary>Allows you to check the length of the allocated buffer.</summary>
     /// <returns>Returns the length of the allocated buffer.</returns>
     public long bufferLength => ArrayManipulation.ArrayLongLength(buffer);
@@ -23,6 +24,8 @@ public class Archive : DataBase {
     public override ArchiveAttributes Attributes { get; protected set; }
     /// <inheritdoc/>
     public override string? Name { get; protected set; }
+    /// <inheritdoc/>
+    public override IDataInfo? DataInfo { get; protected set; }
     /// <summary>Determines whether the object is a null representation.</summary>
     /// <returns>Returns <c>true</c> if the object is a null representation.</returns>
     public bool IsNull => this == @null;
@@ -51,12 +54,15 @@ public class Archive : DataBase {
     /// <summary>Creates a new instance of this object.</summary>
     public Archive(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {
         using File file = new();
-        Error error = file.Open(Path, File.ModeFlags.Read);
+        string filePath = Path;
+        Error error = file.Open(filePath, File.ModeFlags.Read);
         switch (error) {
             case Error.Ok: buffer = file.GetBuffer((long)file.GetLen()); break;
             case Error.FileCantRead: throw new ReadOnlyException("Error.FileCantRead");
-            case Error.FileNotFound: throw new System.IO.FileNotFoundException("File Not Found", Path);
+            case Error.FileNotFound: throw new System.IO.FileNotFoundException("File Not Found", filePath);
         }
+        DebugLog.Log(GodotPath.GlobalizePath(filePath));
+        DataInfo = new ArchiveInfo(filePath);
     }
     /// <summary>This method allows reading the system file loaded in this object.</summary>
     /// <returns>Returns a copy of the buffer loaded into this object.</returns>
@@ -170,6 +176,10 @@ public class Archive : DataBase {
     /// <exception cref="System.IO.FileNotFoundException">It will occur when the path of the file that this object represents does not exist.</exception>
     public void RefreshBuffer() {
         CheckDisposal();
+        if (GDFeature.HasRelease) {
+            if (DataInfo!.IsInternal) return;
+            else if (_LastWriteTime == (_LastWriteTime = DataInfo.GetLastWriteTime)) return;
+        } else if (_LastWriteTime == (_LastWriteTime = DataInfo!.GetLastWriteTime)) return;
         using File file = new();
         Error error;
         buffer = (error = file.Open(Path, File.ModeFlags.Read)) switch {
