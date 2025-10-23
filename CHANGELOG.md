@@ -1,29 +1,3 @@
-# [6.3.1] (23/10/2025)
-## Changed
-- Bumped package version to 6.3.1 in the project file (`com.cobilas.godot.utility.csproj`).
-- Packaging: enabled generation of symbol package (.snupkg) and portable PDBs (`IncludeSymbols`, `SymbolPackageFormat=snupkg`, `DebugType=portable`). `GeneratePackageOnBuild` now enabled only for Release builds.
-- Moved folder-tree construction logic into a dedicated internal `FolderBuilder` class to centralize and simplify `Folder` creation.
-
-## Added
-- `ArchiveInfo` and `FolderInfo` structs implementing `IDataInfo` (provide timestamps, `IsInternal` and `IsGodotRoot`).
-- `FolderBuilder` internal helper that creates `Folder` and `Archive` trees from both Godot resource paths (`res://`) and filesystem/user paths (`user://`).
-- `Folder.SetDataList(Folder, DataBase[]?)` internal accessor to allow the builder to inject constructed children without exposing internals.
-
-## Fixed
-- `GodotPath.GetDirectoryName` now correctly preserves Godot special roots (`res://`, `user://`) and maps truncated results (`res:`, `user:`) to the proper prefixes.
-- `Archive` buffer refresh logic: added `_LastWriteTime` tracking and checks to avoid unnecessary reloads; respects internal Godot resources and release/debug feature flags.
-- `Folder` / `FolderNode`: improved initialization and enumeration of files/folders; added `GetFolders` and `GetFiles` enumerables.
-- Extensive XML documentation added across the IO module; several members were marked nullable where appropriate (notably `IDataInfo?`).
-
-## Breaking changes / compatibility notes
-- `DataInfo` became nullable (`IDataInfo?`) in core types (`DataBase`, `Archive`, `Folder`, `FolderNode`). Update callers to guard against null (e.g. `if (data.DataInfo?.IsInternal ?? false)`).
-- The project `DefineConstants` were adjusted in the csproj: note `RELEASE` is now present in some Debug definitions in this commit — verify if intentional.
-
-## Migration tips
-- Replace direct `DataInfo` access with null-aware checks or ensure `DataInfo` is assigned before using.
-- Build packages in Release when publishing to ensure optimized assemblies and correct packaging of `.nupkg`/`.snupkg`.
-- If you rely on old `GetDirectoryName` truncation behavior, update your code to use `GodotPath` helpers instead.
-
 # [6.2.3] (15/10/2025)
 ## Fixed
 **Identified Issue:**
