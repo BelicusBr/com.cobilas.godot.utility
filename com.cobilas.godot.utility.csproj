@@ -10,7 +10,7 @@
         <Authors>BélicusBr</Authors>
         <Title>Cobilas Godot Utility</Title>
         <PackageId>Cobilas.Godot.Utility</PackageId>
-        <PackageVersion>6.3.1</PackageVersion>
+        <PackageVersion>7.0.0</PackageVersion>
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility.git</RepositoryUrl>
@@ -32,6 +32,15 @@
         <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
+
+    <!-- Excluir pastas específicas da compilação -->
+    <ItemGroup>
+        <Compile Remove="Test\**\*.cs" />
+        <!-- Também remove outros tipos de arquivos dessas pastas -->
+        <EmbeddedResource Remove="Test\**\*" />
+        <None Remove="Test\**\*" />
+        <Content Remove="Test\**\*" />
+    </ItemGroup>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
