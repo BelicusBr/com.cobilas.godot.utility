@@ -2,13 +2,14 @@
 using System.IO;
 using System.Text;
 
-namespace Cobilas.Test.IO.Interfaces;
+namespace Cobilas.GodotEngine.Utility.IO.Interfaces;
 /// <summary>Represents a generic stream interface for reading from and writing to different data sources.</summary>
 public interface IStream : IDisposable {
 	/// <inheritdoc cref="Stream.CanRead"/>
 	bool CanRead { get; }
 	/// <inheritdoc cref="Stream.CanWrite"/>
 	bool CanWrite { get; }
+	bool AutoFlush { get; set; }
 	/// <summary>Reads all bytes from the stream.</summary>
 	/// <returns>A byte array containing the data read from the stream.</returns>
 	byte[] Read();

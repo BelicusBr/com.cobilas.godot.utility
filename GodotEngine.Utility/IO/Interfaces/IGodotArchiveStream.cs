@@ -1,4 +1,4 @@
-﻿namespace Cobilas.Test.IO.Interfaces;
+﻿namespace Cobilas.GodotEngine.Utility.IO.Interfaces;
 /// <summary>Represents a Godot-specific archive stream interface with additional buffer management capabilities.</summary>
 /// <remarks>
 /// This interface extends the basic archive stream functionality with Godot-specific features,

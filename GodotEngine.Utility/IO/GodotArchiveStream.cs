@@ -2,14 +2,11 @@
 using System;
 using System.IO;
 using System.Text;
-using Cobilas.Test.IO.Interfaces;
-using Cobilas.GodotEngine.Utility.IO;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 using GDFile = Godot.File;
-using Cobilas.GodotEngine.Utility;
-using System.Data;
 
-namespace Cobilas.Test.IO;
+namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Represents a Godot-specific archive stream implementation that integrates with Godot's file system.</summary>
 /// <remarks>
 /// This class uses Godot's File API internally while providing a consistent stream interface.
@@ -23,6 +20,7 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	private readonly FileAccess access;
 	private readonly MemoryStream memory;
 	
+	public bool AutoFlush { get; set; }
 	public bool IsInternal => isInternal;
 	/// <inheritdoc/>
 	public bool CanRead => IsSupport(FileAccess.Read);
@@ -42,6 +40,7 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	public GodotArchiveStream(string? path, FileAccess access) {
 		if (path is null) throw new ArgumentNullException(nameof(path));
 		file = new();
+		AutoFlush = false;
 		this.access = access;
 		isInternal = GodotPath.GetPathRoot(path) switch {
             GodotPath.ResPath when GDFeature.HasRelease => true,
@@ -51,31 +50,34 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 		if ((error = file.Open(path, isInternal ? GDFile.ModeFlags.Read : GDFile.ModeFlags.ReadWrite)) != Error.Ok)
 			throw new UnauthorizedAccessException($"[{error}]{path}");
 		_name = GodotPath.GetFileName(path);
-		memory = new(file.GetBuffer(BufferLength), !isInternal);
+		(memory = new())
+			.Write(file.GetBuffer((long)file.GetLen()));
+		Position = 0L;
 	}
 	/// <inheritdoc/>
 	public byte[] Read() {
 		if (!CanRead) throw new NotSupportedException("The stream does not support read operations.");
 		long oldPos = Position;
+		Position = 0L;
 		byte[] result = memory.Read();
 		Position = oldPos;
 		return result;
 	}
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out string result)
-		=> result = (encoding ?? Encoding.UTF8).GetString(memory.Read());
+		=> result = (encoding ?? Encoding.UTF8).GetString(Read());
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out StringBuilder result)
-		=> result = new((encoding ?? Encoding.UTF8).GetString(memory.Read()));
+		=> result = new((encoding ?? Encoding.UTF8).GetString(Read()));
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out char[] result)
-		=> result = (encoding ?? Encoding.UTF8).GetChars(memory.Read());
+		=> result = (encoding ?? Encoding.UTF8).GetChars(Read());
 	/// <inheritdoc/>
-	public void Read(out string result) => Read(out result);
+	public void Read(out string result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
-	public void Read(out StringBuilder result) => Read(out result);
+	public void Read(out StringBuilder result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
-	public void Read(out char[] result) => Read(out result);
+	public void Read(out char[] result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
 	public void RefreshBuffer() {
 		memory.SetLength(0L);
@@ -126,13 +128,17 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	/// <inheritdoc/>
 	public void Flush() {
 		if (!CanWrite) throw new NotSupportedException("The stream does not support write operations.");
-		file.StoreBuffer(memory.GetBuffer());
-		file.Flush();
+		file.Seek(0L);
+		file.StoreBuffer(new byte[(long)file.GetLen()]);
+		file.Seek(0L);
+		file.StoreBuffer(memory.ToArray());
 	}
 	/// <inheritdoc/>
 	public void Dispose() {
-		Flush();
+		if (AutoFlush)
+			Flush();
 		_name = null;
+		file.Flush();
 		file.Dispose();
 		memory.Dispose();
 		_disposedValue = true;

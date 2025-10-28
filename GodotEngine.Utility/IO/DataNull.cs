@@ -1,7 +1,7 @@
 using System;
-using Cobilas.Test.IO.Interfaces;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
-namespace Cobilas.Test.IO;
+namespace Cobilas.GodotEngine.Utility.IO;
 
 public readonly struct DataNull : IDataInfo {
 	private readonly static DataNull @null = new();

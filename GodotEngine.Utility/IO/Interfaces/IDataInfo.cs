@@ -1,6 +1,6 @@
 using System;
 
-namespace Cobilas.Test.IO.Interfaces;
+namespace Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 public interface IDataInfo : IDisposable, IFormattable {
     string Name { get; }

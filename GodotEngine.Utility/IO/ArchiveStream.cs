@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Cobilas.Test.IO.Interfaces;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
-namespace Cobilas.Test.IO;
+namespace Cobilas.GodotEngine.Utility.IO;
 /// <summary>Represents a file-based archive stream implementation that provides read and write operations.</summary>
 /// <remarks>
 /// This class wraps a <see cref="FileStream"/> to provide archive stream functionality
@@ -16,6 +16,7 @@ namespace Cobilas.Test.IO;
 /// <exception cref="UnauthorizedAccessException">Thrown when access is denied.</exception>
 public sealed class ArchiveStream(string? path, FileAccess access) : IArchiveStream {
 	private readonly FileStream stream = new(path, FileMode.Open, access);
+	public bool AutoFlush { get; set; } = false;
 	/// <inheritdoc/>
 	public string Name => stream.Name;
 	/// <inheritdoc/>
@@ -27,22 +28,29 @@ public sealed class ArchiveStream(string? path, FileAccess access) : IArchiveStr
 	/// <inheritdoc/>
 	public long BufferLength { get => stream.Length; set => stream.SetLength(value); }
 	/// <inheritdoc/>
-	public byte[] Read() => stream.Read();
+	public byte[] Read() {
+		long oldPos = Position;
+		Position = 0L;
+		byte[] result = stream.Read();
+		Position = oldPos;
+		return result;
+	}
+
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out string result)
-		=> result = (encoding ?? Encoding.UTF8).GetString(stream.Read());
+		=> result = (encoding ?? Encoding.UTF8).GetString(Read());
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out StringBuilder result)
-		=> result = new((encoding ?? Encoding.UTF8).GetString(stream.Read()));
+		=> result = new((encoding ?? Encoding.UTF8).GetString(Read()));
 	/// <inheritdoc/>
 	public void Read(Encoding? encoding, out char[] result)
-		=> result = (encoding ?? Encoding.UTF8).GetChars(stream.Read());
+		=> result = (encoding ?? Encoding.UTF8).GetChars(Read());
 	/// <inheritdoc/>
-	public void Read(out string result) => Read(out result);
+	public void Read(out string result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
-	public void Read(out StringBuilder result) => Read(out result);
+	public void Read(out StringBuilder result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
-	public void Read(out char[] result) => Read(out result);
+	public void Read(out char[] result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
 	public void ReplaceBuffer(byte[]? newBuffer) {
 		BufferLength = 0L;
@@ -87,5 +95,10 @@ public sealed class ArchiveStream(string? path, FileAccess access) : IArchiveStr
 	/// <inheritdoc/>
 	public void Flush() => stream.Flush();
 	/// <inheritdoc/>
-	public void Dispose() => stream.Dispose();
+	public void Dispose()
+	{
+		if (AutoFlush)
+			Flush();
+		stream.Dispose();
+	}
 }

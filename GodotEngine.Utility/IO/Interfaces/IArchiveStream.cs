@@ -1,4 +1,4 @@
-﻿namespace Cobilas.Test.IO.Interfaces;
+﻿namespace Cobilas.GodotEngine.Utility.IO.Interfaces;
 /// <summary>Represents an archive stream interface that extends basic stream functionality with position tracking and naming.</summary>
 public interface IArchiveStream : IStream {
 	/// <summary>Gets or sets the current position within the stream.</summary>
