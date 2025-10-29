@@ -35,7 +35,7 @@ public sealed class ArchiveInfo(string? path) : IArchiveInfo {
 	/// <inheritdoc/>
 	public bool IsInternal =>
 		GodotPath.GetPathRoot(FullName) switch {
-			GodotPath.ResPath when GDFeature.HasRelease => true,
+			GodotPath.ResPath when GDFeature.HasStandalone => true,
 			_ => false,
 		};
 	/// <inheritdoc/>
@@ -56,7 +56,7 @@ public sealed class ArchiveInfo(string? path) : IArchiveInfo {
 	public IStream Open(FileAccess access, StreamType type)
 		=> type switch {
 			StreamType.IOStream => GodotPath.GetPathRoot(path ?? throw new ArgumentNullException(nameof(path))) switch {
-				GodotPath.ResPath when GDFeature.HasDebug => new ArchiveStream(GodotPath.GlobalizePath(path), access),
+				GodotPath.ResPath when GDFeature.HasEditor => new ArchiveStream(GodotPath.GlobalizePath(path), access),
 				GodotPath.ResPath => new GodotArchiveStream(path, access),
 				_ => new ArchiveStream(GodotPath.GlobalizePath(path), access),
 			},
@@ -74,7 +74,7 @@ public sealed class ArchiveInfo(string? path) : IArchiveInfo {
 	public bool CopyTo(string? destinationPath, bool overwrite) {
 		DisposedException();
 		if (destinationPath is null) throw new ArgumentNullException(nameof(destinationPath));
-		else if (GDFeature.HasRelease)
+		else if (GDFeature.HasStandalone)
 			if (GodotPath.GetPathRoot(destinationPath) == GodotPath.ResPath)
 				return false;
 		destinationPath = GodotPath.GlobalizePath(destinationPath);
@@ -154,7 +154,7 @@ public sealed class ArchiveInfo(string? path) : IArchiveInfo {
 
 	private static GDFile.ModeFlags GetModeFlags(string path)
 		=> GodotPath.GetPathRoot(path) switch {
-			GodotPath.ResPath when GDFeature.HasRelease => GDFile.ModeFlags.Read,
+			GodotPath.ResPath when GDFeature.HasStandalone => GDFile.ModeFlags.Read,
 			_ => GDFile.ModeFlags.ReadWrite,
 		};
 

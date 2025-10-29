@@ -86,7 +86,7 @@ public static class GodotPath {
     /// <inheritdoc cref="Godot.ProjectSettings.GlobalizePath(string)"/>
     public static string GlobalizePath(string path) 
         => IGetPathRoot(path) switch {
-            ResPath => GDFeature.HasDebug ? Godot.ProjectSettings.GlobalizePath(path) : 
+            ResPath => GDFeature.HasEditor ? Godot.ProjectSettings.GlobalizePath(path) : 
                 ICombine(CurrentDirectory, Godot.ProjectSettings.GlobalizePath(path)),
             UserPath => Godot.ProjectSettings.GlobalizePath(path),
             _ => path,

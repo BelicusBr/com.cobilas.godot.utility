@@ -42,7 +42,7 @@ public sealed class FolderInfo(string? path, bool skipHidden) : IFolderInfo {
 	/// <inheritdoc/>
 	public bool IsInternal =>
 		GodotPath.GetPathRoot(FullName) switch {
-			GodotPath.ResPath when GDFeature.HasRelease => true,
+			GodotPath.ResPath when GDFeature.HasStandalone => true,
 			_ => false,
 		};
 	/// <inheritdoc/>
