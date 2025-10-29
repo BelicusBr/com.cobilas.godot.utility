@@ -129,9 +129,9 @@ public struct Vector3DInt : IIntVector {
     /// <returns>Returns the converted vector and floor</returns>
     public static Vector3DInt FloorToInt(in Vector3D a) {
         Vector3DInt result = Vector3DInt._zero;
-        result[0] = Mathf.FloorToInt(result[0]);
-        result[1] = Mathf.FloorToInt(result[1]);
-        result[2] = Mathf.FloorToInt(result[2]);
+        result[0] = Mathf.FloorToInt(a[0]);
+        result[1] = Mathf.FloorToInt(a[1]);
+        result[2] = Mathf.FloorToInt(a[2]);
         return result;
     }
     /// <summary>Converts a floating-point vector to an integer vector and applies a Ceiling to each value.</summary>
@@ -139,9 +139,9 @@ public struct Vector3DInt : IIntVector {
     /// <returns>Returns the converted vector and ceiling</returns>
     public static Vector3DInt CeilToInt(in Vector3D a) {
         Vector3DInt result = Vector3DInt._zero;
-        result[0] = Mathf.CeilToInt(result[0]);
-        result[1] = Mathf.CeilToInt(result[1]);
-        result[2] = Mathf.CeilToInt(result[2]);
+        result[0] = Mathf.CeilToInt(a[0]);
+        result[1] = Mathf.CeilToInt(a[1]);
+        result[2] = Mathf.CeilToInt(a[2]);
         return result;
     }
     /// <summary>Addition operation between two values.(<seealso cref="Vector3DInt"/> + <seealso cref="Vector3DInt"/>)</summary>

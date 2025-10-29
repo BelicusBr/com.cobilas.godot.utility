@@ -4,8 +4,10 @@ public static class Object_CB_GD_Extension {
     /// <inheritdoc cref="GD.Print(object[])"/>
     /// <param name="N">The <see cref="Godot.Node"/> that will be used.</param>
     /// <param name="args">The arguments passed will be printed to the console.</param>
-    public static void Print(this Godot.Object N, params object[] args)
-        => GD.Print(args);
+    public static void Print(this Godot.Object? N, params object[] args) {
+        if (N is null) throw new System.ArgumentNullException(nameof(N));
+        GD.Print(args);
+	}
     /// <summary>Permite definir scripts de forma segura.</summary>
     /// <param name="obj">O objeto alvo.</param>
     /// <param name="resource">O script que será definido.</param>

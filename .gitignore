@@ -5,6 +5,11 @@
 .import/
 export.cfg
 export_presets.cfg
+.libs
+bin
+obj
+.vscode
+node_modules
 
 # Imported translations (automatically generated from CSV files)
 *.translation

@@ -110,15 +110,15 @@ public struct Vector2DInt : IIntVector {
     /// <inheritdoc cref="Vector3DInt.FloorToInt(in Vector3D)"/>
     public static Vector2DInt FloorToInt(in Vector2D a) {
         Vector2DInt result = Vector2DInt._zero;
-        result[0] = Mathf.FloorToInt(result[0]);
-        result[1] = Mathf.FloorToInt(result[1]);
+        result[0] = Mathf.FloorToInt(a[0]);
+        result[1] = Mathf.FloorToInt(a[1]);
         return result;
     }
     /// <inheritdoc cref="Vector3DInt.CeilToInt(in Vector3D)"/>
     public static Vector2DInt CeilToInt(in Vector2D a) {
         Vector2DInt result = Vector2DInt._zero;
-        result[0] = Mathf.CeilToInt(result[0]);
-        result[1] = Mathf.CeilToInt(result[1]);
+        result[0] = Mathf.CeilToInt(a[0]);
+        result[1] = Mathf.CeilToInt(a[1]);
         return result;
     }
     /// <summary>Addition operation between two values.(<seealso cref="Vector2DInt"/> + <seealso cref="Vector2DInt"/>)</summary>

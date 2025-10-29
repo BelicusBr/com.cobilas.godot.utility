@@ -21,7 +21,7 @@ internal class LastCoroutineManager : Node {
 
     public override void _Process(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-            CoroutineItem? coroutine = waits[I];
+            CoroutineItem? coroutine = waits![I];
             if (!coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);
@@ -32,7 +32,7 @@ internal class LastCoroutineManager : Node {
 
     public override void _PhysicsProcess(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
-            CoroutineItem? coroutine = waits[I];
+            CoroutineItem? coroutine = waits![I];
             if (coroutine.IsPhysicsProcess)
                 if (!coroutine.Run()) {
                     ArrayManipulation.Remove(I, ref waits);

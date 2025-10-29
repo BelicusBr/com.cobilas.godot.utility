@@ -1,10 +1,12 @@
 using Godot;
 using System;
+using System.IO;
 using System.Text;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;
 using Cobilas.GodotEngine.Utility.IO;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEngine.Utility; 
 
@@ -64,22 +66,20 @@ public static class Screen {
                 Displays = temp ?? [];
             }
         }
-        using (Folder folder = Folder.CreateRes()) {
-            Archive archive = folder.GetArchive("AddResolution.json");
-            if (!archive.IsNull) {
-                archive.Read(out string stg);
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
-            }
-        }
 
-        if (GDFeature.HasRelease) {
-            using Folder folder = Folder.Create(GodotPath.CurrentDirectory);
-            Archive archive = folder.GetArchive("AddResolution.json");
-            if (!archive.IsNull) {
-                archive.Read(out string stg);
-                AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
-            }
-        }
+		string path = "res://AddResolution.json";
+		if (Archive.Exists(path)) {
+		    using IStream archive = Archive.Open(path, FileAccess.Read);
+			archive.Read(out string stg);
+			AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+		}
+		path = GDFeature.HasRelease ? GodotPath.GlobalizePath(path) : path;
+
+		if (Archive.Exists(path)) {
+			using IStream archive = Archive.Open(path, FileAccess.Read);
+			archive.Read(out string stg);
+			AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
+		}
     }
     /// <summary>Add a custom resolution.</summary>
     /// <param name="width">The width of the screen.</param>
@@ -94,12 +94,13 @@ public static class Screen {
         DisplayInfo display = CurrentDisplay;
         Displays[GetIndexDisplay(OS.CurrentScreen)] = display =
             DisplayInfo.AddCustonResolution(new(new Numerics.Vector2D(width, height), refreshRate), display);
-        
-        using Folder folder = Folder.CreateRes();
-        Archive archive = folder.GetArchive("AddResolution.json");
-        if (archive.IsNull) archive = folder.CreateArchive("AddResolution.json");
-        archive.ReplaceBuffer(Encoding.UTF8.GetBytes(Json.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), true)));
-        archive.Flush();
+
+        string path = "res://AddResolution.json";
+        path = GDFeature.HasRelease ? GodotPath.GlobalizePath(path) : path;
+        if (!Archive.Exists(path))
+            _ = Archive.Create(path);
+        using IStream archive = Archive.Open(path, FileAccess.Write);
+        archive.ReplaceBuffer(Json.Serialize(Array.ConvertAll(Displays, d => d.CustonResolutions), true));
     }
     /// <summary>Defines which screen will be used.</summary>
     /// <param name="index">The target index of the screen.</param>
