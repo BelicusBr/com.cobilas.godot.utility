@@ -16,6 +16,7 @@ namespace Cobilas.GodotEngine.Utility.IO;
 /// <exception cref="UnauthorizedAccessException">Thrown when access is denied.</exception>
 public sealed class ArchiveStream(string? path, FileAccess access) : IArchiveStream {
 	private readonly FileStream stream = new(path, FileMode.Open, access);
+	/// <inheritdoc/>
 	public bool AutoFlush { get; set; } = false;
 	/// <inheritdoc/>
 	public string Name => stream.Name;

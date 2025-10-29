@@ -19,8 +19,9 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	private readonly bool isInternal;
 	private readonly FileAccess access;
 	private readonly MemoryStream memory;
-	
+	/// <inheritdoc/>
 	public bool AutoFlush { get; set; }
+	/// <inheritdoc/>
 	public bool IsInternal => isInternal;
 	/// <inheritdoc/>
 	public bool CanRead => IsSupport(FileAccess.Read);

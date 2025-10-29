@@ -9,6 +9,12 @@ public interface IStream : IDisposable {
 	bool CanRead { get; }
 	/// <inheritdoc cref="Stream.CanWrite"/>
 	bool CanWrite { get; }
+	/// <summary>
+	/// Gets or sets a value indicating whether the stream should automatically flush after 
+	/// each write operation.
+	/// </summary>
+	/// <returns><c>true</c> if auto-flush is enabled; otherwise, <c>false</c>.</returns>
+	/// <value><c>true</c> to enable auto-flush; <c>false</c> to disable it.</value>
 	bool AutoFlush { get; set; }
 	/// <summary>Reads all bytes from the stream.</summary>
 	/// <returns>A byte array containing the data read from the stream.</returns>

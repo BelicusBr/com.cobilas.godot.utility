@@ -9,6 +9,8 @@ public interface IGodotArchiveStream : IStream {
 	/// <returns>The current position within the stream.</returns>
 	/// <value>The new position within the stream.</value>
 	long Position { get; set; }
+	/// <summary>Gets a value indicating whether the stream is internal to the Godot engine.</summary>
+	/// <returns>true if the stream is internal to Godot; otherwise, false.</returns>
 	bool IsInternal { get; }
 	/// <summary>Gets the name of the Godot archive stream.</summary>
 	/// <returns>The name identifier of the stream.</returns>
