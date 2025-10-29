@@ -10,12 +10,12 @@
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
         <PackageId>Cobilas.Godot.Utility</PackageId>
         <Title>Cobilas Godot Utility</Title>
-        <Version>7.0.1</Version>
+        <Version>7.0.2</Version>
         <Authors>BélicusBr</Authors>
         <Description>The package contains utility classes in csharp for godot engine</Description>
         <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageOutputPath>C:\local.nuget\$(Configuration)</PackageOutputPath>
+        <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>CSharp;C#;net472;netstandard2.0;netstandard2.1;godotengine;godot</PackageTags>
@@ -37,7 +37,7 @@
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
 		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
-		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.1" />
+		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
 		<Reference Include="GodotSharp">
 			<HintPath>..\assemblies\Debug\GodotSharp.dll</HintPath>
