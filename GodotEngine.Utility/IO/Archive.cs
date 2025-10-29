@@ -55,7 +55,7 @@ public static class Archive {
 	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
 	public static bool Create(string? path) {
 		if (path is null) throw new ArgumentNullException(nameof(path));
-		else if (GDFeature.HasRelease)
+		else if (GDFeature.HasStandalone)
 			if (GodotPath.GetPathRoot(path) == GodotPath.ResPath)
 				return false;
 		path = GodotPath.GlobalizePath(path);

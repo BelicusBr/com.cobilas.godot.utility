@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.1.1] - (29/10/2025)
+
+### Changed
+- **Build Configuration**: Replaced `GDFeature.HasRelease` with `GDFeature.HasStandalone` and `GDFeature.HasDebug` with `GDFeature.HasEditor` throughout the codebase
+- **Cache Location**: Updated `SerializationCache` to use `ResPath` instead of `UserPath` for cache storage
+- **Path Handling**: Modified `GodotPath.GlobalizePath` to use `GDFeature.HasEditor` instead of `GDFeature.HasDebug`
+- **Screen Configuration**: Updated path handling in `Screen` class to use `GDFeature.HasStandalone`
+
+### Version
+- Bumped package version from 7.0.2 to 7.1.1
+
 ## [7.0.2] - (29/10/2025)
 
 ### Changed
