@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.IO;
-using System.Text;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility;
@@ -9,10 +8,7 @@ using Cobilas.IO.Serialization.Json;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.Runtime;
 
-using IOPath = System.IO.Path;
-using IOFile = System.IO.File;
-using IODirectory = System.IO.Directory;
-using SYSEnvironment = System.Environment;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>Class to handle property caching.</summary>
@@ -26,20 +22,20 @@ public static class SerializationCache {
     /// <returns>Returns <c>true</c> when the value is retrieved from the cache.</returns>
     public static bool GetValueInCache(SNInfo info, string? propertyName, out string value) {
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
-        //string res = $"res://cache/{(RunTime.ExecutionMode == ExecutionMode.PlayerMode ? "player" : "editor")}";
 
         value = string.Empty;
-        using Folder directory = Folder.Create("res://cache");
-        Archive file = directory.GetArchive($"id_{GetID(info)}.cache");
-        if (file == Archive.Null) {
-            SetValueInCache(info, propertyName, value = string.Empty);
-            return false;
-        }
-        file.RefreshBuffer();
-        file.Read(out string stg);
-        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
+        string id = GetID(info),
+               path = GodotPath.Combine(GodotPath.UserPath, "cache", $"id_{id}.cache");
 
-        if (cache is not null && cache.TryGetValue(propertyName, out value)) return true;
+        if (Archive.Exists(path)) {
+            using IGodotArchiveStream stream = (IGodotArchiveStream)Archive.Open(path, FileAccess.Read);
+
+			stream.Read(out string stg);
+			Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
+
+			if (cache is not null && cache.TryGetValue(propertyName, out value)) return true;
+		} else _ = SetValueInCache(info, propertyName, value = string.Empty);
+
         return false;
     }
     /// <summary>Caches the property value.</summary>
@@ -49,36 +45,43 @@ public static class SerializationCache {
     /// <returns>Returns <c>true</c> when the property value is cached.</returns>
     public static bool SetValueInCache(SNInfo info, string? propertyName, object? value) {
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
-        if (string.IsNullOrEmpty((string)info[1])) return false;
-        CreateFileCache($"id_{info["id"]}.cache");
+        else if (string.IsNullOrEmpty((string)info[1])) return false;
 
-        using Folder directory = Folder.Create("res://cache");
-        Archive file = directory.GetArchive($"id_{info["id"]}.cache");
-        file.Read(out string stg);
-        Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
-        if (cache is null) return false;
-        if (!cache.ContainsKey("nodePath"))
-            cache.Add("nodePath", (string)info[1]);
-        if (!cache.ContainsKey(propertyName))
-            cache.Add(propertyName, value is null ? string.Empty : value.ToString());
-        else cache[propertyName] = value is null ? string.Empty : value.ToString();
-        file.ReplaceBuffer(Encoding.UTF8.GetBytes(Json.Serialize(cache)));
-        file.Flush();
-        return true;
+        string id = (string)info["id"],
+               path = GodotPath.Combine(GodotPath.UserPath, "cache", $"id_{id}.cache");
+        CreateFileCache($"id_{id}.cache");
+
+        if (Archive.Exists(path)) {
+            using IStream stream = Archive.Open(path, FileAccess.ReadWrite);
+            stream.AutoFlush = true;
+            stream.Read(out string stg);
+            Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg) ?? [];
+            if (!cache.ContainsKey("nodePath"))
+                cache.Add("nodePath", (string)info[1]);
+            if (!cache.ContainsKey(propertyName))
+                cache.Add(propertyName, value is null ? string.Empty : value.ToString());
+            else cache[propertyName] = value is null ? string.Empty : value.ToString();
+			stream.ReplaceBuffer(Json.Serialize(cache));
+            return true;
+		}
+        return false;
     }
 
     private static string GetID(SNInfo info) {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return (string)info[0];
         else if (_cache.Contains((string)info[0])) return (string)info[0];
         _cache.Add((string)info[0]);
-        using Folder directory = Folder.Create("res://cache");
+
+        using IFolderInfo datas = Folder.Open(GodotPath.Combine(GodotPath.UserPath, "cache"));
         List<Dictionary<string, string>> list = [];
-        Archive[]? archives = directory.GetArchives();
+
+        IArchiveInfo[] archives = datas.GetArchives();
 
         if (ArrayManipulation.EmpytArray(archives)) return string.Empty;
         
-        foreach (Archive file in archives) {
-            file.Read(out string stg);
+        foreach (IArchiveInfo file in archives) {
+            using IStream stream = file.Open(FileAccess.Read);
+			stream.Read(out string stg);
             Dictionary<string, string>? cache = Json.Deserialize<Dictionary<string, string>>(stg);
             if (cache is null) continue;
             foreach (string? item in cache["nodePath"].Split(separator, StringSplitOptions.RemoveEmptyEntries))
@@ -108,26 +111,28 @@ public static class SerializationCache {
     }
 
     private static void RefreshFileCache(string fileName, Dictionary<string, string> json) {
-        string dir = IOPath.Combine(SYSEnvironment.CurrentDirectory, "cache", fileName);
-        if (IOFile.Exists(dir)) {
-            using FileStream stream = IOFile.Create(dir);
-            stream.Write(Json.Serialize(json));
-        } else CreateFileCache(fileName, json);
-    }
+        string path = GodotPath.Combine(GodotPath.UserPath, "cache", fileName);
+
+        if (Archive.Exists(path)) {
+			using IStream stream = Archive.Open(path, FileAccess.Write);
+			stream.Write(Json.Serialize(json));
+		} else CreateFileCache(fileName, json);
+	}
 
     private static void CreateFileCache(string fileName) => CreateFileCache(fileName, []);
 
     private static void CreateFileCache(string fileName, Dictionary<string, string> json) {
-        string dir = IOPath.Combine(SYSEnvironment.CurrentDirectory, "cache");
-        
-        fileName = IOPath.Combine(dir, fileName);
+        string path = GodotPath.Combine(GodotPath.UserPath, "cache");
 
-        if (!IODirectory.Exists(dir))
-            IODirectory.CreateDirectory(dir);
+        if (!Folder.Exists(path))
+            Folder.Create(path).Dispose();
 
-        if (!IOFile.Exists(fileName)) {
-            using FileStream stream = IOFile.Create(fileName);
-            stream.Write(Json.Serialize(json));
-        }
+        path = GodotPath.Combine(path, fileName);
+
+        if (!Archive.Exists(path))
+            if (Archive.Create(path)) {
+                using IStream stream = Archive.Open(path, FileAccess.Write);
+                stream.Write(Json.Serialize(json));
+            }
     }
 }

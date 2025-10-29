@@ -1,8 +1,10 @@
-using Godot;
-using System;
 using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.IO;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 using Cobilas.GodotEngine.Utility.Runtime;
+using Godot;
+using System;
+using System.IO;
 
 namespace Cobilas.GodotEngine.Utility.Scene;
 /// <summary>This class can be used to manage scene switching.</summary>
@@ -35,11 +37,11 @@ internal class InternalSceneManager : Node {
             scnt.Connect("node_added", this, nameof(nodeaddedevent));
             scnt.Connect("node_removed", this, nameof(noderemovedevent));
 
-            using Folder folder = Folder.Create("res://Scenes/");
-            Archive[]? archives = folder.GetArchives();
+            using IFolderInfo folder = Folder.Open("res://Scenes");
+            IArchiveInfo[] archives = folder.GetArchives();
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
-                scenes[I] = new(archives[I].Path, I, NullNode.Null);
+                scenes[I] = new(archives[I].FullName, I, NullNode.Null);
         }
     }
     

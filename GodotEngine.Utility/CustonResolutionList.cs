@@ -25,7 +25,7 @@ public readonly struct CustonResolutionList : IEnumerable<Resolution> {
 
     /// <summary>Starts a new instance of the object.</summary>
     public CustonResolutionList(in int hash, in IEnumerable<Resolution> resolutions) :
-        this(hash, resolutions.ToArray()) {}
+        this(hash, [.. resolutions]) {}
     /// <summary>Serializes a list of objects to a specified file.</summary>
     /// <param name="list">The list to be serialized.</param>
     /// <param name="stream">The file that will receive the list.</param>

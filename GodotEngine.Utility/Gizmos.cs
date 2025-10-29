@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace Cobilas.GodotEngine.Utility;
 /// <summary>Gizmos are used to give visual debugging or setup aids in the Scene view.</summary>
 public static class Gizmos {
-
     /// <summary>Sets the Color of the gizmos that are drawn next.</summary>
     /// <value>Returns or sets the color of the next gizmo.</value>
     public static Color Color {

@@ -9,6 +9,24 @@
 			"name": "Documentações"
 		}
 	],
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "dotnet nuget pack",
+				"command": "dotnet pack -c Release",
+				"type": "shell",
+				"args": [],
+				"problemMatcher": [
+					"$tsc"
+				],
+				"presentation": {
+					"reveal": "always"
+				},
+				"group": "build"
+			}
+		]
+	},
 	"settings": {
 		"workbench.iconTheme": "vscode-icon-theme",
 		"workbench.colorTheme": "Visual Studio Dark - C++",
