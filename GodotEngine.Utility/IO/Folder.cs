@@ -1,403 +1,193 @@
-using Godot;
 using System;
-using System.Text;
-using System.Data;
-using System.Collections;
-using Cobilas.Collections;
-using System.Globalization;
-using System.Collections.Generic;
-
-using IOFile = System.IO.File;
+using System.IO;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEngine.Utility.IO;
-/// <summary>A representation of a system folder.</summary>
-public class Folder : DataBase, IEnumerable<DataBase> {
-    private bool discarded;
-    private DataBase[]? datas = [];
+/// <summary>
+/// Provides static methods for working with folders and directories in 
+/// both Godot and system file systems.
+/// </summary>
+/// <remarks>
+/// This class offers a unified interface for folder operations that works seamlessly
+/// across Godot's virtual file system and the underlying operating system's file system.
+/// </remarks>
+public static class Folder {
+	private readonly static string[] logicalDrives = Directory.GetLogicalDrives();
+	/// <summary>Gets the logical drives available on the system.</summary>
+	/// <returns>An array of strings representing the logical drives (e.g., "C:\", "D:\").</returns>
+	public static string[] LogicalDrives => logicalDrives;
+	/// <summary>Opens a folder at the specified path with the option to skip hidden items.</summary>
+	/// <param name="path">The path to the folder. If null, an exception will be thrown.</param>
+	/// <param name="skipHidden">Whether to skip hidden files and folders in the enumeration.</param>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the opened folder.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static IFolderInfo Open(string? path, bool skipHidden) => new FolderInfo(path, skipHidden);
+	/// <summary>Opens a folder at the specified path, automatically skipping hidden items.</summary>
+	/// <param name="path">The path to the folder. If null, an exception will be thrown.</param>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the opened folder.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static IFolderInfo Open(string? path) => Open(path, true);
+	/// <summary>Opens the Godot resource path folder with the option to skip hidden items.</summary>
+	/// <param name="skipHidden">Whether to skip hidden files and folders in the enumeration.</param>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the Godot resource folder.</returns>
+	public static IFolderInfo OpenRes(bool skipHidden) => Open(GodotPath.ResPath, skipHidden);
+	/// <summary>Opens the Godot resource path folder, automatically skipping hidden items.</summary>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the Godot resource folder.</returns>
+	public static IFolderInfo OpenRes() => OpenRes(true);
+	/// <summary>Opens the Godot user data path folder with the option to skip hidden items.</summary>
+	/// <param name="skipHidden">Whether to skip hidden files and folders in the enumeration.</param>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the Godot user data folder.</returns>
+	public static IFolderInfo OpenUser(bool skipHidden) => Open(GodotPath.UserPath, skipHidden);
+	/// <summary>Opens the Godot user data path folder, automatically skipping hidden items.</summary>
+	/// <returns>An <see cref="IFolderInfo"/> instance representing the Godot user data folder.</returns>
+	public static IFolderInfo OpenUser() => OpenUser(true);
+	/// <summary>Creates a new folder at the specified path.</summary>
+	/// <param name="path">The full path where the folder should be created.</param>
+	/// <returns>An <see cref="IDataInfo"/> instance representing the newly created folder.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static IDataInfo Create(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		string npath = GodotPath.GetDirectoryName(path);
+		return (_ = new FolderInfo(npath, false)).CreateFolder(GodotPath.GetFileName(path));
+	}
+	/// <summary>Deletes the folder at the specified path and all its contents.</summary>
+	/// <remarks>
+	/// This method will not delete internal Godot folders. If the path is empty or null, 
+	/// the operation will return false without throwing an exception.
+	/// </remarks>
+	/// <param name="path">The path to the folder to delete.</param>
+	/// <returns>true if the folder was successfully deleted; otherwise, false.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static bool Delete(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		else if (string.IsNullOrEmpty(path)) return false;
+		using FolderInfo datas = new(path, false);
+		if (datas.IsInternal) return false;
+		Directory.Delete(GodotPath.GlobalizePath(datas.FullName), true);
+		return true;
+	}
+	/// <summary>Determines whether the specified folder exists.</summary>
+	/// <remarks>This method works with both system directories and Godot's virtual file system.</remarks>
+	/// <param name="path">The path to check for existence.</param>
+	/// <returns>true if the folder exists; otherwise, false.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static bool Exists(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		if (!GodotPath.IsGodotRoot(path))
+			return Directory.Exists(path);
+		using Godot.Directory directory = new();
+		return directory.DirExists(path);
+	}
+	/// <summary>Moves a folder to a new location.</summary>
+	/// <param name="path">The current path of the folder.</param>
+	/// <param name="destinationPath">The new path for the folder.</param>
+	/// <returns>true if the folder was successfully moved; otherwise, false.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when either path is null.</exception>
+	public static bool Move(string? path, string? destinationPath) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		else if (destinationPath is null) throw new ArgumentNullException(nameof(destinationPath));
+		using FolderInfo datas = new(path, false);
+		return datas.Move(destinationPath);
+	}
+	/// <summary>Renames a folder.</summary>
+	/// <param name="folderPath">The current full path of the folder.</param>
+	/// <param name="newName">The new name for the folder.</param>
+	/// <returns>true if the folder was successfully renamed; otherwise, false.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when either parameter is null.</exception>
+	public static bool Rename(string? folderPath, string? newName) {
+		if (folderPath is null) throw new ArgumentNullException(nameof(folderPath));
+		else if (newName is null) throw new ArgumentNullException(nameof(newName));
+		using FolderInfo datas = new(GodotPath.GetDirectoryName(folderPath), false);
+		return datas.RenameFolder(GodotPath.GetFileName(folderPath), newName);
+	}
+	/// <summary>Gets all archive files in the specified folder.</summary>
+	/// <param name="path">The path to search for archive files.</param>
+	/// <returns>An array of <see cref="IArchiveInfo"/> representing the archive files found.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static IArchiveInfo[] GetArchives(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetArchives();
+	}
+	/// <summary>Gets all subfolders in the specified folder.</summary>
+	/// <param name="path">The path to search for subfolders.</param>
+	/// <returns>An array of <see cref="IFolderInfo"/> representing the subfolders found.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static IFolderInfo[] GetFolders(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetFolders();
+	}
+	/// <summary>Gets the creation time of the specified folder in local time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's creation time in local time.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetCreationTime(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetCreationTime;
+	}
+	/// <summary>Gets the creation time of the specified folder in UTC time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's creation time in UTC.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetCreationTimeUtc(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetCreationTimeUtc;
+	}
+	/// <summary>Gets the last access time of the specified folder in local time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's last access time in local time.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetLastAccessTime(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetLastAccessTime;
+	}
+	/// <summary>Gets the last access time of the specified folder in UTC time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's last access time in UTC.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetLastAccessTimeUtc(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetLastAccessTimeUtc;
+	}
+	/// <summary>Gets the last write time of the specified folder in local time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's last write time in local time.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetLastWriteTime(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetLastWriteTime;
+	}
+	/// <summary>Gets the last write time of the specified folder in UTC time.</summary>
+	/// <param name="path">The path to the folder.</param>
+	/// <returns>A <see cref="DateTime"/> representing the folder's last write time in UTC.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when path is null.</exception>
+	public static DateTime GetLastWriteTimeUtc(string? path) {
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		using FolderInfo datas = new(path, false);
+		return datas.GetLastWriteTimeUtc;
+	}
+	/// <summary>Gets the parent folder of the specified folder information.</summary>
+	/// <param name="data">The folder information to get the parent of.</param>
+	/// <returns>An <see cref="IDataInfo"/> representing the parent folder, or <see cref="DataNull.Null"/> if there is no parent.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
+	public static IDataInfo GetParent(IFolderInfo? data) => GetParent(data);
 
-    private static readonly char[] separator = { '/' };
-    /// <inheritdoc/>
-    public override string Path => GetDataPath(this);
-    /// <inheritdoc/>
-    public override DataBase? Parent { get; protected set; }
-    /// <inheritdoc/>
-    public override ArchiveAttributes Attributes { get; protected set; }
-    /// <inheritdoc/>
-    public override string? Name { get; protected set; }
-
-    private static readonly Folder @null = new(null, string.Empty, ArchiveAttributes.Null);
-    /// <summary>A null representation of the <seealso cref="Folder"/> object.</summary>
-    /// <returns>Returns a null representation of the <seealso cref="Folder"/> object.</returns>
-    public static Folder Null => @null;
-    /// <summary>Creates a new instance of this object.</summary>
-    public Folder(DataBase? parent, string? dataName, ArchiveAttributes attributes) : base(parent, dataName, attributes) {}
-    /// <summary>Allows the creation of a new folder in the current folder.</summary>
-    /// <param name="folderName">The name of the new folder.</param>
-    /// <param name="recursive">Allows the creation of a folder within another in a cascade fashion. <c>(exp: Folder1/Folder2/Folder3/Folder4)</c></param>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="folderName"/> parameter is null.</exception>
-    /// <returns>Returns the newly created folder.</returns>
-    public Folder CreateFolder(string? folderName, bool recursive = false) {
-        if (folderName is null) throw new ArgumentNullException(nameof(folderName));
-        Folder result = CreateRecursiveFolder(this, 0, recursive ? folderName.Split(separator, StringSplitOptions.RemoveEmptyEntries) : new string[] { folderName });
-        ReorderList();
-        return result;
-    }
-    /// <summary>Allows you to create a new file in the current folder.</summary>
-    /// <param name="fileName">The name of this new file.</param>
-    /// <returns>Returns the new file that was created in the current folder.</returns>
-    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="fileName"/> parameter is null.</exception>
-    /// <exception cref="System.InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
-    public Archive CreateArchive(string? fileName) {
-        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
-        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new ReadOnlyException("Is ReadOnly");
-        else if (GodotPath.IsInvalidFileName(fileName, out char ic))
-            throw new System.InvalidOperationException($"The name '{fileName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
-
-        if (Path is null) return Archive.Null;
-        fileName = GodotPath.Combine(Path, fileName);
-        string fpath = GodotPath.GlobalizePath(fileName);
-
-        IOFile.Create(fpath).Dispose();
-        Archive result = new(this, fileName, ArchiveAttributes.File);
-        ArrayManipulation.Add(result, ref datas);
-        ReorderList();
-        return result;
-    }
-    /// <summary>Allows you to rename the folder.</summary>
-    /// <param name="oldName">The name of the folder.</param>
-    /// <param name="newName">The new name of the folder.</param>
-    /// <returns>Returns <c>true</c> when the rename operation was successful.</returns>
-    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="oldName"/> parameter is null.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="newName"/> parameter is null.</exception>
-    /// <exception cref="System.InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
-    public bool RenameFolder(string? oldName, string? newName) {
-        if (oldName is null) throw new ArgumentNullException(nameof(oldName));
-        else if (newName is null) throw new ArgumentNullException(nameof(newName));
-        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
-        else if (GodotPath.IsInvalidFileName(newName, out char ic))
-            throw new System.InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
-        
-        using Directory directory = new();
-        if (oldName == newName || directory.Open(Path) != Error.Ok) return false;
-        Folder folder = GetFolder(oldName);
-        if (folder == @null) return false;
-
-        oldName = GodotPath.Combine(Path ?? string.Empty, oldName);
-        newName = GodotPath.Combine(Path ?? string.Empty, newName);
-        if (directory.Rename(oldName, newName) == Error.Ok) {
-            folder.Name = GodotPath.GetFileName(newName);
-            return true;
-        }
-        return false;
-    }
-    /// <summary>Allows the removal of a folder.</summary>
-    /// <param name="folderName">The name of the folder.</param>
-    /// <returns>Returns <c>true</c> when the remove operation is successful.</returns>
-    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="folderName"/> parameter is null.</exception>
-    public bool RemoveFolder(string? folderName) {
-        if (folderName is null) throw new ArgumentNullException(nameof(folderName));
-        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new ReadOnlyException("Is ReadOnly");
-
-        using Directory directory = new();
-        if (directory.Open(Path) != Error.Ok) return false;
-        Folder folder = GetFolder(folderName);
-        if (folder == @null) return false;
-
-        folderName = GodotPath.Combine(Path ?? string.Empty, folderName);
-
-        if (directory.Remove(folderName) == Error.Ok) {
-            datas = ArrayManipulation.Remove(folder, datas);
-            return true;
-        }
-
-        return false;
-    }
-    /// <summary>Allows you to remove a file in the current folder.</summary>
-    /// <param name="archiveName">The name of the archive.</param>
-    /// <returns>Returns <c>true</c> when the remove operation is successful.</returns>
-    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="archiveName"/> parameter is null.</exception>
-    public bool RemoveArchive(string? archiveName) {
-        if (archiveName is null) throw new ArgumentNullException(nameof(archiveName));
-        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new ReadOnlyException("Is ReadOnly");
-
-        Archive archive = GetArchive(archiveName);
-        if (archive == Archive.Null) return false;
-        else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
-
-        IOFile.Delete(GodotPath.GlobalizePath(archive.Path));
-        datas = ArrayManipulation.Remove(archive, datas);
-        
-        return true;
-    }
-    /// <summary>Allows renaming of a file in the current folder.</summary>
-    /// <param name="oldName">The name of the archive.</param>
-    /// <param name="newName">The new name of the archive.</param>
-    /// <returns>Returns <c>true</c> when the rename operation was successful.</returns>
-    /// <exception cref="ReadOnlyException">Will occur if the method is called on an object that is marked as read-only.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="oldName"/> parameter is null.</exception>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="newName"/> parameter is null.</exception>
-    /// <exception cref="InvalidOperationException">Occurs when the name of the new file has an invalid character.</exception>
-    public bool RenameArchive(string? oldName, string? newName) {
-        if (oldName is null) throw new ArgumentNullException(nameof(oldName));
-        else if (newName is null) throw new ArgumentNullException(nameof(newName));
-        else if (Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new ReadOnlyException("Is ReadOnly");
-        else if (GodotPath.IsInvalidFileName(newName, out char ic))
-            throw new InvalidOperationException($"The name '{newName}' has the invalid character '{ic.EscapeSequenceToString()}'.");
-
-        if (oldName == newName) return false;
-        
-        Archive archive = GetArchive(oldName);
-        if (archive == Archive.Null) return false;
-        else if (!IOFile.Exists(GodotPath.GlobalizePath(archive.Path))) return false;
-
-        return Archive.RenameArchive(archive, newName);
-    }
-    /// <summary>Checks if a folder exists.</summary>
-    /// <param name="folderName">The name of the folder.</param>
-    /// <returns>Returns <c>true</c> when the specified element exists.</returns>
-    public bool FolderExists(string folderName) => DataExists(folderName, typeof(Folder));
-    /// <summary>Checks if a file exists.</summary>
-    /// <param name="archiveName">The name of the archive.</param>
-    /// <returns>Returns <c>true</c> when the specified element exists.</returns>
-    public bool ArchiveExists(string archiveName) => DataExists(archiveName, typeof(Archive));
-    /// <summary>Gets all folders in the current folder.</summary>
-    /// <returns>Returns a list of all folders in the current folder.</returns>
-    public Folder[]? GetFolders() {
-        Folder[]? result = [];
-        if (datas is not null)
-            foreach (DataBase item in datas)
-                if (item is Folder fd)
-                    ArrayManipulation.Add(fd, ref result);
-        return result;
-    }
-    /// <summary>Gets the target folder from the current folder.</summary>
-    /// <param name="folderName">The name of the folder.</param>
-    /// <param name="recursive">Allows you to get a specified folder in the current folder or its subfolders.</param>
-    /// <returns>Returns the specified folder. If not found, a null representation will be returned.</returns>
-    public Folder GetFolder(string? folderName, bool recursive = false) {
-        if (folderName is null || datas is null) return @null;
-        foreach (DataBase item in datas)
-            if (item is Folder fd) {
-                if (fd.Name == folderName)
-                    return fd;
-                if (recursive) {
-                    Folder temp = fd.GetFolder(folderName);
-                    if (temp != @null)  return temp;
-                }
-            }
-        return @null;
-    }
-    /// <summary>Gets all archives in the current folder.</summary>
-    /// <param name="search">Allows you to collect specific files. Use '|' to separate search conditions. (exp:".jpeg|.png|.txt")</param>
-    /// <param name="recursive">Allows you to get a specified archives in the current folder or its subfolders.</param>
-    /// <returns>Returns a list of all archives in the current folder.</returns>
-    public Archive[]? GetArchives(string? search, bool recursive = false) {
-        search ??= string.Empty;
-        string[] research = search.Split(new char[] { '|' }, System.StringSplitOptions.RemoveEmptyEntries);
-        Archive[]? result = (Archive[]?)null;
-
-        if (datas is null) return result;
-
-        for (var A = 0; A < datas.Length; A++) {
-            switch (datas[A]) {
-                case Archive ac:
-                    if (research.Length != 0) {
-                        for (var I = 0; I < research.Length; I++)
-                            if ((ac.Name ?? string.Empty).Contains(research[I])) {
-                                result = ArrayManipulation.Add(ac, result);
-                                break;
-                            }
-                    }
-                    else result = ArrayManipulation.Add(ac, result);
-                    break;
-                case Folder fd:
-                    if (recursive)
-                        result = ArrayManipulation.Add(fd.GetArchives(search, recursive), result);
-                    break;
-            }
-        }
-
-        return result;
-    }
-    /// <inheritdoc cref="GetArchive(string?, bool)"/>
-    public Archive[]? GetArchives(bool recursive = false) => GetArchives(string.Empty, recursive);
-    /// <summary>Gets the target archive from the current folder.</summary>
-    /// <param name="fileName">The name of the archive.</param>
-    /// <param name="recursive">Allows you to get a specified archive in the current folder or its subfolders</param>
-    /// <returns>Returns the specified archive. If not found, a null representation will be returned.</returns>
-    public Archive GetArchive(string? fileName, bool recursive = false) {
-        if (fileName is null || datas is null) return Archive.Null;
-
-        for (var A = 0; A < datas.Length; A++) {
-            switch (datas[A]) {
-                case Archive ac:
-                    if (ac.Name == fileName || ac.NameWithoutExtension == fileName)
-                        return ac;
-                    break;
-                case Folder fd:
-                    if (recursive) {
-                        Archive temp = fd.GetArchive(fileName, recursive);
-                        if (temp != Archive.Null)
-                            return temp;
-                    }
-                    break;
-            }
-        }
-
-        return Archive.Null;
-    }
-    /// <inheritdoc cref="ToString()"/>
-    public string ToString(bool recursive) => ToString(recursive ? "PR" : "PN", CultureInfo.CurrentCulture);
-    /// <inheritdoc/>
-    public override string ToString() => ToString(false);
-    /// <inheritdoc/>
-    public override string ToString(string format, IFormatProvider formatProvider) 
-        => format switch {
-            "PR" => ToString(true, true, formatProvider),
-            "PN" => ToString(false, true, formatProvider),
-            "PP" => string.Format(formatProvider, "path:'{0}'", Path),
-            "PA" => string.Format(formatProvider, "attributes:'{0}'", Attributes),
-            "PDN" => string.Format(formatProvider, "name:'{0}'", Name),
-            "PPN" => string.Format(formatProvider, "parent_name:'{0}'", Parent?.Name),
-            "PDC" => string.Format(formatProvider, "data_count:'{0}'", ArrayManipulation.ArrayLength(datas)),
-            _ => throw new FormatException($"The format '{format}' is not recognized!"),
-        };
-    /// <inheritdoc/>
-    public IEnumerator<DataBase> GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas ?? []);
-    /// <inheritdoc/>
-    public override void Dispose() {
-        if (discarded) throw new ObjectDisposedException(nameof(Folder));
-        discarded = true;
-        foreach (DataBase item in this)
-            item.Dispose();
-        Attributes = ArchiveAttributes.Null;
-        ArrayManipulation.ClearArraySafe(ref datas);
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => new ArrayToIEnumerator<DataBase>(datas ?? []);
-
-    private bool DataExists(string dataName, Type dataType) {
-        foreach (DataBase item in this)
-            if (item.CompareType(dataType) && item.Name == dataName)
-                return true;
-        return false;
-    }
-
-    private string ToString(bool recursive, bool printInfo, IFormatProvider formatProvider) {
-        StringBuilder builder = new();
-        if (printInfo) {
-            builder.AppendFormat(formatProvider, "@>{0}\r\n", Name);
-            builder.AppendFormat(formatProvider, "@>{0}\r\n", Attributes);
-            builder.AppendFormat(formatProvider, "#>{0}\r\n", Parent is null ? string.Empty : Parent.Name);
-            builder.AppendLine("=================================================");
-        }
-        builder.AppendFormat(formatProvider, "{0}\r\n", Path);
-        foreach (DataBase item in this)
-            switch (item) {
-                case Folder fd: builder.AppendFormat(formatProvider, "{0}", recursive ? fd.ToString(recursive, false, formatProvider) : $"{fd.Path}\r\n"); break;
-                case Archive ac: builder.AppendFormat(formatProvider, "{0}\r\n", ac.Path); break;
-            }
-        return builder.ToString();
-    }
-
-    private void ReorderList() {
-        if (datas is null) return;
-        DataBase[] result = new DataBase[ArrayManipulation.ArrayLength(datas)];
-        int folderCount = 0;
-        int folderIndex = 0;
-        int fileIndex = 0;
-
-        for (int I = 0; I < result.Length; I++)
-            if (datas[I] is Folder) folderCount++;
-
-        for (int I = 0; I < result.Length; I++)
-            switch (datas[I]) {
-                case Folder fd:
-                    result[folderIndex++] = fd;
-                    break;
-                case Archive ac:
-                    result[folderCount + fileIndex] = ac;
-                    ++fileIndex;
-                    break;
-            }
-        datas = result;
-    }
-
-    private static Folder CreateRecursiveFolder(Folder root, int index, string[] names) {
-        if (index >= names.Length) return @null;
-        string name = names[index];
-
-        if (root.Attributes.HasFlag(ArchiveAttributes.ReadOnly))
-            throw new System.InvalidOperationException("Is ReadOnly");
-        else if (GodotPath.IsInvalidFileName(name, out char ic))
-            throw new System.InvalidOperationException($"The name '{name}' has the invalid character '{ic.EscapeSequenceToString()}'.");
-
-        using Directory directory = new();
-        switch (directory.Open(root.Path)) {
-            case Error.Ok:
-                switch (directory.MakeDir(name)) {
-                    case Error.Ok:
-                        Folder folder = new(root, GodotPath.Combine(root.Path ?? string.Empty, name), ArchiveAttributes.Directory);
-                        ArrayManipulation.Add((DataBase)folder, ref root.datas);
-                        Folder temp = CreateRecursiveFolder(folder, index + 1, names);
-                        if (temp != @null) return temp;
-                        return folder;
-                    default: return @null;
-                }
-            case Error.FileCantRead: throw new System.InvalidOperationException("Error.FileCantRead");
-            case Error.FileCantWrite: throw new System.InvalidOperationException("Error.FileCantWrite");
-            case Error.FileNotFound: throw new System.IO.FileNotFoundException("File Not Found", root.Path);
-            default: return @null;
-        }
-    }
-    /// <summary>Creates a new instance containing a representation of the <c>res://</c> folder.</summary>
-    /// <inheritdoc cref="Create(string?)"/>
-    public static Folder CreateRes() => Create("res://", @null);
-    /// <summary>Creates a new instance containing a representation of the <c>user://</c> folder.</summary>
-    /// <inheritdoc cref="Create(string?)"/>
-    public static Folder CreateUser() => Create("user://", @null);
-    /// <summary>Creates a new instance containing a specified directory.</summary>
-    /// <param name="path">The path that will be instantiated.</param>
-    /// <returns>Returns the representation of a folder.</returns>
-    /// <exception cref="ArgumentNullException">Occurs if the <paramref name="path"/> parameter is null.</exception>
-    public static Folder Create(string? path) => Create(path, @null);
-
-    private static Folder Create(string? path, Folder root) {
-        if (path is null) throw new ArgumentNullException(nameof(path));
-        Folder result = @null;
-
-        using Directory directory = new();
-        if (directory.Open(path) == Error.Ok) {
-            ArchiveAttributes attributes = GDFeature.HasEditor ? ArchiveAttributes.Directory : ArchiveAttributes.Directory | ArchiveAttributes.ReadOnly;
-            string npath = GodotPath.GetFileName(path);
-            result = new(root, string.IsNullOrEmpty(npath) ? path : npath, attributes);
-
-            directory.ListDirBegin(true, true);
-            string fileName = directory.GetNext();
-
-            while (!string.IsNullOrEmpty(fileName)) {
-                if (directory.CurrentIsDir()) {
-                    result.datas = ArrayManipulation.Add((DataBase)Create(GodotPath.Combine(path, fileName), result), result.datas);
-                } else {
-                    attributes = GDFeature.HasEditor ? ArchiveAttributes.File : ArchiveAttributes.File | ArchiveAttributes.ReadOnly;
-                    Archive archive = new(result, fileName, attributes);
-                    result.datas = ArrayManipulation.Add(archive, result.datas);
-                }
-                fileName = directory.GetNext();
-            }
-
-            directory.ListDirEnd();
-        }
-        result.ReorderList();
-        return result;
-    }
+	internal static IDataInfo GetParent(IDataInfo? dataInfo) {
+		switch ((dataInfo ?? throw new ArgumentNullException(nameof(dataInfo))).FullName) {
+			case GodotPath.ResPath:
+			case GodotPath.UserPath:
+				return DataNull.Null;
+			default:
+				foreach (string item in logicalDrives)
+					if (item.Replace('\\', '/') == dataInfo.FullName)
+						return DataNull.Null;
+				return new FolderInfo(GodotPath.GetDirectoryName(dataInfo.FullName), false);
+		}
+	}
 }
