@@ -73,7 +73,7 @@ public static class Screen {
 			archive.Read(out string stg);
 			AddResolution(Json.Deserialize<CustonResolutionList[]>(stg));
 		}
-		path = GDFeature.HasRelease ? GodotPath.GlobalizePath(path) : path;
+		path = GDFeature.HasStandalone ? GodotPath.GlobalizePath(path) : path;
 
 		if (Archive.Exists(path)) {
 			using IStream archive = Archive.Open(path, FileAccess.Read);
@@ -96,7 +96,7 @@ public static class Screen {
             DisplayInfo.AddCustonResolution(new(new Numerics.Vector2D(width, height), refreshRate), display);
 
         string path = "res://AddResolution.json";
-        path = GDFeature.HasRelease ? GodotPath.GlobalizePath(path) : path;
+        path = GDFeature.HasStandalone ? GodotPath.GlobalizePath(path) : path;
         if (!Archive.Exists(path))
             _ = Archive.Create(path);
         using IStream archive = Archive.Open(path, FileAccess.Write);

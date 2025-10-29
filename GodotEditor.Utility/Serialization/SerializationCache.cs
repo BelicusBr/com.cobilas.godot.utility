@@ -25,7 +25,7 @@ public static class SerializationCache {
 
         value = string.Empty;
         string id = GetID(info),
-               path = GodotPath.Combine(GodotPath.UserPath, "cache", $"id_{id}.cache");
+               path = GodotPath.Combine(GodotPath.ResPath, "cache", $"id_{id}.cache");
 
         if (Archive.Exists(path)) {
             using IGodotArchiveStream stream = (IGodotArchiveStream)Archive.Open(path, FileAccess.Read);
@@ -48,7 +48,7 @@ public static class SerializationCache {
         else if (string.IsNullOrEmpty((string)info[1])) return false;
 
         string id = (string)info["id"],
-               path = GodotPath.Combine(GodotPath.UserPath, "cache", $"id_{id}.cache");
+               path = GodotPath.Combine(GodotPath.ResPath, "cache", $"id_{id}.cache");
         CreateFileCache($"id_{id}.cache");
 
         if (Archive.Exists(path)) {
@@ -72,7 +72,7 @@ public static class SerializationCache {
         else if (_cache.Contains((string)info[0])) return (string)info[0];
         _cache.Add((string)info[0]);
 
-        using IFolderInfo datas = Folder.Open(GodotPath.Combine(GodotPath.UserPath, "cache"));
+        using IFolderInfo datas = Folder.Open(GodotPath.Combine(GodotPath.ResPath, "cache"));
         List<Dictionary<string, string>> list = [];
 
         IArchiveInfo[] archives = datas.GetArchives();
@@ -111,7 +111,7 @@ public static class SerializationCache {
     }
 
     private static void RefreshFileCache(string fileName, Dictionary<string, string> json) {
-        string path = GodotPath.Combine(GodotPath.UserPath, "cache", fileName);
+        string path = GodotPath.Combine(GodotPath.ResPath, "cache", fileName);
 
         if (Archive.Exists(path)) {
 			using IStream stream = Archive.Open(path, FileAccess.Write);
@@ -122,7 +122,7 @@ public static class SerializationCache {
     private static void CreateFileCache(string fileName) => CreateFileCache(fileName, []);
 
     private static void CreateFileCache(string fileName, Dictionary<string, string> json) {
-        string path = GodotPath.Combine(GodotPath.UserPath, "cache");
+        string path = GodotPath.Combine(GodotPath.ResPath, "cache");
 
         if (!Folder.Exists(path))
             Folder.Create(path).Dispose();
