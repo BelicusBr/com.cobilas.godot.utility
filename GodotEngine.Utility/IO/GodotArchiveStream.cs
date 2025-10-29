@@ -44,7 +44,7 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 		AutoFlush = false;
 		this.access = access;
 		isInternal = GodotPath.GetPathRoot(path) switch {
-            GodotPath.ResPath when GDFeature.HasRelease => true,
+            GodotPath.ResPath when GDFeature.HasStandalone => true,
             _ => false,
         };
 		Error error;
