@@ -5,69 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [7.0.1] (29/10/2025)
-
-### Added
-- Added comprehensive XML documentation for all IO classes and interfaces including:
-  - `Archive` class with detailed method documentation
-  - `ArchiveAttributes` enum with complete attribute descriptions
-  - `ArchiveInfo` class with constructor and method documentation
-  - `ArchiveStream` class with auto-flush capability
-  - `DataNull` structure documentation
-  - `Folder` static class with method documentation
-  - `FolderInfo` class with comprehensive documentation
-  - All IO interfaces (`IArchiveInfo`, `IDataInfo`, `IFolderInfo`, `IGodotArchiveStream`, `IStream`)
-  - `StreamType` enum documentation
-
-### Changed
-- Enhanced null safety in extension methods with proper null checking
-- Improved collection initialization using spread operator in `CustonResolutionList`
-- Updated project file with additional properties and build configurations
-- Refactored vector conversion methods in `Vector2DInt` and `Vector3DInt` to use correct parameter values
-- Improved array handling in `PriorityList` with null safety checks
-- Enhanced coroutine management with proper null checking in internal arrays
-
+## [7.0.1] - 2025-10-29
 ### Fixed
-- Fixed vector conversion methods in `Vector2DInt` and `Vector3DInt` that were incorrectly using result variables instead of input parameters
-- Improved null safety in coroutine management arrays
-- Enhanced error handling and documentation throughout the codebase
-
-### Documentation
-- Added extensive XML documentation for all public members in the IO namespace
-- Improved code comments and documentation consistency
-- Added detailed remarks and usage examples for file system operations
-
-## [7.0.0] (28/10/2025)
+- **Vector Operations**: Fixed `Vector2DInt.FloorToInt` and `CeilToInt` methods incorrectly using result components instead of input vector components
+- **Vector Operations**: Fixed `Vector3DInt.FloorToInt` and `CeilToInt` methods incorrectly using result components instead of input vector components
+- **Null Safety**: Added null checks in `Object_CB_GD_Extension.Print` method to prevent null reference exceptions
+- **Collection Safety**: Added null-forgiving operator in coroutine managers to handle potential null arrays safely
 
 ### Added
-- New file system abstraction layer with interface-based architecture
-- Added `IStream` interface for unified stream operations
-- Implemented `GodotArchiveStream` for Godot-specific file operations
-- Added `ArchiveStream` for system file operations
-- New folder and archive management interfaces (`IFolderInfo`, `IArchiveInfo`)
+- **XML Documentation**: Added comprehensive XML documentation for all IO classes and interfaces including:
+  - `Archive` static class with detailed method descriptions
+  - `ArchiveAttributes` enum with complete attribute descriptions
+  - `ArchiveInfo` class with constructor exceptions and usage notes
+  - `ArchiveStream` class with auto-flush capability
+  - `DataNull` struct as null object pattern implementation
+  - `Folder` static class with folder operation methods
+  - `FolderInfo` class with folder management capabilities
+  - `GodotArchiveStream` class for Godot-specific file operations
+  - All interfaces in `Cobilas.GodotEngine.Utility.IO.Interfaces` namespace
+  - `StreamType` enum for stream implementation selection
+- **Auto-Flush**: Added `AutoFlush` property to `IStream` interface and implementations
+- **Collection Initializers**: Updated `CustonResolutionList` to use modern collection expressions
 
 ### Changed
-- Complete refactor of file system operations from concrete classes to interface-based design
-- Replaced `DataBase` abstract class with `IDataInfo` interface
-- Updated `SerializationCache` to use new IO interfaces
-- Modified `Screen` class to use new archive streaming system
-- Enhanced `InternalSceneManager` to work with new folder interface
+- **Project Configuration**: Updated .csproj to generate documentation, include symbols, and improve package metadata
+- **Code Modernization**: Replaced `ToArray()` with spread operator `[.. enumerable]` for better performance
+- **Stream Behavior**: Modified stream read operations to preserve position and reset to beginning when reading entire content
+- **Enum Values**: Updated `ArchiveAttributes` to use proper hexadecimal values and standard .NET attributes
+
+## [7.0.0] - 2025-10-28
+### Added
+- **New IO System**: Completely new file system abstraction supporting both Godot virtual file system and system file system
+- **Stream Architecture**: New stream-based IO system with `IStream`, `IArchiveStream`, and `IGodotArchiveStream` interfaces
+- **Folder Management**: New `IFolderInfo` interface for comprehensive folder operations
+- **Archive Management**: New `IArchiveInfo` interface for file operations with copy/move functionality
+
+### Changed
+- **Serialization Cache**: Refactored `SerializationCache` to use new IO interfaces instead of legacy Archive/Folder classes
+- **Scene Management**: Updated `InternalSceneManager` to use new folder enumeration system
+- **Screen Resolution**: Modified `Screen` class to use stream-based configuration file reading
+- **Build System**: Updated target frameworks and package references in project file
 
 ### Removed
-- Removed legacy `DataBase` abstract class
-- Removed `FolderBuilder` and `FolderNode` classes
-- Removed old test IO classes and interfaces
-- Cleaned up obsolete file system implementation
+- **Legacy IO Classes**: Removed `DataBase`, `FolderBuilder`, `FolderNode` and related legacy file system abstractions
+- **Old Archive/Folder**: Removed previous `Archive` and `Folder` class implementations in favor of new interface-based system
 
 ### Fixed
-- Improved file path handling and cross-platform compatibility
-- Enhanced error handling in file operations
-- Fixed resource path handling in release builds
-
-### Infrastructure
-- Updated .gitignore to include common development artifacts
-- Improved project configuration and build settings
-- Enhanced package metadata and documentation generation
+- **File Operations**: Improved error handling and exception management in file operations
+- **Path Handling**: Enhanced path normalization and Godot path root detection
+- **Memory Management**: Better resource disposal patterns in stream and archive operations
 
 ## [6.3.1] (23/10/2025)
 ### Changed
