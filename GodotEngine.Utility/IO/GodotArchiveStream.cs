@@ -13,9 +13,9 @@ namespace Cobilas.GodotEngine.Utility.IO;
 /// It maintains an in-memory buffer that synchronizes with the Godot file system.
 /// </remarks>
 public sealed class GodotArchiveStream : IGodotArchiveStream {
-	private string? _name;
+	private GDFile file;
+	private string? _path;
 	private bool _disposedValue;
-	private readonly GDFile file;
 	private readonly bool isInternal;
 	private readonly FileAccess access;
 	private readonly MemoryStream memory;
@@ -32,7 +32,7 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	/// <inheritdoc/>
 	public long BufferLength { get => memory.Length; set => memory.SetLength(value); }
 	/// <inheritdoc/>
-	public string Name => !_disposedValue ? _name! : throw new ObjectDisposedException(nameof(GodotArchiveStream));
+	public string Name => !_disposedValue ? GodotPath.GetFileName(_path!) : throw new ObjectDisposedException(nameof(GodotArchiveStream));
 	/// <summary>Initializes a new instance of the <see cref="GodotArchiveStream"/> class with the specified path and access mode.</summary>
 	/// <param name="path">The path to the file in the Godot file system.</param>
 	/// <param name="access">The file access mode specifying read and/or write permissions.</param>
@@ -40,19 +40,18 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	/// <exception cref="UnauthorizedAccessException">Thrown when the file cannot be opened due to access restrictions.</exception>
 	public GodotArchiveStream(string? path, FileAccess access) {
 		if (path is null) throw new ArgumentNullException(nameof(path));
-		file = new();
 		AutoFlush = false;
+		_path = path;
 		this.access = access;
 		isInternal = GodotPath.GetPathRoot(path) switch {
             GodotPath.ResPath when GDFeature.HasStandalone => true,
             _ => false,
         };
-		Error error;
-		if ((error = file.Open(path, isInternal ? GDFile.ModeFlags.Read : GDFile.ModeFlags.ReadWrite)) != Error.Ok)
+		if (!OpenFile(path, out Error error))
 			throw new UnauthorizedAccessException($"[{error}]{path}");
-		_name = GodotPath.GetFileName(path);
 		(memory = new())
-			.Write(file.GetBuffer((long)file.GetLen()));
+			.Write(file!.GetBuffer((long)file.GetLen()));
+		file.Dispose();
 		Position = 0L;
 	}
 	/// <inheritdoc/>
@@ -81,8 +80,11 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	public void Read(out char[] result) => Read(Encoding.UTF8, out result);
 	/// <inheritdoc/>
 	public void RefreshBuffer() {
+		if (!OpenFile(_path!, out Error error))
+			throw new UnauthorizedAccessException($"[{error}]{_path}");
 		memory.SetLength(0L);
 		memory.Write(file.GetBuffer((long)file.GetLen()));
+		file.Dispose();
 	}
 	/// <inheritdoc/>
 	public void ReplaceBuffer(byte[]? newBuffer) {
@@ -129,20 +131,29 @@ public sealed class GodotArchiveStream : IGodotArchiveStream {
 	/// <inheritdoc/>
 	public void Flush() {
 		if (!CanWrite) throw new NotSupportedException("The stream does not support write operations.");
+		if (!OpenFile(_path!, out Error error))
+			throw new UnauthorizedAccessException($"[{error}]{_path}");
 		file.Seek(0L);
 		file.StoreBuffer(new byte[(long)file.GetLen()]);
 		file.Seek(0L);
 		file.StoreBuffer(memory.ToArray());
+		file.Close();
+		file.Dispose();
 	}
 	/// <inheritdoc/>
 	public void Dispose() {
 		if (AutoFlush)
 			Flush();
-		_name = null;
-		file.Flush();
-		file.Dispose();
+		_path = null;
 		memory.Dispose();
 		_disposedValue = true;
 	}
+	
 	private bool IsSupport(FileAccess access) => !_disposedValue ? (this.access & access) != 0 : throw new ObjectDisposedException(nameof(GodotArchiveStream));
+
+	private GDFile.ModeFlags GetModeFlags() 
+		=> isInternal ? GDFile.ModeFlags.Read : GDFile.ModeFlags.ReadWrite;
+
+	private bool OpenFile(string path, out Error error)
+		=> (error = (file = new()).Open(path, GetModeFlags())) == Error.Ok;
 }

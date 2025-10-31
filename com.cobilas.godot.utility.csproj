@@ -10,7 +10,7 @@
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
         <PackageId>Cobilas.Godot.Utility</PackageId>
         <Title>Cobilas Godot Utility</Title>
-        <Version>7.1.1</Version>
+        <Version>7.2.2</Version>
         <Authors>BélicusBr</Authors>
         <Description>The package contains utility classes in csharp for godot engine</Description>
         <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>
@@ -18,7 +18,7 @@
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>CSharp;C#;net472;netstandard2.0;netstandard2.1;godotengine;godot</PackageTags>
+        <PackageTags>CSharp;C#;net472;netstandard2.0;godotengine;godot</PackageTags>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <NeutralLanguage>en</NeutralLanguage>
         <IncludeSymbols>True</IncludeSymbols>
