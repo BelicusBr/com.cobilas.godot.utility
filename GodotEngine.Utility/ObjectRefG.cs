@@ -16,9 +16,10 @@ namespace Cobilas.GodotEngine.Utility;
 public class ObjectRef<T> : ObjectRef where T : Node {
 	/// <summary>Gets the typed node instance resolved from the path.</summary>
 	/// <returns>The resolved Node instance of type T.</returns>
-	public T Value {
+	public T? Value {
 		get {
-			if (node is NullNode) return (T)(node = path.GetNode());
+			if (path.IsEmpty()) return (T?)null;
+			else if (node is NullNode) return (T)(node = path.GetNode());
 			else if (node is null) return (T)(node = path.GetNode());
 			else if (node.GetPath() != path) return (T)(node = path.GetNode());
 			return (T)node;
