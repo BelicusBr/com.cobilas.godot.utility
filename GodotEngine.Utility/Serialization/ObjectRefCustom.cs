@@ -22,7 +22,6 @@ public sealed class ObjectRefCustom : PropertyCustom {
 		if (propertyName != $"{PropertyPath}/path") return null;
 		else if (Member.Value is null) return null;
 		else if (value is null) return (NodePath?)value;
-		(Member.Value as ObjectRef)!.Set(value);
 		return (NodePath)value;
 	}
 	/// <inheritdoc/>

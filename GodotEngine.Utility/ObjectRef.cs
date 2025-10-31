@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System;
+using Cobilas.GodotEditor.Utility.Serialization;
 
 namespace Cobilas.GodotEngine.Utility;
 /// <summary>Represents a reference to a Godot node with automatic path resolution and node caching.</summary>
@@ -12,7 +13,7 @@ public class ObjectRef {
 	/// <summary>The cached node instance resolved from the path.</summary>
 	protected Node node;
 	/// <summary>The path to the node in the Godot scene tree.</summary>
-	protected NodePath path;
+	[HideProperty(true)] protected NodePath path;
 	/// <summary>Initializes a new instance of the <see cref="ObjectRef"/> class with empty path and null node.</summary>
 	public ObjectRef() {
 		path = string.Empty;

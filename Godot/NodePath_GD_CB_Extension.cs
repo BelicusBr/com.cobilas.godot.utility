@@ -31,12 +31,10 @@ public static class NodePath_GD_CB_Extension {
         Node scene = SceneManager.CurrentSceneNode;
         if (np is null) throw new ArgumentNullException(nameof(np));
         else if (!np.IsAbsolute()) {
-            StringBuilder builder = new(scene.GetPath());
             string path = np;
             int index = path.IndexOf("./");
-            if (index != -1) path = path.Remove(0, index + 1);
-            builder.Append(path);
-            return scene.GetNode(builder.ToString());
+            if (index != -1) path = path.Remove(0, index + 2);
+            return scene.GetNode($"{scene.GetPath()}/{path}");
         }
         return scene.GetNode(np);
     }
