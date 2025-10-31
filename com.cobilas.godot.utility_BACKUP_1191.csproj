@@ -10,7 +10,11 @@
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
         <PackageId>Cobilas.Godot.Utility</PackageId>
         <Title>Cobilas Godot Utility</Title>
+<<<<<<< HEAD
         <Version>7.2.2</Version>
+=======
+        <Version>7.1.3</Version>
+>>>>>>> main.fix
         <Authors>BélicusBr</Authors>
         <Description>The package contains utility classes in csharp for godot engine</Description>
         <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>

@@ -49,9 +49,9 @@ public sealed class ArchiveInfo(string? path) : IArchiveInfo {
 	/// <inheritdoc/>
 	public DateTime GetLastAccessTimeUtc => IsInternal ? DateTime.MinValue : IOFile.GetLastAccessTimeUtc(GodotPath.GlobalizePath(FullName));
 	/// <inheritdoc/>
-	public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : IOFile.GetLastAccessTime(GodotPath.GlobalizePath(FullName));
+	public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : IOFile.GetLastWriteTime(GodotPath.GlobalizePath(FullName));
 	/// <inheritdoc/>
-	public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : IOFile.GetLastAccessTimeUtc(GodotPath.GlobalizePath(FullName));
+	public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : IOFile.GetLastWriteTimeUtc(GodotPath.GlobalizePath(FullName));
 	/// <inheritdoc/>
 	public IStream Open(FileAccess access, StreamType type)
 		=> type switch {

@@ -18,7 +18,7 @@
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>CSharp;C#;net472;netstandard2.0;godotengine;godot</PackageTags>
+        <PackageTags>CSharp;C#;net472;netstandard2.0;netstandard2.1;godotengine;godot</PackageTags>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <NeutralLanguage>en</NeutralLanguage>
         <IncludeSymbols>True</IncludeSymbols>

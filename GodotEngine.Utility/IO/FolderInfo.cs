@@ -56,9 +56,9 @@ public sealed class FolderInfo(string? path, bool skipHidden) : IFolderInfo {
 	/// <inheritdoc/>
 	public DateTime GetLastAccessTimeUtc => IsInternal ? DateTime.MinValue : IOFolder.GetLastAccessTimeUtc(GodotPath.GlobalizePath(FullName));
 	/// <inheritdoc/>
-	public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : IOFolder.GetLastAccessTime(GodotPath.GlobalizePath(FullName));
+	public DateTime GetLastWriteTime => IsInternal ? DateTime.MinValue : IOFolder.GetLastWriteTime(GodotPath.GlobalizePath(FullName));
 	/// <inheritdoc/>
-	public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : IOFolder.GetLastAccessTimeUtc(GodotPath.GlobalizePath(FullName));
+	public DateTime GetLastWriteTimeUtc => IsInternal ? DateTime.MinValue : IOFolder.GetLastWriteTimeUtc(GodotPath.GlobalizePath(FullName));
 
 	private KeyValuePair<string, string>[] _Folder { get => datas[0]; set => datas[0] = value; }
 	private KeyValuePair<string, string>[] _Archives { get => datas[1]; set => datas[1] = value; }
