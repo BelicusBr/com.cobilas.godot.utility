@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.2.2] - (31/10/2025)
+
+### Fixed
+- **Node Path Resolution**: Corrected path handling in `NodePath_GD_CB_Extension.GetNode` method to properly resolve relative paths with "./" prefix
+- **Generic ObjectRef**: Enhanced `ObjectRef<T>.Value` property with proper node resolution and path validation logic
+
+### Changed
+- **Version Update**: Bumped package version from 7.2.0 to 7.2.2
+
+## [7.2.0] - (31/10/2025)
+
+### Added
+- **Object Reference System**: Introduced `ObjectRef` and `ObjectRef<T>` classes for better manipulation of Node objects in Godot 3 hierarchy
+- **Automatic Path Resolution**: Implemented automatic node resolution with path caching and validation
+- **Type-Safe References**: Added generic `ObjectRef<T>` for type-safe node references with implicit conversions
+- **Serialization Support**: Created `ObjectRefCustom` property custom class for proper editor serialization
+
+### Features
+- **Implicit Conversions**: Support for implicit conversions between ObjectRef, NodePath, string, and Node types
+- **Path Validation**: Automatic re-resolution when node paths change in the scene hierarchy
+- **Editor Integration**: Full integration with Godot editor inspector for path assignment
+- **Null Safety**: Proper handling of null nodes and paths with `NullNode` fallback
+
+## [7.1.3] - (31/10/2025)
+
+### Fixed
+- **File Timestamps**: Corrected `GetLastWriteTime` and `GetLastWriteTimeUtc` properties in `ArchiveInfo` and `FolderInfo` classes that were incorrectly using access time methods
+- **Concurrent File Access**: Modified `ArchiveStream` to use `FileShare.ReadWrite` allowing concurrent file access by different processes
+- **Node Path Resolution**: Fixed "Node path not found" exception in `NodePath_GD_CB_Extension.GetNode` extension method
+- **Godot Stream Management**: Enhanced `GodotArchiveStream` with improved file handling and resource management
+
+### Technical Improvements
+- **Stream Performance**: Optimized GodotArchiveStream to open files on-demand rather than keeping them persistently open
+- **Memory Management**: Better resource disposal patterns in stream operations
+- **Error Handling**: Improved exception handling and error reporting in file operations
+
 ## [7.1.1] - (29/10/2025)
 
 ### Changed

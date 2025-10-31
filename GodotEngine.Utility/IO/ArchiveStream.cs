@@ -15,7 +15,7 @@ namespace Cobilas.GodotEngine.Utility.IO;
 /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
 /// <exception cref="UnauthorizedAccessException">Thrown when access is denied.</exception>
 public sealed class ArchiveStream(string? path, FileAccess access) : IArchiveStream {
-	private readonly FileStream stream = new(path, FileMode.Open, access);
+	private readonly FileStream stream = new(path, FileMode.Open, access, FileShare.ReadWrite);
 	/// <inheritdoc/>
 	public bool AutoFlush { get; set; } = false;
 	/// <inheritdoc/>
