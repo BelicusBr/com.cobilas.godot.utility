@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>Represents a property that does not have a <see cref="Properties.PropertyCustom"/>.</summary>
+[System.Obsolete($"Use {nameof(NodeReneder)} or {nameof(ResourceRender)} class")]
 public class NoSerializedProperty : SerializedObject, IEnumerable<SerializedObject> {
     private readonly List<SerializedObject> properties;
     /// <inheritdoc/>
