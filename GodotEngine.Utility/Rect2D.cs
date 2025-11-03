@@ -34,7 +34,9 @@ public struct Rect2D(float x,
                       float pivotX,
                       float pivotY) : IEquatable<Rect2D>, IFormattable
 {
-    private float x = x,
+    private const string defaultFormate = "p(x:{0:N3}, y:{1:N3}) s(x:{2:N3}, y:{3:N3}) ms(x:{4:N3}, y:{5:N3}) r({6:N3}) sc(x:{7:N3}, y:{8:N3}) pv(x:{9:N3}, y:{10:N3})";
+
+	private float x = x,
                   y = y,
                   width = width,
                   height = height,
@@ -261,7 +263,7 @@ public struct Rect2D(float x,
     /// <param name="formatProvider">The provider to use to format the value.</param>
     /// <returns>A <seealso cref="string"/> that represents the current <seealso cref="object"/>.</returns>
     public readonly string ToString(string format, IFormatProvider formatProvider)
-        => string.Format(formatProvider, format, x, y, width, height,
+        => string.Format(formatProvider, format ?? defaultFormate, x, y, width, height,
             minWidth, minHeight, rotation, scaleX, scaleY, pivotX, pivotY);
     /// <summary>Returns a <seealso cref="string"/> representing the current <seealso cref="object"/> using the specified format.</summary>
     /// <param name="format">The format to use.</param>
@@ -271,7 +273,7 @@ public struct Rect2D(float x,
     /// <summary>Returns a <seealso cref="string"/> representing the current object.</summary>
     /// <returns>A <seealso cref="string"/> representing the current object.</returns>
     public override readonly string ToString()
-        => ToString("p(x:{0:N3}, y:{1:N3}) s(x:{2:N3}, y:{3:N3}) ms(x:{4:N3}, y:{5:N3}) r({6:N3}) sc(x:{7:N3}, y:{8:N3}) pv(x:{9:N3}, y:{10:N3})");
+        => ToString(defaultFormate);
 
     private static bool IsPointInsideSquare(Vector2 A, Vector2 B, Vector2 C, Vector2 D, Vector2 P)
         => IsPointInsideTriangle(A, B, C, P) || IsPointInsideTriangle(A, C, D, P);
