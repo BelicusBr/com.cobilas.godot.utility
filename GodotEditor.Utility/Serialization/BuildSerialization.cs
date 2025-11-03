@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using Cobilas.Collections;
 using System.Collections.Generic;
+using Cobilas.GodotEngine.Utility;
 using Cobilas.GodotEditor.Utility.Serialization.Interfaces;
 using Cobilas.GodotEditor.Utility.Serialization.Properties;
 using Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
@@ -18,28 +19,52 @@ public static class BuildSerialization {
 	/// <summary>The method constructs a serialization list of properties for the node.</summary>
 	/// <param name="obj">The <see cref="Godot.Object"/> to use.</param>
 	/// <returns>Returns a serialization representation of the node.</returns>
-	[Obsolete("Use BuildSerialization.BuildObjectRender(Godot.Object)")]
+	[Obsolete($"Use '{nameof(GetPropertyList)}', '{nameof(GetValue)}' or '{nameof(SetValue)}' methods")]
 	public static SerializedNode? Build(Godot.Object obj)
 		=> obj switch {
 			Node nd => Build(nd),
 			Resource rc => Build(rc),
 			_ => null
 		};
-	/// <summary>Builds an object render for property manipulation.</summary>
-	/// <param name="obj">The Godot object to build the render for.</param>
-	/// <returns>Returns an interface for property manipulation.</returns>
-	public static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
+	/// <summary>Gets the property list for serialization of the specified Godot object.</summary>
+	/// <param name="obj">The Godot object to get the property list for.</param>
+	/// <returns>Returns an array of property items for serialization, or null if the object is not supported.</returns>
+	public static PropertyItem[]? GetPropertyList(Godot.Object? obj) {
+		ISerializedPropertyManipulation? manipulation = BuildObjectRender(obj);
+		if (manipulation is null) return null;
+		return manipulation.GetPropertyList();
+	}
+	/// <summary>Gets the value of a property from the specified Godot object.</summary>
+	/// <param name="obj">The Godot object to get the property value from.</param>
+	/// <param name="propertyName">The name of the property to retrieve.</param>
+	/// <returns>Returns the property value, or null if the object or property is not found.</returns>
+	public static object? GetValue(Godot.Object? obj, string? propertyName) {
+		ISerializedPropertyManipulation? manipulation = BuildObjectRender(obj);
+		if (manipulation is null) return null;
+		return manipulation.Get(propertyName);
+	}
+	/// <summary>Sets the value of a property on the specified Godot object.</summary>
+	/// <param name="obj">The Godot object to set the property value on.</param>
+	/// <param name="propertyName">The name of the property to set.</param>
+	/// <param name="value">The value to set for the property.</param>
+	/// <returns>Returns true if the value was successfully set, false otherwise.</returns>
+	/// <remarks>In standalone mode, the value setting is deferred until the next Ready event.</remarks>
+	public static bool SetValue(Godot.Object? obj, string? propertyName, object? value) {
+		ISerializedPropertyManipulation? manipulation = BuildObjectRender(obj);
+		if (manipulation is null) return false;
+		if (GDFeature.HasStandalone) {
+			LastBuildSerialization.Ready += () => manipulation.Set(propertyName, value);
+			return true;
+		}
+		return manipulation.Set(propertyName, value);
+	}
+
+	private static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
 		=> obj switch {
 			Node nd => BuildRender(nd, obj => new NodeReneder(obj)),
 			Resource rc => BuildRender(rc, obj => new ResourceRender(obj)),
 			_ => null
 		};
-
-	public static void SetValue(Godot.Object? obj, string prop, object value) {
-		LastBuildSerialization.Ready += () => {
-			BuildObjectRender(obj).Set(prop, value);
-		};
-	}
 
 	private static ISerializedPropertyManipulation? BuildRender<T>(T? obj, Func<T, IPropertyRender> renderFactory) where T : Godot.Object {
 		if (obj is null) return null;

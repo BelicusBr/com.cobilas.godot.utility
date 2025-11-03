@@ -21,8 +21,14 @@ public abstract class PropertyCustom : ISerializedPropertyManipulation {
     /// <summary>The serialization attribute of the property.</summary>
     /// <returns>Returns the serialization attribute that tells the editor how to display the property.</returns>
     public SerializeFieldAttribute Attribute => Member.Menber.GetCustomAttribute<SerializeFieldAttribute>();
-
-    public object? Value { 
+	/// <summary>Gets or sets the value of the property and propagates changes through the render hierarchy.</summary>
+	/// <returns>Returns the current value of the property.</returns>
+	/// <value>Receives the new value for the property and propagates it through the render hierarchy.</value>
+	/// <remarks>
+	/// When setting a value, it automatically propagates the change to parent property renders
+	/// to maintain consistency in the serialization hierarchy.
+	/// </remarks>
+	public object? Value { 
         get => Member.Value; 
         set {
             Member.Value = value;
