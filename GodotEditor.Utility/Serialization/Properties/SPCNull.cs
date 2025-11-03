@@ -1,3 +1,4 @@
+using Cobilas.GodotEditor.Utility.Serialization.Interfaces;
 using System;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
@@ -8,6 +9,8 @@ public sealed class SPCNull : PropertyCustom, INullObject {
     public override bool IsHide => false;
     /// <inheritdoc/>
     public override string PropertyPath { get; set; } = string.Empty;
+	/// <inheritdoc/>
+	public override IPropertyRender? PropertyRender { get; set; }
     /// <inheritdoc/>
     public override MemberItem Member { get; set; } = MemberItem.Null;
     /// <summary>Null representation of <seealso cref="PropertyCustom"/>.</summary>
@@ -21,4 +24,8 @@ public sealed class SPCNull : PropertyCustom, INullObject {
     public override bool Set(string? propertyName, object? value) => false;
     /// <inheritdoc/>
     public override object? CacheValueToObject(string? propertyName, string? value) => null;
+	/// <inheritdoc/>
+	public override string? ObjectToCacheValue(string? propertyName, object? value) => string.Empty;
+	/// <inheritdoc/>
+	public override bool VerifyPropertyName(string? propertyName) => false;
 }

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Globalization;
+using Cobilas.GodotEditor.Utility.Serialization.Interfaces;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
 /// <summary>Allows customization of a primitive type in the inspector.</summary>
@@ -11,17 +12,19 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
     public override MemberItem Member { get; set; } = MemberItem.Null;
     /// <inheritdoc/>
     public override string PropertyPath { get; set; } = string.Empty;
-    /// <inheritdoc/>
-    public override object? Get(string? propertyName) {
+	/// <inheritdoc/>
+	public override IPropertyRender? PropertyRender { get; set; }
+	/// <inheritdoc/>
+	public override object? Get(string? propertyName) {
         if (propertyName is null) return null;
         else if (propertyName == string.Empty) return null;
-        else if (propertyName == PropertyPath) return Member.Value;
+        else if (propertyName == PropertyPath) return Value;
         return null;
     }
     /// <inheritdoc/>
     public override PropertyItem[] GetPropertyList() {
         PropertyUsageFlags flags = PropertyUsageFlags.Storage | PropertyUsageFlags.ScriptVariable;
-        if (!IsHide) flags |= PropertyUsageFlags.Editor;
+		if (!IsHide) flags |= PropertyUsageFlags.Editor;
         Variant.Type type = Variant.Type.Nil;
 
         if (Member.TypeMenber.CompareType<string>()) type = Variant.Type.String;
@@ -36,13 +39,11 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
     }
     /// <inheritdoc/>
     public override bool Set(string? propertyName, object? value) {
-        if (propertyName is null) return false;
-        else if (propertyName == string.Empty) return false;
-        else if (propertyName == PropertyPath) {
-            Member.Value = value;
-            return true;
-        }
-        return false;
+        if (string.IsNullOrEmpty(propertyName)) return false;
+        else if (value is null) return false;
+        else if (propertyName != PropertyPath) return false;
+        Value = value;
+        return true;
     }
     /// <inheritdoc/>
     public static bool IsPrimitiveType(Type type) 
@@ -50,8 +51,7 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
             typeof(short), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double));
     /// <inheritdoc/>
     public override object? CacheValueToObject(string? propertyName, string? value) {
-        if (value is null) return null;
-        else if (string.IsNullOrEmpty(value)) return value;
+        if (string.IsNullOrEmpty(value)) return null;
         else if (Member.TypeMenber.CompareType<bool>()) return bool.Parse(value);
         else if (Member.TypeMenber.CompareType<sbyte>()) return sbyte.Parse(value);
         else if (Member.TypeMenber.CompareType<byte>()) return byte.Parse(value);
@@ -61,8 +61,15 @@ public sealed class PrimitiveTypeCustom : PropertyCustom {
         else if (Member.TypeMenber.CompareType<int>()) return int.Parse(value);
         else if (Member.TypeMenber.CompareType<ulong>()) return ulong.Parse(value);
         else if (Member.TypeMenber.CompareType<long>()) return long.Parse(value);
-        else if (Member.TypeMenber.CompareType<float>()) return float.Parse(value, CultureInfo.InvariantCulture);
-        else if (Member.TypeMenber.CompareType<double>()) return double.Parse(value, CultureInfo.InvariantCulture);
+        else if (Member.TypeMenber.CompareType<float>()) return float.Parse(value, NumberStyles.Float, CultureInfo.InvariantCulture);
+        else if (Member.TypeMenber.CompareType<double>()) return double.Parse(value, NumberStyles.Float, CultureInfo.InvariantCulture);
         return value;
     }
+	/// <inheritdoc/>
+	public override string? ObjectToCacheValue(string? propertyName, object? value) {
+		if (value is null) return string.Empty;
+        return Convert.ToString(value, CultureInfo.InvariantCulture);
+	}
+    /// <inheritdoc/>
+    public override bool VerifyPropertyName(string? propertyName) => propertyName == PropertyPath;
 }

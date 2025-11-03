@@ -2,7 +2,6 @@
 using System;
 
 namespace Cobilas.GodotEngine.Utility;
-
 /// <summary>
 /// Represents a generic reference to a specific type of Godot Node with automatic 
 /// path resolution and node caching.
@@ -16,9 +15,10 @@ namespace Cobilas.GodotEngine.Utility;
 public class ObjectRef<T> : ObjectRef where T : Node {
 	/// <summary>Gets the typed node instance resolved from the path.</summary>
 	/// <returns>The resolved Node instance of type T.</returns>
-	public T Value {
+	public T? Value {
 		get {
-			if (node is NullNode) return (T)(node = path.GetNode());
+			if (path.IsEmpty()) return (T?)null;
+			else if (node is NullNode) return (T)(node = path.GetNode());
 			else if (node is null) return (T)(node = path.GetNode());
 			else if (node.GetPath() != path) return (T)(node = path.GetNode());
 			return (T)node;
@@ -65,6 +65,7 @@ public class ObjectRef<T> : ObjectRef where T : Node {
 	public static implicit operator T(ObjectRef<T>? obj) {
 		if (obj is null) throw new ArgumentNullException(nameof(obj));
 		else if (obj.node is null) return (T)(obj.node = obj.path.GetNode());
+		else if (!obj.node.IsInsideTree()) return (T)(obj.node = obj.path.GetNode());
 		else if (obj.node.GetPath() != obj.path) return (T)(obj.node = obj.path.GetNode());
 		return (T)obj.node;
 	}
