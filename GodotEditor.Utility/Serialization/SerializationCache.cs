@@ -7,11 +7,11 @@ using Cobilas.GodotEngine.Utility;
 using Cobilas.IO.Serialization.Json;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.Runtime;
-
 using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEditor.Utility.Serialization;
 /// <summary>Class to handle property caching.</summary>
+[Obsolete($"Use {nameof(PropertyRenderCache)} class")]
 public static class SerializationCache {
     private static readonly char[] separator = { '/' };
     private static readonly List<string> _cache = [];
@@ -67,7 +67,7 @@ public static class SerializationCache {
         return false;
     }
 
-    private static string GetID(SNInfo info) {
+	private static string GetID(SNInfo info) {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return (string)info[0];
         else if (_cache.Contains((string)info[0])) return (string)info[0];
         _cache.Add((string)info[0]);

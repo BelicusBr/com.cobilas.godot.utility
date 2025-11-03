@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.3.2] - (03/11/2025)
+
+### Added
+- **Serialization System**: Major refactor of the serialization system with new interfaces and classes
+- **New Interfaces**: Added IObjectRender and IPropertyRender for property manipulation
+- **New Classes**: Introduced NodeRenderer, ResourceRender, PropertyRender for inspector serialization
+- **Caching System**: Implemented PropertyRenderCache for caching property values
+- **Custom Properties**: Added support for NodePath and Rect2D custom property serialization
+- **Project Configuration**: Added .csproj.user file for publish profile settings
+
+### Changed
+- **BuildSerialization API**: Refactored BuildSerialization class with new public methods (GetPropertyList, GetValue, SetValue)
+- **Property Access**: Improved property access and manipulation with better error handling and standalone mode support
+- **Version Update**: Bumped package version from 7.2.3 to 7.3.2
+
+### Technical Notes
+- The new serialization system provides a more flexible and robust way to handle property serialization in the Godot editor
+- The caching system helps improve performance by storing and retrieving property values efficiently
+- Property value changes now automatically propagate through the render hierarchy
+
+## [7.2.3] - (31/10/2025)
+
+### Fixed
+- **ObjectRef Safety**: Enhanced ObjectRef<T>.Value property with null safety and proper path validation
+- **Generic References**: Improved handling of empty paths in generic object references
+
+### Changed
+- **Version Update**: Bumped package version from 7.2.2 to 7.2.3
+
 ## [7.2.2] - (31/10/2025)
 
 ### Fixed

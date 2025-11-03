@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>The class is a serialization representation of a node.</summary>
+[System.Obsolete($"Use {nameof(NodeReneder)} or {nameof(ResourceRender)} class")]
 public class SerializedNode : ISerializedPropertyManipulation {
     private readonly string id;
     private readonly List<SerializedObject> properties;

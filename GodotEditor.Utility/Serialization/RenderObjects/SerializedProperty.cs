@@ -1,9 +1,10 @@
 using System;
-using Cobilas.GodotEditor.Utility.Serialization.Properties;
 using Cobilas.GodotEngine.Utility;
+using Cobilas.GodotEditor.Utility.Serialization.Properties;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 /// <summary>Property serialization class in inspector.</summary>
+[Obsolete($"Use {nameof(PropertyRender)} class")]
 public class SerializedProperty : SerializedObject {
     /// <summary>Property customization object.</summary>
     /// <value>Allows you to define a property customization object.</value>
