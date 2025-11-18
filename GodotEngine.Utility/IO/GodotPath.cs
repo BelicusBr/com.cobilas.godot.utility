@@ -91,7 +91,6 @@ public static class GodotPath {
             UserPath => Godot.ProjectSettings.GlobalizePath(path),
             _ => path,
         };
-
     /// <summary>Determines whether the specified path is a Godot root path.</summary>
     /// <remarks>
     /// This method checks if a path is one of Godot's special root paths (res:// or user://).
@@ -99,22 +98,20 @@ public static class GodotPath {
     /// </remarks>
     /// <param name="path">The path to check.</param>
     /// <returns><c>true</c> if the path starts with either <see cref="ResPath"/> or <see cref="UserPath"/>; otherwise, <c>false</c>.</returns>
-    public static bool IsGodotRoot(string path) {
-        path = IGetPathRoot(path);
-        return path == ResPath || path == UserPath;
-    }
+    public static bool IsGodotRoot(string path)
+        => IGetPathRoot(path) switch {
+            ResPath or UserPath => true,
+            _ => false
+        };
 
-    private static string ICombine(params string[] paths) => Path.Combine(paths).Replace('\\', DirectorySeparatorChar);
-
-
+	private static string ICombine(params string[] paths) => Path.Combine(paths).Replace('\\', DirectorySeparatorChar);
 
     private static string IGetPathRoot(string path) {
         int index = path.IndexOf("://");
         if (index != -1) return $"{path.Remove(index)}://";
         index = path.IndexOf(":\\");
         if (index != -1) return $"{path.Remove(index)}:\\";
-        index = path.IndexOf(":/");
-        if (index != -1) return $"{path.Remove(index)}:/";
-        throw new ArgumentException($"The path '{path}' does not have a valid root!");
+
+        return Path.GetPathRoot(path);
     }
 }
