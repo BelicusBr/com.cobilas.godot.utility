@@ -39,14 +39,21 @@
 		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
 		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <Reference Include="GodotSharp">
+        <HintPath>..\..\assemblies\Debug\GodotSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="GodotSharpEditor">
+        <HintPath>..\..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Reference Include="GodotSharp">
-			<HintPath>..\assemblies\Debug\GodotSharp.dll</HintPath>
+			<HintPath>..\..\assemblies\Release\GodotSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="GodotSharpEditor">
-			<HintPath>..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
+			<HintPath>..\..\assemblies\Release\GodotSharpEditor.dll</HintPath>
 		</Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Test\GodotEditor.Utility\Serialization\RenderObjects\" />
-    </ItemGroup>
+	</ItemGroup>
 </Project>
