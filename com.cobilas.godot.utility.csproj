@@ -10,7 +10,7 @@
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
         <PackageId>Cobilas.Godot.Utility</PackageId>
         <Title>Cobilas Godot Utility</Title>
-        <Version>7.3.2</Version>
+        <Version>7.3.3</Version>
         <Authors>BélicusBr</Authors>
         <Description>The package contains utility classes in csharp for godot engine</Description>
         <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>
@@ -39,14 +39,21 @@
 		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
 		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <Reference Include="GodotSharp">
+        <HintPath>..\..\assemblies\Debug\GodotSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="GodotSharpEditor">
+        <HintPath>..\..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Reference Include="GodotSharp">
-			<HintPath>..\assemblies\Debug\GodotSharp.dll</HintPath>
+			<HintPath>..\..\assemblies\Release\GodotSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="GodotSharpEditor">
-			<HintPath>..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
+			<HintPath>..\..\assemblies\Release\GodotSharpEditor.dll</HintPath>
 		</Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Test\GodotEditor.Utility\Serialization\RenderObjects\" />
-    </ItemGroup>
+	</ItemGroup>
 </Project>

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.3.3] - (17/11/2025)
+
+### Fixed
+- **Path Root Detection**: Fixed `GodotPath.IGetPathRoot` internal method to properly handle non-Windows directory paths and prevent invalid path exceptions
+- **Cross-Platform Compatibility**: Enhanced path root detection to work correctly across different operating systems
+
+### Changed
+- **Version Update**: Bumped package version from 7.3.2 to 7.3.3
+- **Reference Paths**: Updated Godot assembly reference paths in project file
+
+### Technical Notes
+- The improved path detection now uses `Path.GetPathRoot` as fallback for non-standard path formats, providing better cross-platform compatibility
+- Previously, the method only recognized Windows-style paths (`:\`) and Godot resource paths, causing exceptions on Linux and macOS systems
+
 ## [7.3.2] - (03/11/2025)
 
 ### Added
