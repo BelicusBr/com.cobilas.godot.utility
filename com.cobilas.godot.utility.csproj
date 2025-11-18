@@ -37,6 +37,8 @@
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
 		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
+		<None Include="build\Cobilas.Godot.Utility.targets" Pack="true" PackagePath="build\" />
+		<None Include="lib\print_test.csx" Pack="true" PackagePath="lib\" />
 		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
     </ItemGroup>
