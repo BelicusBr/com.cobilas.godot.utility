@@ -1,11 +1,7 @@
-# folders
-bin/
-obj/
-.mono/
-.vs/
-.vscode/
-.libs/
-
-# files
-*.sln
-*.user
+﻿# Folders
+/export
+*/.mono
+*/.import
+**/.vs
+**/bin
+**/obj
