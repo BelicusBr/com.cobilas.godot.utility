@@ -1,14 +1,14 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Target Name="EnsureDotnetScript" BeforeTargets="Build">
-		<!-- Verifica se dotnet-script está instalado -->
-		<Exec Command="dotnet-script --version"
-			  IgnoreExitCode="true"
-			  ContinueOnError="true">
-			<Output TaskParameter="ExitCode" PropertyName="DotnetScriptExitCode" />
-		</Exec>
+	<Import Project="Cobilas.Godot.Utility.props"/>
+	<UsingTask
+		TaskName="Cobilas.GodotEditor.Utility.Tasks.GodotUtilityTask"
+		AssemblyFile="$(CurrentPathPackageFolder)\lib\runtime\$(TargetFramework)\com.cobilas.godot.utility.Tasks.dll"/>
 
-		<!-- Instala se não estiver presente -->
-		<Exec Command="dotnet tool install -g dotnet-script"
-			  Condition="'$(DotnetScriptExitCode)' != '0'" />
+	<!-- Executar automaticamente depois do build -->
+	<Target Name="RunCobilasUtilityTask" AfterTargets="Build">
+
+		<GodotUtilityTask ProjectPath="$(MSBuildProjectDirectory)"/>
+
 	</Target>
+
 </Project>

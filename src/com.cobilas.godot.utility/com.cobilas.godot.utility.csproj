@@ -1,30 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="build/Cobilas.Godot.Utility.props" />
+	<!--Project-->
     <PropertyGroup>
         <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
 		<LangVersion>default</LangVersion>
 		<Nullable>enable</Nullable>
         <RootNamespace>Cobilas</RootNamespace>
+		<OutDir>bin\$(TargetFramework)\</OutDir>
         <AssemblyName>com.cobilas.godot.utility</AssemblyName>
-		<OutputPath>bin\$(Configuration)</OutputPath>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
-        <PackageId>Cobilas.Godot.Utility</PackageId>
+		<TaskOutDir>..\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks\</TaskOutDir>
+    </PropertyGroup>
+	<!--Nuget-->
+	<PropertyGroup>
         <Title>Cobilas Godot Utility</Title>
-        <Version>7.4.0</Version>
+        <PackageId>Cobilas.Godot.Utility</PackageId>
         <Authors>BélicusBr</Authors>
+        <Version>$(ProjectVersion)</Version>
+        <PackageTags>CSharp;C#;net472;netstandard2.0;godotengine;godot</PackageTags>
         <Description>The package contains utility classes in csharp for godot engine</Description>
-        <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageOutputPath>C:\local.nuget</PackageOutputPath>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>CSharp;C#;net472;netstandard2.0;godotengine;godot</PackageTags>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <RepositoryUrl>https://github.com/BelicusBr/com.cobilas.godot.utility</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <NeutralLanguage>en</NeutralLanguage>
-        <IncludeSymbols>True</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
-    </PropertyGroup>
+	</PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <WarningLevel>4</WarningLevel>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
@@ -34,22 +39,28 @@
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     </PropertyGroup>
     <ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="\" />
-		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
-		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\CHANGELOG.md" Pack="true" PackagePath="\" />
+		<None Include="build\Cobilas.Godot.Utility.props" Pack="true" PackagePath="build\" />
 		<None Include="build\Cobilas.Godot.Utility.targets" Pack="true" PackagePath="build\" />
-		<None Include="lib\print_test.csx" Pack="true" PackagePath="lib\" />
+
+		<None Include="$(TaskOutDir)\lib\runtime\**\*" Pack="true" PackagePath="lib\runtime\" />
+
+		<ProjectReference Include="..\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks.csproj"
+				Private="false" ReferenceOutputAssembly="false" />
+		
 		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
     </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <Reference Include="GodotSharp">
-        <HintPath>..\..\assemblies\Debug\GodotSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="GodotSharpEditor">
-        <HintPath>..\..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Reference Include="GodotSharp">
+			<HintPath>..\..\assemblies\Debug\GodotSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="GodotSharpEditor">
+			<HintPath>..\..\assemblies\Debug\GodotSharpEditor.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Reference Include="GodotSharp">
 			<HintPath>..\..\assemblies\Release\GodotSharp.dll</HintPath>
