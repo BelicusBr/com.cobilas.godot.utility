@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "godot.test", "godot.test.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cobilas.godot.utility", "..\src\com.cobilas.godot.utility\com.cobilas.godot.utility.csproj", "{698C0D77-7C06-35D2-D42D-270EE0F6C0B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cobilas.godot.utility.Tasks", "..\src\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks.csproj", "{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{698C0D77-7C06-35D2-D42D-270EE0F6C0B6}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 		{698C0D77-7C06-35D2-D42D-270EE0F6C0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{698C0D77-7C06-35D2-D42D-270EE0F6C0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A2D906-F8DE-4F6E-9DCA-AFAD9101DBC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,10 +3,22 @@
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;ExportDebug;ExportRelease;Release</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ExportDebug|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ExportRelease|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\com.cobilas.godot.utility\com.cobilas.godot.utility.csproj" />
+    <PackageReference Include="Cobilas.Godot.Utility" Version="7.4.0" />
   </ItemGroup>
 </Project>

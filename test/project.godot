@@ -15,7 +15,7 @@ run/main_scene="res://Scenes/Node_Test.tscn"
 
 [autoload]
 
-GameRuntime="*res://GameRuntime.cs"
+GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
 
 [mono]
 
