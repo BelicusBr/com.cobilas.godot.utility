@@ -26,4 +26,9 @@ public sealed class PropertyItem : IDisposable {
     /// <summary>Converts <seealso cref="PropertyItem"/> to <see cref="Godot.Collections.Dictionary"/>.</summary>
     /// <returns>Returns <seealso cref="PropertyItem"/> converted to <see cref="Godot.Collections.Dictionary"/>.</returns>
     public Dictionary ToDictionary() => dictionary;
+	/// <summary>The method converts a list of <seealso cref="PropertyItem"/> to an <see cref="Godot.Collections.Array"/></summary>
+	/// <param name="array">The list to be converted.</param>
+	/// <returns>Returns an <see cref="Godot.Collections.Array"/> containing the serialization information for the properties.</returns>
+	public static Godot.Collections.Array PropertyItemArrayToGDArray(PropertyItem[]? array)
+        => [.. array ?? throw new ArgumentNullException(nameof(array))];
 }

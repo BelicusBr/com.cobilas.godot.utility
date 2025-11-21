@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.4.0] - (21/11/2025)
+
+### Added
+- **MSBuild Task**: Added a new MSBuild Task for automatic generation of the `RunTimeInitialization` class in consumer projects
+- **Automatic Runtime Setup**: New MSBuild target automatically creates `GameRuntime.cs` and configures Godot project autoload settings
+- **Task Infrastructure**: Created separate `com.cobilas.godot.utility.Tasks` project for build-time automation
+
+### Changed
+- **Project Structure**: Reorganized project layout, moving License, README, and CHANGELOG files to project root
+- **Build System**: Updated build targets and package references to support new MSBuild task architecture
+- **File Organization**: Centralized project documentation and license files in root directory
+- **Git Integration**: Updated .gitignore to exclude lib directories
+
+### Removed
+- **Legacy Build Tasks**: Removed old MSBuild task classes and code generation utilities
+- **Test Environment Dependencies**: Eliminated test-specific runtime configurations from main package
+
+### Technical Notes
+- The new MSBuild task automatically generates a `GameRuntime.cs` file in the `Godot.Runtime` folder of consumer projects
+- Automatic configuration of Godot's autoload system eliminates manual setup steps for runtime initialization
+- Package now includes both runtime utilities and build-time automation in a single distribution
+
 ## [7.3.3] - (17/11/2025)
 
 ### Fixed
