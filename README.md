@@ -99,9 +99,9 @@ public class Exe1 : Node {
 	[HideProperty] string var4;
 	[ShowProperty] vec2d var5;
 
-	public override GDArray _GetPropertyList() => SerializedNode.GetPropertyList(BuildSerialization.Build(this).GetPropertyList());
-	public override bool _Set(string property, object value) => BuildSerialization.Build(this).Set(property, value);
-	public override object _Get(string property) => BuildSerialization.Build(this).Get(property);
+	public override GDArray _GetPropertyList() => PropertyItem.PropertyItemArrayToGDArray(BuildSerialization.GetPropertyList(this));
+	public override bool _Set(string property, object value) => BuildSerialization.SetValue(this, property, value);
+	public override object _Get(string property) => BuildSerialization.GetValue(this, property);
 }
 [Serializable]
 public struct vec2d {

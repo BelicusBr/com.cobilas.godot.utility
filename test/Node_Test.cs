@@ -1,3 +1,5 @@
+using Cobilas.GodotEditor.Utility.Serialization;
+using Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 using Cobilas.GodotEngine.Utility;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.IO.Interfaces;
