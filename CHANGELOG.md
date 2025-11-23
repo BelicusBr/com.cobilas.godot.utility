@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.4.2] - (23/11/2025)
+
+### Fixed
+- **Error Logging**: Restricted error logs to exceptions within the `try-catch` block only, or when the `ProjectPath` property is null
+- **Return Values**: Corrected error logging methods to return appropriate success/failure indicators
+- **Project Structure**: Removed redundant solution file and updated project references
+
+### Changed
+- **String Constants**: Converted `gameRuntime` and `code` fields from `readonly` to `const` for better performance
+- **Build System**: Updated project output paths and assembly references for better organization
+
 ## [7.4.1] - (23/11/2025)
 
 ### Added

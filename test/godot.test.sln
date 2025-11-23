@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "godot.test", "godot.test.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cobilas.godot.utility", "..\src\com.cobilas.godot.utility\com.cobilas.godot.utility.csproj", "{698C0D77-7C06-35D2-D42D-270EE0F6C0B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cobilas.godot.utility.Tasks", "..\src\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks.csproj", "{ACCFEB8A-2A73-060B-34FA-A41C53AC3C51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.cobilas.godot.utility.tasks", "..\src\com.cobilas.godot.utility.tasks\com.cobilas.godot.utility.tasks.csproj", "{ACCFEB8A-2A73-060B-34FA-A41C53AC3C51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
