@@ -27,35 +27,29 @@ namespace Godot.Runtime {
 
 	public override bool Execute() {
 
-		if (ProjectPath is null) {
-			Log.LogError(ProjectPathIsNull);
-			return true;
-		}
-		Log.LogMessage(MessageImportance.High, InitCopyTask);
+		if (ProjectPath is null)
+			return LogError(ProjectPathIsNull);
+
+		_ = LogMessage(InitCopyTask);
 
 		try {
 			string projectPath = Path.Combine(ProjectPath, "project.godot");
 			string rt_dir = Path.Combine(ProjectPath, "Godot.Runtime");
 			string rt_file = Path.Combine(rt_dir, "GameRuntime.cs");
-			if (!File.Exists(projectPath)) {
-				Log.LogError(ProjectFileNotExist);
-				return true;
-			}
+			if (!File.Exists(projectPath))
+				return LogError(ProjectFileNotExist);
+
 			using (StreamReader reader = new(projectPath)) {
 				while (!reader.EndOfStream)
-					if (reader.ReadLine().Trim() == gameRuntime) {
-						Log.LogMessage(GameRuntimeNotDefined);
-						return true;
-					}
+					if (reader.ReadLine().Trim() == gameRuntime)
+						return LogMessage(GameRuntimeNotDefined);
 			}
 			
 			if (!Directory.Exists(rt_dir))
 				Directory.CreateDirectory(rt_dir);
 			
-			if (File.Exists(rt_file)) {
-				Log.LogMessage(GameRuntimeAlreadyExists);
-				return true;
-			}
+			if (File.Exists(rt_file))
+				return LogMessage(GameRuntimeAlreadyExists);
 
 			using FileStream stream = File.OpenWrite(rt_file);
 			byte[] bytes = Encoding.UTF8.GetBytes(code);
@@ -68,12 +62,25 @@ namespace Godot.Runtime {
 			writer.WriteLine();
 			writer.WriteLine(gameRuntime);
 
-			Log.LogMessage(CopyingTaskCompleted);
+			return LogMessage(CopyingTaskCompleted);
 
 		} catch (System.Exception ex) {
-			Log.LogWarningFromException(ex);
+			return LogError(ex);
 		}
+	}
 
+	private bool LogError(System.Exception ex) {
+		Log.LogErrorFromException(ex);
+		return Log.HasLoggedErrors;
+	}
+
+	private bool LogError(string message) {
+		Log.LogError(message);
+		return Log.HasLoggedErrors;
+	}
+
+	private bool LogMessage(string message) {
+		Log.LogMessage(MessageImportance.High, message);
 		return !Log.HasLoggedErrors;
 	}
 }
