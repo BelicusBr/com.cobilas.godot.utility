@@ -2,6 +2,8 @@ using Godot;
 using System;
 using Godot.Collections;
 
+using GDArray = Godot.Collections.Array;
+
 namespace Cobilas.GodotEditor.Utility.Serialization; 
 /// <summary>The class stores the information for drawing in the editor.</summary>
 public sealed class PropertyItem : IDisposable {
@@ -29,6 +31,11 @@ public sealed class PropertyItem : IDisposable {
 	/// <summary>The method converts a list of <seealso cref="PropertyItem"/> to an <see cref="Godot.Collections.Array"/></summary>
 	/// <param name="array">The list to be converted.</param>
 	/// <returns>Returns an <see cref="Godot.Collections.Array"/> containing the serialization information for the properties.</returns>
-	public static Godot.Collections.Array PropertyItemArrayToGDArray(PropertyItem[]? array)
-        => [.. array ?? throw new ArgumentNullException(nameof(array))];
+	public static GDArray PropertyItemArrayToGDArray(PropertyItem[]? array) {
+        if (array is null) throw new ArgumentNullException(nameof(array));
+        GDArray result = [];
+		foreach (PropertyItem item in array)
+		    result.Add(item.ToDictionary());
+        return result;
+	}
 }
