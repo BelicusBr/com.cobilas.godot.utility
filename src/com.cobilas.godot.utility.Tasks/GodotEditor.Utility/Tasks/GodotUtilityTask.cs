@@ -7,6 +7,13 @@ namespace Cobilas.GodotEditor.Utility.Tasks;
 
 public class GodotUtilityTask : Task {
 
+	private const string ProjectPathIsNull = "The 'ProjectPath' property is null!";
+	private const string InitCopyTask = "Running the GameRuntime class copy task!";
+	private const string ProjectFileNotExist = "The Godot project file could not be found!";
+	private const string GameRuntimeNotDefined = "The GameRuntime class is already defined in the Godot project file!";
+	private const string GameRuntimeAlreadyExists = "The GameRuntime.cs file already exists in the godot project!";
+	private const string CopyingTaskCompleted = "The process of copying the GameRuntime class was completed successfully!";
+
 	private readonly string gameRuntime = "GameRuntime=\"*res://Godot.Runtime/GameRuntime.cs\"";
 	private readonly string code =
 @"using Cobilas.GodotEngine.Utility.Runtime;
@@ -21,20 +28,23 @@ namespace Godot.Runtime {
 	public override bool Execute() {
 
 		if (ProjectPath is null) {
-			Log.LogError("The 'ProjectPath' property is null!");
+			Log.LogError(ProjectPathIsNull);
 			return true;
 		}
-		Log.LogMessage(MessageImportance.High, "Running the GameRuntime class copy task!");
+		Log.LogMessage(MessageImportance.High, InitCopyTask);
 
 		try {
 			string projectPath = Path.Combine(ProjectPath, "project.godot");
 			string rt_dir = Path.Combine(ProjectPath, "Godot.Runtime");
 			string rt_file = Path.Combine(rt_dir, "GameRuntime.cs");
-			if (!File.Exists(projectPath)) return false;
+			if (!File.Exists(projectPath)) {
+				Log.LogError(ProjectFileNotExist);
+				return true;
+			}
 			using (StreamReader reader = new(projectPath)) {
 				while (!reader.EndOfStream)
 					if (reader.ReadLine().Trim() == gameRuntime) {
-						Log.LogMessage("The GameRuntime class is already defined in the Godot project file.");
+						Log.LogMessage(GameRuntimeNotDefined);
 						return true;
 					}
 			}
@@ -43,7 +53,7 @@ namespace Godot.Runtime {
 				Directory.CreateDirectory(rt_dir);
 			
 			if (File.Exists(rt_file)) {
-				Log.LogMessage("The GameRuntime.cs file already exists in the godot project.");
+				Log.LogMessage(GameRuntimeAlreadyExists);
 				return true;
 			}
 
@@ -58,7 +68,7 @@ namespace Godot.Runtime {
 			writer.WriteLine();
 			writer.WriteLine(gameRuntime);
 
-			Log.LogMessage("The process of copying the GameRuntime class was completed successfully!");
+			Log.LogMessage(CopyingTaskCompleted);
 
 		} catch (System.Exception ex) {
 			Log.LogWarningFromException(ex);
