@@ -14,8 +14,8 @@ public class GodotUtilityTask : Task {
 	private const string GameRuntimeAlreadyExists = "The GameRuntime.cs file already exists in the godot project!";
 	private const string CopyingTaskCompleted = "The process of copying the GameRuntime class was completed successfully!";
 
-	private readonly string gameRuntime = "GameRuntime=\"*res://Godot.Runtime/GameRuntime.cs\"";
-	private readonly string code =
+	private const string gameRuntime = "GameRuntime=\"*res://Godot.Runtime/GameRuntime.cs\"";
+	private const string code =
 @"using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Godot.Runtime {
@@ -29,15 +29,14 @@ namespace Godot.Runtime {
 
 		if (ProjectPath is null)
 			return LogError(ProjectPathIsNull);
-
-		_ = LogMessage(InitCopyTask);
-
 		try {
+			_ = LogMessage(InitCopyTask);
+
 			string projectPath = Path.Combine(ProjectPath, "project.godot");
 			string rt_dir = Path.Combine(ProjectPath, "Godot.Runtime");
 			string rt_file = Path.Combine(rt_dir, "GameRuntime.cs");
 			if (!File.Exists(projectPath))
-				return LogError(ProjectFileNotExist);
+				return LogMessage(ProjectFileNotExist);
 
 			using (StreamReader reader = new(projectPath)) {
 				while (!reader.EndOfStream)
@@ -71,12 +70,12 @@ namespace Godot.Runtime {
 
 	private bool LogError(System.Exception ex) {
 		Log.LogErrorFromException(ex);
-		return Log.HasLoggedErrors;
+		return !Log.HasLoggedErrors;
 	}
 
 	private bool LogError(string message) {
 		Log.LogError(message);
-		return Log.HasLoggedErrors;
+		return !Log.HasLoggedErrors;
 	}
 
 	private bool LogMessage(string message) {
