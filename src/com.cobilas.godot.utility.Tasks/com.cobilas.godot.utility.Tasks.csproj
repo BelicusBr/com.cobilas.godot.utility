@@ -16,8 +16,8 @@
 	<PropertyGroup>
 		<nets2dir>$(MSBuildProjectDirectory)\bin\netstandard2.0\</nets2dir>
 		<net472dir>$(MSBuildProjectDirectory)\bin\net472\</net472dir>
-		<nets2Dis>$(MSBuildProjectDirectory)\lib\runtime\netstandard2.0\</nets2Dis>
-		<net472Dis>$(MSBuildProjectDirectory)\lib\runtime\net472\</net472Dis>
+		<nets2Dis>$(MSBuildProjectDirectory)\build\runtime\netstandard2.0\</nets2Dis>
+		<net472Dis>$(MSBuildProjectDirectory)\build\runtime\net472\</net472Dis>
 	</PropertyGroup>
 	<ItemGroup>
 		<nets2dll Include="$(nets2dir)$(AssemblyName).dll"/>

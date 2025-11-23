@@ -1,8 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="Cobilas.Godot.Utility.props"/>
+	<!--<Import Project="Cobilas.Godot.Utility.props"/>-->
 	<UsingTask
 		TaskName="Cobilas.GodotEditor.Utility.Tasks.GodotUtilityTask"
-		AssemblyFile="$(CurrentPathPackageFolder)\lib\runtime\$(TargetFramework)\com.cobilas.godot.utility.Tasks.dll"/>
+		AssemblyFile="$(CurrentPathPackageFolder)\build\runtime\$(TargetFramework)\com.cobilas.godot.utility.tasks.dll"/>
 
 	<!-- Executar automaticamente depois do build -->
 	<Target Name="RunCobilasUtilityTask" AfterTargets="Build">

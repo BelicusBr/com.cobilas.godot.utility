@@ -19,6 +19,6 @@
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cobilas.Godot.Utility" Version="7.4.0" />
+    <PackageReference Include="Cobilas.Godot.Utility" Version="7.4.1" />
   </ItemGroup>
 </Project>

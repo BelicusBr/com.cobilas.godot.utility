@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.4.1] - (23/11/2025)
+
+### Added
+- **Error Handling**: Enhanced `GodotUtilityTask` with improved error logging methods for better build diagnostics
+- **Logging Methods**: Added `LogError` and `LogMessage` helper methods for consistent error reporting
+
+### Changed
+- **Version Update**: Bumped package version from 7.4.0 to 7.4.1
+- **Build System**: Updated build output paths from `lib/runtime` to `build/runtime` for better organization
+- **Project Structure**: Reorganized project files and updated solution configurations
+- **Message Constants**: Refactored log messages to use string constants for better maintainability
+
+### Fixed
+- **Error Reporting**: Fixed error logging in `GodotUtilityTask.Execute` method to properly report missing project files
+- **Build Paths**: Corrected assembly reference paths in build targets and project configurations
+
+### Technical Notes
+- The improved error handling in `GodotUtilityTask` now properly detects and reports missing Godot project files during build
+- Log messages are now centralized in constants, making them easier to maintain and translate
+- Build system reorganization provides clearer separation between package content and build artifacts
+
 ## [7.4.0] - (21/11/2025)
 
 ### Added
