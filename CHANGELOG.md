@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.4.3] - (23/11/2025)
+
+### Fixed
+- **Serialization**: Refactored `PropertyItem.PropertyItemArrayToGDArray` method to correctly convert PropertyItem arrays to Godot Collections.Array by properly serializing each item to dictionary format
+- **Type Handling**: Added proper null checking and explicit iteration for array conversion instead of using collection expressions
+
+### Changed
+- **Type Aliases**: Added `GDArray` type alias for `Godot.Collections.Array` for cleaner code
+- **Version Update**: Bumped package version from 7.4.2 to 7.4.3
+
 ## [7.4.2] - (23/11/2025)
 
 ### Fixed
