@@ -10,7 +10,7 @@
         <AssemblyName>com.cobilas.godot.utility</AssemblyName>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
-		<TaskOutDir>..\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks\</TaskOutDir>
+		<TaskOutDir>..\com.cobilas.godot.utility.Tasks\</TaskOutDir>
     </PropertyGroup>
 	<!--Nuget-->
 	<PropertyGroup>
@@ -45,9 +45,9 @@
 		<None Include="build\Cobilas.Godot.Utility.props" Pack="true" PackagePath="build\" />
 		<None Include="build\Cobilas.Godot.Utility.targets" Pack="true" PackagePath="build\" />
 
-		<None Include="$(TaskOutDir)\lib\runtime\**\*" Pack="true" PackagePath="lib\runtime\" />
+		<None Include="$(TaskOutDir)\build\runtime\**\*" Pack="true" PackagePath="build\runtime\" />
 
-		<ProjectReference Include="..\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks.csproj"
+		<ProjectReference Include="..\com.cobilas.godot.utility.Tasks\com.cobilas.godot.utility.Tasks.csproj"
 				Private="false" ReferenceOutputAssembly="false" />
 		
 		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
