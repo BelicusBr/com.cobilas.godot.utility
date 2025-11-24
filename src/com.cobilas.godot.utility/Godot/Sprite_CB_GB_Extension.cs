@@ -56,9 +56,34 @@ public static class Sprite_CB_GB_Extension {
         ctl.GlobalPosition = rect.Position;
         SetNoRect2DPosition(ctl, rect);
     }
+	/// <summary>
+	/// Gets the scaled texture size of the <see cref="Sprite"/>.
+	/// </summary>
+	/// <param name="ctl"><see cref="Sprite"/> target (can be null)</param>
+	/// <returns>A <see cref="Vector2D"/> representing the scaled texture size, or <see cref="Vector2D.Zero"/> if texture is null</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <see cref="Sprite"/> is null</exception>
+	public static Vector2D GetTextureSize(this Sprite? ctl) {
+		if (ctl is null) throw new ArgumentNullException(nameof(ctl));
+		else if (ctl.Texture is null) return Vector2D.Zero;
+		return ctl.Texture.GetSize() * ctl.Scale;
+	}
+	/// <summary>
+	/// Sets the texture size of the <see cref="Sprite"/> by adjusting its scale.
+	/// </summary>
+	/// <param name="ctl"><see cref="Sprite"/> target (can be null)</param>
+	/// <param name="newSize">The desired texture size as a <see cref="Vector2DInt"/></param>
+	/// <exception cref="ArgumentNullException">Thrown when <see cref="Sprite"/> is null</exception>
+	/// <remarks>
+	/// This method calculates and applies the appropriate scale to achieve the desired texture size.
+	/// If the sprite's texture is null, the method returns without making changes.
+	/// </remarks>
+	public static void SetTextureSize(this Sprite? ctl, Vector2DInt newSize) {
+		if (ctl is null) throw new ArgumentNullException(nameof(ctl));
+		else if (ctl.Texture is null) return;
+		ctl.Scale = newSize / ctl.Texture.GetSize();
+	}
 
-    private static void SetNoRect2DPosition(this Sprite ctl, Rect2D rect)
-    {
+	private static void SetNoRect2DPosition(this Sprite ctl, Rect2D rect) {
         ctl.RotationDegrees = rect.Rotation;
         ctl.Scale = rect.Scale;
         ctl.Offset = rect.Pivot;
