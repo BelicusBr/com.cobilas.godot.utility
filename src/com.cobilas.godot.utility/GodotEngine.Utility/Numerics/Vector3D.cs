@@ -90,7 +90,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
 #region Methods
     /// <inheritdoc cref="Vector4D.Abs(bool, bool, bool, bool)"/>
     public readonly Vector3D Abs(bool absX = true, bool absY = true, bool absZ = true) {
-        Vector2D abs = Abs(this);
+        Vector3D abs = Abs(this);
         abs[0] = absX ? abs[0] : this[0];
         abs[1] = absY ? abs[1] : this[1];
         abs[2] = absZ ? abs[2] : this[2];
@@ -98,7 +98,7 @@ public struct Vector3D : IVectorGeneric<Vector3D> {
     }
     /// <inheritdoc cref="Vector4D.Neg(bool, bool, bool, bool)"/>
     public readonly Vector3D Neg(bool negX = true, bool negY = true, bool negZ = true) {
-        Vector2D abs = Neg(this);
+        Vector3D abs = Neg(this);
         abs[0] = negX ? abs[0] : this[0];
         abs[1] = negY ? abs[1] : this[1];
         abs[2] = negZ ? abs[2] : this[2];
