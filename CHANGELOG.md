@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.5.0] - (24/11/2025)
+
+### Added
+- **Sprite Extensions**: Added new extension methods `GetTextureSize` and `SetTextureSize` for `Sprite` class to manipulate sprite size
+- **Texture Manipulation**: Implemented methods to get scaled texture size and set texture size by adjusting sprite scale
+- **Vector2DInt Support**: Added support for `Vector2DInt` in sprite size manipulation methods
+
+### Features
+- **GetTextureSize**: Returns the scaled texture size of a Sprite, accounting for current scale
+- **SetTextureSize**: Adjusts sprite scale to achieve desired texture size using `Vector2DInt`
+
+### Technical Notes
+- Methods include proper null checking and error handling with `ArgumentNullException`
+- Returns `Vector2D.Zero` when texture is null for safe operation
+- Uses vector division for precise scale calculation
+
+## [7.4.4] - (24/11/2025)
+
+### Fixed
+- **Vector3D Methods**: Fixed `Vector3D.Abs` and `Vector3D.Neg` methods that were incorrectly using `Vector2D` internally, causing `ArgumentOutOfRangeException`
+- **Type Consistency**: Corrected return types from `Vector2D` to `Vector3D` in vector operations
+
+### Code Quality
+- **Formatting**: Improved code region organization in `Vector2D` class
+- **Version Update**: Bumped package version from 7.4.3 to 7.4.4
+
+### Technical Notes
+- The bug was causing index out of range exceptions when accessing the Z component
+- Methods now properly handle three-dimensional vector operations
+- Maintains conditional component modification for flexibility
+
 ## [7.4.3] - (23/11/2025)
 
 ### Fixed
