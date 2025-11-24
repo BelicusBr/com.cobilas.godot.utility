@@ -73,7 +73,7 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
     /// <summary>Starts a new instance of the object.</summary>
     public Vector2D(Vector2 vector) : this(vector.x, vector.y) {}
 
-#region Methods
+    #region Methods
     /// <inheritdoc/>
     public readonly bool Equals(Vector2D other)
         => other.x == this.x && other.y == this.y;
@@ -108,7 +108,6 @@ public struct Vector2D : IVectorGeneric<Vector2D> {
     public readonly Vector2D Round() => Round(this);
     readonly IVector IVector.Round() => Round(this);
     #endregion
-
     #region Static methods
     /// <inheritdoc cref="Vector4D.Magnitude(in Vector4D)"/>
     public static float Magnitude(in Vector2D a) => Mathf.Sqrt(SqrMagnitude(a));
