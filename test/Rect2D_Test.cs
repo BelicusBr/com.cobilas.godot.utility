@@ -1,9 +1,8 @@
+using Godot;
 using Cobilas.GodotEngine.Utility;
 using Cobilas.GodotEngine.Utility.Input;
-using Cobilas.GodotEngine.Utility.Numerics;
 using Cobilas.GodotEngine.Utility.Runtime;
-using Godot;
-using System;
+using Cobilas.GodotEngine.Utility.Numerics;
 
 public class Rect2D_Test : Camera2D
 {
