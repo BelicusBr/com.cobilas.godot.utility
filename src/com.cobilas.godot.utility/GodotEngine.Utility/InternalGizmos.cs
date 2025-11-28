@@ -14,6 +14,7 @@ internal class InternalGizmos : CanvasLayer {
 
     private static InternalGizmos? gizmos = null;
     private static event Action? drawFunc = null;
+    private static readonly Dictionary<Color, ColorTarget> colors = [];
 
     /// <summary>Sets the Color of the gizmos that are drawn next.</summary>
     /// <value>Returns or sets the color of the next gizmo.</value>
@@ -57,7 +58,7 @@ internal class InternalGizmos : CanvasLayer {
 
     private void DrawGizmos() {
         drawFunc?.Invoke();
-        drawFunc = null;
+        //drawFunc = null;
     }
     /// <summary>
     /// Draws a line from a 2D point to another, with a given color and width. It can
@@ -70,7 +71,7 @@ internal class InternalGizmos : CanvasLayer {
     /// <param name="end">The end of the line.</param>
     /// <param name="width">The thickness of the line.</param>
     internal static void DrawLine(Vector2 start, Vector2 end, float width)
-        => drawFunc += () => gizmos!.canvasItem!.DrawLine(start, end, Color, width);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawLine(start, end, c, width));
     /// <summary>
     /// Draws a line from a 2D point to another, with a given color and width. It can
     /// be optionally antialiased. See also <seealso cref="CanvasItem.DrawMultiline(Vector2[], Color, float, bool)"/>
@@ -88,7 +89,7 @@ internal class InternalGizmos : CanvasLayer {
     /// </summary>
     /// <param name="rect">The dimensions of the rectangle.</param>
     internal static void DrawRect(Rect2 rect)
-        => drawFunc += () => gizmos!.canvasItem!.DrawRect(rect, Color);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawRect(rect, c));
     /// <summary>
     /// Draw a rectangle of a skeletonized body.
     /// <para>Note: Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.</para>
@@ -96,7 +97,7 @@ internal class InternalGizmos : CanvasLayer {
     /// <param name="rect">The dimensions of the rectangle.</param>
     /// <param name="width">The thickness of the line.</param>
     internal static void DrawWireRect(Rect2 rect, float width)
-        => drawFunc += () => gizmos!.canvasItem!.DrawRect(rect, Color, false, width);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawRect(rect, c, false, width));
     /// <summary>
     /// Draw a rectangle of a skeletonized body.
     /// <para>Note: Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.</para>
@@ -110,7 +111,7 @@ internal class InternalGizmos : CanvasLayer {
     /// <param name="position">The central position of the circle.</param>
     /// <param name="radius">The radius of the circle.</param>
     internal static void DrawCircle(Vector2 position, float radius)
-        => drawFunc += () => gizmos!.canvasItem!.DrawCircle(position, radius, Color);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawCircle(position, radius, c));
     /// <summary>
     /// <para>Draws multiple disconnected lines with a uniform <c>color</c>. When drawing large amounts of lines, this is faster than using individual <see cref="M:Godot.CanvasItem.DrawLine(Godot.Vector2,Godot.Vector2,Godot.Color,System.Single,System.Boolean)" /> calls. To draw interconnected lines, use <see cref="M:Godot.CanvasItem.DrawPolyline(Godot.Vector2[],Godot.Color,System.Single,System.Boolean)" /> instead.</para>
     /// <para>Note: <c>width</c> and <c>antialiased</c> are currently not implemented and have no effect. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.</para>
@@ -118,7 +119,7 @@ internal class InternalGizmos : CanvasLayer {
     /// <param name="points">The points that form the line.</param>
     /// <param name="width">The thickness of the line.</param>
     internal static void DrawMultiline(Vector2[] points, float width)
-        => drawFunc += () => gizmos!.canvasItem!.DrawMultiline(points, Color, width);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawMultiline(points, c, width));
     /// <summary>
     /// <para>Draws multiple disconnected lines with a uniform <c>color</c>. When drawing large amounts of lines, this is faster than using individual <see cref="M:Godot.CanvasItem.DrawLine(Godot.Vector2,Godot.Vector2,Godot.Color,System.Single,System.Boolean)" /> calls. To draw interconnected lines, use <see cref="M:Godot.CanvasItem.DrawPolyline(Godot.Vector2[],Godot.Color,System.Single,System.Boolean)" /> instead.</para>
     /// <para>Note: <c>width</c> and <c>antialiased</c> are currently not implemented and have no effect. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.</para>
@@ -152,7 +153,7 @@ internal class InternalGizmos : CanvasLayer {
     /// </param>
     /// <param name="width">The thickness of the line.</param>
     internal static void DrawArc(Vector2 center, float radius, float startAngle, float endAngle, int pointCount, float width)
-        => drawFunc += () => gizmos!.canvasItem!.DrawArc(center, radius, startAngle, endAngle, pointCount, Color, width);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawArc(center, radius, startAngle, endAngle, pointCount, c, width));
     /// <summary>
     /// <para>Draws a unfilled arc between the given angles. The larger the value of <c>point_count</c>, the smoother the curve. See also <see cref="M:Godot.CanvasItem.DrawCircle(Godot.Vector2,System.Single,Godot.Color)" />.</para>
     /// <para>Note: Line drawing is not accelerated by batching if <c>antialiased</c> is <c>true</c>.</para>
@@ -175,16 +176,41 @@ internal class InternalGizmos : CanvasLayer {
     /// <param name="normalMap">The texture normal map.</param>
     /// <param name="transform">If the parameter is null, then the default value is Transform2D.Identity</param>
     internal static void DrawMesh(Mesh mesh, Texture texture, Texture? normalMap = null, Transform2D? transform = null)
-        => drawFunc += () => gizmos!.canvasItem!.DrawMesh(mesh, texture, normalMap, transform, Color);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawMesh(mesh, texture, normalMap, transform, c));
     /// <summary>
     /// <para>Draws a texture at a given position.</para>
     /// </summary>
     internal static void DrawTexture(Texture texture, Vector2 position, Texture? normalMap = null)
-        => drawFunc += () => gizmos!.canvasItem!.DrawTexture(texture, position, Color, normalMap);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawTexture(texture, position, c, normalMap));
 
     /// <summary>
     /// <para>Draws a textured rectangle at a given position, optionally modulated by a color. If <c>transpose</c> is <c>true</c>, the texture will have its X and Y coordinates swapped.</para>
     /// </summary>
     internal static void DrawTextureRect(Texture texture, Rect2 rect, bool tile, bool transpose = false, Texture? normalMap = null)
-        => drawFunc += () => gizmos!.canvasItem!.DrawTextureRect(texture, rect, tile, Color, transpose, normalMap);
+        => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawTextureRect(texture, rect, tile, c, transpose, normalMap));
+
+    private static void SetDrawFunc(Color colorTarget, Action<Color> func) {
+        if (colors.TryGetValue(colorTarget, out ColorTarget target)) target.DrawFunc += func;
+        else {
+            target = new(colorTarget);
+			target.DrawFunc += func;
+            drawFunc += target.Invok;
+            colors.Add(colorTarget, target);
+		}
+    }
+
+	private sealed class ColorTarget {
+        public event Action<Color>? DrawFunc;
+
+        private Color myColor { get; set; }
+
+		public ColorTarget(Color color) {
+            myColor = color;
+		}
+
+		public void Invok() {
+            DrawFunc?.Invoke(myColor);
+            DrawFunc = null;
+        }
+	}
 }
