@@ -4,7 +4,6 @@ using System.Globalization;
 using Cobilas.GodotEngine.Utility.Numerics;
 
 namespace Cobilas.GodotEngine.Utility;
-
 /// <summary>Represents a 2D rectangle with advanced properties for geometric transformations.</summary>
 /// <remarks>
 /// This structure extends the functionality of a traditional rectangle, including
@@ -245,19 +244,19 @@ public struct Rect2D(float x,
     /// <param name="point">The point to be checked.</param>
     /// <returns>true if the point is inside the rectangle; otherwise, false.</returns>
     public readonly bool HasPoint(Vector2D point) {
-        Vector2D position = Position;
-        Quaternion quaternion = Quaternion.ToQuaternion(Vector3D.Forward * RadianRotation);
-        Vector2D dirx = quaternion.GenerateDirectionRight() * SizeScale.x;
-        Vector2D diry = quaternion.GenerateDirectionDown() * SizeScale.y;
-        Vector2D pivx = quaternion.GenerateDirectionLeft() * PivotScale.x;
-        Vector2D pivy = quaternion.GenerateDirectionUp() * PivotScale.y;
-        position += Pivot + pivx + pivy;
-        Vector2D px = position + dirx;
-        Vector2D py = position + diry;
-        Vector2D pxy = position + dirx + diry;
+		Vector2D position = Position;
+		Quaternion quaternion = Quaternion.ToQuaternion(Vector3D.Forward * RadianRotation);
+		Vector2D dirx = quaternion.GenerateDirectionRight() * SizeScale.x;
+		Vector2D diry = quaternion.GenerateDirectionDown() * SizeScale.y;
+		Vector2D pivx = quaternion.GenerateDirectionLeft() * PivotScale.x;
+		Vector2D pivy = quaternion.GenerateDirectionUp() * PivotScale.y;
+		position += pivx + pivy;
+		Vector2D px = position + dirx;
+		Vector2D py = position + diry;
+		Vector2D pxy = position + dirx + diry;
 
-        return IsPointInsideSquare(position, px, pxy, py, point);
-    }
+		return IsPointInsideSquare(position, px, pxy, py, point);
+	}
     /// <summary>Returns a <seealso cref="string"/> that represents the current <seealso cref="object"/> using the specified format and format provider.</summary>
     /// <param name="format">The format to use.</param>
     /// <param name="formatProvider">The provider to use to format the value.</param>

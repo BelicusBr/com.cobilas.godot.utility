@@ -94,5 +94,5 @@ public static class Sprite_CB_GB_Extension {
             .SetMinSize(Vector2D.Zero)
             .SetRotation(ctl.RotationDegrees)
             .SetScale(ctl.Scale)
-            .SetPivot(ctl.Offset);
+            .SetPivot((ctl.Centered ? GetTextureSize(ctl) * .5f : Vector2D.Zero) + ctl.Offset);
 }

@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.5.1] - (27/11/2025)
+
+### Fixed
+- **Rect2D Point Detection**: Corrected `Rect2D.HasPoint` function that had incorrect pivot calculation leading to inaccurate point detection
+- **Camera2D Extensions**: Fixed `ScreenToWorldPoint` and `WorldToScreenPoint` methods to properly account for camera offset in coordinate conversions
+- **Control Extensions**: Corrected `GetRect2D`, `SetRect2D`, `GetGlobalRect2D`, and `SetGlobalRect2D` methods to properly handle `RectPivotOffset`
+- **Sprite Extensions**: Fixed `GetRect2D` method to correctly calculate pivot when sprite is centered
+- **Gizmos System**: Resolved color management issues in `InternalGizmos` by implementing color-targeted drawing system
+
+### Changed
+- **Gizmos Architecture**: Refactored `InternalGizmos` to use color-targeted drawing system with `ColorTarget` class for better color management
+- **Coordinate Systems**: Improved coordinate transformation logic across all 2D extension methods
+
+### Added
+- **Testing**: Added comprehensive `Rect2D_Test` scene and test script for validating rectangle point detection and coordinate transformations
+- **Debug Tools**: Enhanced gizmos drawing capabilities with persistent draw functions and improved color handling
+
+### Technical Notes
+- The pivot calculation fix ensures accurate point-in-rectangle detection for rotated and scaled rectangles
+- Camera coordinate transformations now properly account for both position and offset properties
+- Gizmos system now supports multiple colors in the same draw cycle without color conflicts
+- Test scene includes interactive controls for validating sprite and control transformations
+
 ## [7.5.0] - (24/11/2025)
 
 ### Added
