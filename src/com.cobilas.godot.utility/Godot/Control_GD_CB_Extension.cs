@@ -20,7 +20,7 @@ public static class Control_GD_CB_Extension {
     public static Rect2D GetRect2D(this Control? ctl)
         => ctl switch {
             null => throw new ArgumentNullException(nameof(ctl)),
-            _ => DoNotGetRect2Dposition(ctl).SetPosition(ctl.RectPosition),
+            _ => DoNotGetRect2Dposition(ctl).SetPosition(ctl.RectPosition + ctl.RectPivotOffset),
         };
     /// <summary>
     /// Sets the properties of the <seealso cref="Control"/> based on a <seealso cref="Rect2D"/>.
@@ -30,7 +30,7 @@ public static class Control_GD_CB_Extension {
     /// <exception cref="ArgumentNullException">Thrown when <seealso cref="Control"/> is null</exception>
     public static void SetRect2D(this Control? ctl, Rect2D rect) {
         if (ctl is null) throw new ArgumentNullException(nameof(ctl));
-        ctl.RectPosition = rect.Position;
+        ctl.RectPosition = rect.Position - ctl.RectPivotOffset;
         SetNoRect2DPosition(ctl, rect);
     }
     /// <summary>
@@ -42,7 +42,7 @@ public static class Control_GD_CB_Extension {
     public static Rect2D GetGlobalRect2D(this Control? ctl)
         => ctl switch {
             null => throw new ArgumentNullException(nameof(ctl)),
-            _ => DoNotGetRect2Dposition(ctl).SetPosition(ctl.RectGlobalPosition),
+            _ => DoNotGetRect2Dposition(ctl).SetPosition(ctl.RectGlobalPosition + ctl.RectPivotOffset),
         };
     /// <summary>
     /// Sets the properties of the <seealso cref="Control"/> based on a <seealso cref="Rect2D"/>, using global coordinates.
@@ -52,7 +52,7 @@ public static class Control_GD_CB_Extension {
     /// <exception cref="ArgumentNullException">Thrown when <seealso cref="Control"/> is null</exception>
     public static void SetGlobalRect2D(this Control? ctl, Rect2D rect) {
         if (ctl is null) throw new ArgumentNullException(nameof(ctl));
-        ctl.RectGlobalPosition = rect.Position;
+        ctl.RectGlobalPosition = rect.Position - ctl.RectPivotOffset;
         SetNoRect2DPosition(ctl, rect);
     }
 
