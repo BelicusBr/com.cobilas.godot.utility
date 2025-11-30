@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.6.0] - (29/11/2025)
+
+### Added
+- **Color Conversion**: Added explicit conversion operators from `Color32` and `ColorF` structures to Godot's `Color` structure
+- **Integration**: Enhanced interoperability between custom color structures and Godot's native color system
+
+### Features
+- **Color32 to Color**: Explicit conversion operator that preserves RGBA values using `Color.Color8` method
+- **ColorF to Color**: Explicit conversion operator that uses floating-point RGBA values to create Godot color instances
+
+### Changed
+- **Version Update**: Bumped package version from 7.5.1 to 7.6.0
+- **Documentation**: Updated README.md to reflect new version 7.6.0 in installation examples
+
+### Technical Notes
+- The explicit conversions provide seamless integration between custom color structures and Godot's native color system
+- `Color32` conversion uses the `Color.Color8` method which expects 8-bit integer color components (0-255)
+- `ColorF` conversion directly uses floating-point color components (0.0-1.0) to construct Godot Color instances
+
 ## [7.5.1] - (27/11/2025)
 
 ### Fixed

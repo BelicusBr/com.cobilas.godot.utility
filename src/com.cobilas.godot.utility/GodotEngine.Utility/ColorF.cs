@@ -743,4 +743,12 @@ public struct ColorF : IEquatable<ColorF>, IEquatable<Vector4D> {
     /// <summary>Explicit conversion operator.(<seealso cref="string"/> to <seealso cref="ColorF"/>)</summary>
     /// <param name="stg">Object to be converted.</param>
     public static explicit operator ColorF(string stg) => Color32.HexToColor32(stg);
+	/// <summary>Explicitly converts a <see cref="ColorF"/> structure to a Godot <see cref="Color"/>.</summary>
+	/// <param name="c">The <see cref="ColorF"/> structure to convert.</param>
+	/// <returns>A Godot <see cref="Color"/> with equivalent RGBA values.</returns>
+	/// <remarks>
+	/// This conversion uses the floating-point RGBA values from the ColorF structure
+	/// to create a corresponding Godot color instance with the same color values.
+	/// </remarks>
+	public static explicit operator Color(ColorF c) => new(c.r, c.g, c.b, c.a);
 }
