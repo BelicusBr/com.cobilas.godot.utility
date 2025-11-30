@@ -97,4 +97,12 @@ public struct Color32 : IEquatable<Color32> {
     /// <summary>Explicit conversion operator.(<seealso cref="string"/> to <seealso cref="Color32"/>)</summary>
     /// <param name="stg">Object to be converted.</param>
     public static explicit operator Color32(string stg) => HexToColor32(stg);
+	/// <summary>Explicitly converts a <see cref="Color32"/> structure to a Godot <see cref="Color"/>.</summary>
+	/// <param name="c">The <see cref="Color32"/> structure to convert.</param>
+	/// <returns>A Godot <see cref="Color"/> with equivalent RGBA values.</returns>
+	/// <remarks>
+	/// This conversion preserves the RGBA values from the 32-bit color structure
+	/// and creates a corresponding Godot color instance.
+	/// </remarks>
+	public static explicit operator Color(Color32 c) => Color.Color8(c.r, c.g, c.b, c.a);
 }
