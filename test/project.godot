@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="godot.test"
-run/main_scene="res://Scenes/Rect2D_Test.tscn"
+run/main_scene="res://Scenes/Node_Test.tscn"
 
 [autoload]
 
