@@ -7,3 +7,5 @@
 **/obj
 **/lib
 **/build/runtime
+# Files
+gitlog.txt
