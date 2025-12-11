@@ -1,0 +1,29 @@
+﻿<Project Sdk="Godot.NET.Sdk/3.3.0">
+	<Import Project="..\src\com.cobilas.godot.utility\build\Cobilas.Godot.Utility.props"/>
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Configurations>Debug;ExportDebug;ExportRelease;Release</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ExportDebug|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ExportRelease|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="TextFile1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+<<<<<<< HEAD
+    <PackageReference Include="Cobilas.Godot.Utility" Version="$(ProjectVersion)" />
+=======
+    <PackageReference Include="Cobilas.Godot.Utility" Version="7.6.2" />
+>>>>>>> main.fix
+  </ItemGroup>
+</Project>

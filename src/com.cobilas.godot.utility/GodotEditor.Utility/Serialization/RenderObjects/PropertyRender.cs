@@ -98,15 +98,9 @@ public class PropertyRender : IPropertyRender {
 							Custom.ObjectToCacheValue(propertyName, value));
 					return Custom.Set(propertyName, value);
 				}
-			} else {
-				if (Custom.VerifyPropertyName(propertyName)) {
-					if (Member.IsSaveCache) {
-						value = Custom.CacheValueToObject(propertyName,
-							PropertyRenderCache.GetValue(GetID(this), propertyName));
-					}
+			} else
+				if (Custom.VerifyPropertyName(propertyName))
 					return Custom.Set(propertyName, value);
-				}
-			}
 			return false;
 		}
 		foreach (KeyValuePair<string, PropertyRender[]> item in renders ?? [])
