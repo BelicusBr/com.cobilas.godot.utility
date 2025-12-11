@@ -54,7 +54,7 @@ public static class BuildSerialization {
 		return manipulation.Set(propertyName, value);
 	}
 
-	private static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
+	public static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
 		=> obj switch {
 			Node nd => BuildRender(nd, obj => new NodeReneder(obj)),
 			Resource rc => BuildRender(rc, obj => new ResourceRender(obj)),

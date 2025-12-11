@@ -10,6 +10,7 @@
         <AssemblyName>com.cobilas.godot.utility</AssemblyName>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
+		<!--<NoWarn>CS0618;CS0612</NoWarn>-->
 		<TaskOutDir>..\com.cobilas.godot.utility.tasks\</TaskOutDir>
     </PropertyGroup>
 	<!--Nuget-->
