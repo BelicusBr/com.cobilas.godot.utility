@@ -173,7 +173,8 @@ public class PropertyRender : IPropertyRender {
 
 	private static bool IsGodotType(Type type)
 		=> type.CompareType(
-				typeof(NodePath)
+				typeof(Godot.NodePath),
+				typeof(Godot.Resource)
 			);
 
 	private static bool IsSpecialType(Type type, out PropertyCustom custom) {
@@ -185,6 +186,9 @@ public class PropertyRender : IPropertyRender {
 			return true;
 		} else if (type.CompareType<Godot.NodePath>()) {
 			custom = new NodePathCustom();
+			return true;
+		} else if (type.CompareTypeAndSubType<Godot.Resource>()) {
+			custom = new ResourceCustom();
 			return true;
 		}
 		custom = SPCNull.Null;

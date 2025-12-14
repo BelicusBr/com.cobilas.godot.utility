@@ -20,6 +20,10 @@
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Cobilas.Godot.Utility" Version="$(ProjectVersion)" />
+=======
+    <PackageReference Include="Cobilas.Godot.Utility" Version="7.6.2" />
+>>>>>>> main.fix
   </ItemGroup>
 </Project>

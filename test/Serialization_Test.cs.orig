@@ -8,14 +8,21 @@ using System;
 public class Serialization_Test : Node2D
 {
     [ShowProperty(true)] private ObjectRef Ref;
+<<<<<<< HEAD
 	[ShowProperty(true)] private ObjectRef Ref2;
+=======
+	[ShowProperty()] private ObjectRef Ref2;
+>>>>>>> main.fix
 	[ShowProperty(true)] private Rect2D Rect;
 	[ShowProperty(true)] private Vector2D vec2;
 	[ShowProperty(true)] private Vector2DInt vec2i;
 	[ShowProperty(true)] private Vector3D vec3;
 	[ShowProperty(true)] private Vector3DInt vec3i;
 	[ShowProperty(true)] private Vector4D vec4;
+<<<<<<< HEAD
 	[ShowProperty] private Resource res;
+=======
+>>>>>>> main.fix
 	[Export] private NodePath label;
 	private string refv;
 
@@ -24,7 +31,10 @@ public class Serialization_Test : Node2D
 		try
 		{
 			Node node = Ref;
+<<<<<<< HEAD
 			_label.ClearText();
+=======
+>>>>>>> main.fix
 			_label.AppendLine(refv);
 			_label.AppendLine($"=={nameof(Ref)}==");
 			_label.Append("node path: ");
@@ -52,9 +62,12 @@ public class Serialization_Test : Node2D
 
 			_label.AppendLine($"=={nameof(vec4)}==");
 			_label.AppendLine($"{vec4}");
+<<<<<<< HEAD
 
 			_label.AppendLine($"=={nameof(res)}==");
 			_label.AppendLine($"{res.ResourcePath}");
+=======
+>>>>>>> main.fix
 		}
 		catch (Exception ex) {
 			_label.AppendLine(ex.ToString());

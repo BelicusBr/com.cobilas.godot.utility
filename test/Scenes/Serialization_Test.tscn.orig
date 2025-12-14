@@ -1,12 +1,42 @@
+<<<<<<< HEAD
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Serialization_Test.cs" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
+=======
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Serialization_Test.cs" type="Script" id=1]
+>>>>>>> main.fix
 
 [node name="Serialization_Test" type="Node2D"]
 script = ExtResource( 1 )
 label = NodePath("CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label")
 Ref_ref = NodePath("CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label")
+<<<<<<< HEAD
+Ref2_ref = NodePath("CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label")
+Rect/rect_position = null
+Rect/rect_size = null
+Rect/rect_min_size = null
+Rect/rect_rotation = null
+Rect/rect_scale = null
+Rect/rect_pivot = null
+vec2/x = null
+vec2/y = null
+vec2i/x = null
+vec2i/y = null
+vec3/x = null
+vec3/y = null
+vec3/z = null
+vec3i/x = null
+vec3i/y = null
+vec3i/z = null
+vec4/x = null
+vec4/y = null
+vec4/z = null
+vec4/w = null
+res = ExtResource( 2 )
+=======
 Ref2_ref = NodePath("CanvasLayer/Panel/ScrollContainer/HBoxContainer")
 Rect/rect_position = Vector2( 32.5, 25.25 )
 Rect/rect_size = Vector2( 150, 250 )
@@ -28,7 +58,7 @@ vec4/x = 258.0
 vec4/y = 61.0
 vec4/z = 14.0
 vec4/w = 769.0
-res = ExtResource( 2 )
+>>>>>>> main.fix
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -41,13 +71,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/ScrollContainer"]
+<<<<<<< HEAD
 margin_right = 787.0
-margin_bottom = 354.0
+margin_bottom = 337.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
 margin_right = 787.0
-margin_bottom = 354.0
-text = "Ref_ref : CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label
+margin_bottom = 337.0
+text = "node path: 
+Ref_ref : CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label
+Ref_ref : CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label
 ==Ref==
 node path: 
 ==Ref2==
@@ -64,7 +97,14 @@ p(x:32,500, y:25,250) s(x:150,000, y:250,000) ms(x:20,000, y:35,000) r(45,000) s
 (x:45 y:68 z:73)
 ==vec4==
 (x:258,000 y:61,000 z:14,000 w:769,000)
-==res==
-System.NullReferenceException: Object reference not set to an instance of an object
-  at Serialization_Test._Ready () [0x0018b] in <14ea16d1295e45d486666592d72384c0>:0 
+=======
+margin_right = 413.0
+margin_bottom = 48.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
+margin_right = 413.0
+margin_bottom = 48.0
+text = "node path: 
+Ref_ref : CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label
+>>>>>>> main.fix
 "
