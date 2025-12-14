@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.7.0] - (13/12/2025)
+
+### Added
+- **Direct `Godot.Resource` serialization support:** The `BuildSerialization` system now natively supports serializing and deserializing `Godot.Resource` types.
+- **New `ResourceCustom` class:** A dedicated property handler (`ResourceCustom`) has been implemented within the `Cobilas.GodotEditor.Utility.Serialization.Properties` namespace. This class handles the conversion between `Resource` instances and their file paths for caching purposes.
+
+### Changed
+- **Public API:** The method `BuildSerialization.BuildObjectRender(Godot.Object?)` has been changed from `private static` to **`public static`**, allowing external code to build property manipulation interfaces for Godot objects.
+- **Package Version:** Updated all references and documentation from version `7.6.0` to `7.7.0`.
+- **Comments:** Added comprehensive XML documentation for the `BuildObjectRender` method and the new `ResourceCustom` class, detailing their purpose and usage.
+
+### Fixed
+- **Serialization Test Scene:** Updated the test scene (`Serialization_Test.tscn`) and script to properly test and display serialized `Resource` properties. Resolved a `NullReferenceException` that was previously thrown when accessing the `res` property in the test.
+
+## [7.7.0-rc.3] - (11/12/2025)
+
+### Added
+- **Initial Resource Serialization:** Introduced foundational support for serializing `Godot.Resource` objects. The `ResourceCustom` property handler was created and integrated into the `PropertyRender` system.
+- **Serialization Test Infrastructure:** Added a comprehensive test scene (`Serialization_Test.tscn`), C# test script (`Serialization_Test.cs`), and a cache file (`cacheList.cache`) to validate the serialization of various custom types including `ObjectRef`, `Rect2D`, vectors, and the new `Resource` type.
+
+## [7.6.2] - (11/12/2025)
+
+### Fixed
+- **Culture-Invariant Serialization:** Corrected a critical bug in `Rect2DCustom.ObjectToCacheValue` where the `x` and `y` components of `Vector2` properties within a `Rect2D` were converted to string **without** using `CultureInfo.InvariantCulture`. This mismatch in `IFormatProvider` caused serialization/deserialization failures when the system's culture used a different decimal separator (e.g., a comma) than Godot's internal format (which uses a period).
+
+## [7.6.1] - (11/12/2025)
+
+### Fixed
+- **Runtime Serialization in Exported Projects:** Resolved a major issue where `BuildSerialization.SetValue` failed in exported game builds. The problem stemmed from a dependency on cached values that required the object's scene path to generate an ID—information unavailable when `Godot.Object._Set()` is called early in the initialization process.
+- **Architecture Simplified:** The workaround class `LastBuildSerialization` (which deferred property setting until the scene was fully loaded) was removed. The fix involved modifying the `PropertyRender.Set` logic to pass values from `_Set()` directly, eliminating the erroneous step of trying to fetch initial values from the cache for fields marked with `IsSaveCache`.
+- **Improved Error Messages:** Enhanced the exception messages in `ObjectRef` implicit conversion operators to specify the type of conversion that failed.
+
+### Deprecated
+- **Obsolete Code Path:** A comment was added to `BuildSerialization.cs` indicating that certain obsolete objects should be removed in a future version (>= 7.11.0).
+
 ## [7.6.0] - (29/11/2025)
 
 ### Added
