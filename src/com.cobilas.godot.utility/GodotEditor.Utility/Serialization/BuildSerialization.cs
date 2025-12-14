@@ -3,13 +3,12 @@ using System;
 using System.Reflection;
 using Cobilas.Collections;
 using System.Collections.Generic;
-using Cobilas.GodotEngine.Utility;
 using Cobilas.GodotEditor.Utility.Serialization.Interfaces;
 using Cobilas.GodotEditor.Utility.Serialization.Properties;
 using Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 
 namespace Cobilas.GodotEditor.Utility.Serialization;
-
+//Remover objetos obsoletos após a versão (>= 7.11.0).
 /// <summary>Class allows to build a serialization list of properties of a node class.</summary>
 public static class BuildSerialization {
 	private const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -52,14 +51,16 @@ public static class BuildSerialization {
 	public static bool SetValue(Godot.Object? obj, string? propertyName, object? value) {
 		ISerializedPropertyManipulation? manipulation = BuildObjectRender(obj);
 		if (manipulation is null) return false;
-		if (GDFeature.HasStandalone) {
-			LastBuildSerialization.Ready += () => manipulation.Set(propertyName, value);
-			return true;
-		}
 		return manipulation.Set(propertyName, value);
 	}
-
-	private static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
+	/// <summary>Builds a property manipulation interface for the specified Godot object.</summary>
+	/// <param name="obj">The Godot object to build the render for.</param>
+	/// <returns>An <see cref="ISerializedPropertyManipulation"/> interface for the object, or null if unsupported.</returns>
+	/// <remarks>
+	/// This method creates and caches property renderers for efficient property manipulation.
+	/// Supported object types include <see cref="Node"/> and <see cref="Resource"/>.
+	/// </remarks>
+	public static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
 		=> obj switch {
 			Node nd => BuildRender(nd, obj => new NodeReneder(obj)),
 			Resource rc => BuildRender(rc, obj => new ResourceRender(obj)),

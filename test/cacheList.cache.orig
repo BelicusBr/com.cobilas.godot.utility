@@ -1,0 +1,30 @@
+{
+  "287298628": {
+    "Ref_ref": "CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label",
+<<<<<<< HEAD
+    "Ref2_ref": "CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label"
+=======
+    "Ref2_ref": "CanvasLayer/Panel/ScrollContainer/HBoxContainer",
+    "Rect/rect_position": "32.5;25.25",
+    "Rect/rect_size": "150;250",
+    "Rect/rect_min_size": "20;35",
+    "Rect/rect_rotation": "45",
+    "Rect/rect_scale": "12;22",
+    "Rect/rect_pivot": "35;44",
+    "vec2/x": "25.5",
+    "vec2/y": "25",
+    "vec2i/x": "33",
+    "vec2i/y": "55",
+    "vec3/x": "77",
+    "vec3/y": "88",
+    "vec3/z": "11",
+    "vec3i/z": "73",
+    "vec3i/y": "68",
+    "vec3i/x": "45",
+    "vec4/w": "769",
+    "vec4/z": "14",
+    "vec4/y": "61",
+    "vec4/x": "258"
+>>>>>>> main.fix
+  }
+}

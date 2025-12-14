@@ -72,7 +72,7 @@ public sealed class Rect2DCustom : PropertyCustom {
 		if (propertyName == $"{PropertyPath}/rect_rotation")
 			return Convert.ToString(value, CultureInfo.InvariantCulture);
 		Vector2 result = value is null ? Vector2.Zero : (Vector2)value;
-		return $"{result.x};{result.y}";
+		return $"{result.x.ToString(CultureInfo.InvariantCulture)};{result.y.ToString(CultureInfo.InvariantCulture)}";
 	}
 	/// <inheritdoc/>
 	public override bool Set(string? propertyName, object? value) {

@@ -98,15 +98,9 @@ public class PropertyRender : IPropertyRender {
 							Custom.ObjectToCacheValue(propertyName, value));
 					return Custom.Set(propertyName, value);
 				}
-			} else {
-				if (Custom.VerifyPropertyName(propertyName)) {
-					if (Member.IsSaveCache) {
-						value = Custom.CacheValueToObject(propertyName,
-							PropertyRenderCache.GetValue(GetID(this), propertyName));
-					}
+			} else
+				if (Custom.VerifyPropertyName(propertyName))
 					return Custom.Set(propertyName, value);
-				}
-			}
 			return false;
 		}
 		foreach (KeyValuePair<string, PropertyRender[]> item in renders ?? [])
@@ -179,7 +173,8 @@ public class PropertyRender : IPropertyRender {
 
 	private static bool IsGodotType(Type type)
 		=> type.CompareType(
-				typeof(NodePath)
+				typeof(Godot.NodePath),
+				typeof(Godot.Resource)
 			);
 
 	private static bool IsSpecialType(Type type, out PropertyCustom custom) {
@@ -191,6 +186,9 @@ public class PropertyRender : IPropertyRender {
 			return true;
 		} else if (type.CompareType<Godot.NodePath>()) {
 			custom = new NodePathCustom();
+			return true;
+		} else if (type.CompareTypeAndSubType<Godot.Resource>()) {
+			custom = new ResourceCustom();
 			return true;
 		}
 		custom = SPCNull.Null;
