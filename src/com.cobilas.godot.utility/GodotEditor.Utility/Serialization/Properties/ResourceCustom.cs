@@ -2,7 +2,11 @@
 using Cobilas.GodotEditor.Utility.Serialization.Interfaces;
 
 namespace Cobilas.GodotEditor.Utility.Serialization.Properties;
-
+/// <summary>Provides a custom property handler for <see cref="Godot.Resource"/> type serialization.</summary>
+/// <remarks>
+/// This class handles the serialization and deserialization of Godot resources,
+/// converting between resource instances and their file paths for caching purposes.
+/// </remarks>
 public sealed class ResourceCustom : PropertyCustom {
 	/// <inheritdoc/>
 	public override bool IsHide => Member.IsHide;

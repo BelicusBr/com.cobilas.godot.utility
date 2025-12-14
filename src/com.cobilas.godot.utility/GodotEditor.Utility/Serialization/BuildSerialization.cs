@@ -53,7 +53,13 @@ public static class BuildSerialization {
 		if (manipulation is null) return false;
 		return manipulation.Set(propertyName, value);
 	}
-
+	/// <summary>Builds a property manipulation interface for the specified Godot object.</summary>
+	/// <param name="obj">The Godot object to build the render for.</param>
+	/// <returns>An <see cref="ISerializedPropertyManipulation"/> interface for the object, or null if unsupported.</returns>
+	/// <remarks>
+	/// This method creates and caches property renderers for efficient property manipulation.
+	/// Supported object types include <see cref="Node"/> and <see cref="Resource"/>.
+	/// </remarks>
 	public static ISerializedPropertyManipulation? BuildObjectRender(Godot.Object? obj)
 		=> obj switch {
 			Node nd => BuildRender(nd, obj => new NodeReneder(obj)),
