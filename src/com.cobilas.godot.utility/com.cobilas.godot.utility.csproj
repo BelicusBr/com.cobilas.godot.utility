@@ -50,7 +50,7 @@
 
 		<ProjectReference Include="..\com.cobilas.godot.utility.tasks\com.cobilas.godot.utility.tasks.csproj" Private="false" ReferenceOutputAssembly="false" />
 		
-		<PackageReference Include="Cobilas.Core.Net4x" Version="2.7.2" />
+		<PackageReference Include="Cobilas.Core.Net4x" Version="2.9.0" />
 		<PackageReference Include="OpenTK" Version="3.3.3" />
     </ItemGroup>
 	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
