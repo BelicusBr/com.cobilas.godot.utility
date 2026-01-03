@@ -7,7 +7,7 @@ using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility; 
 /// <summary>This class is responsible for managing all coroutines.</summary>
-[RunTimeInitializationClass(nameof(InternalCoroutineManager))]
+[RunTimeInitializationClass(nameof(InternalCoroutineManager), subPriority:-1)]
 internal class InternalCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 

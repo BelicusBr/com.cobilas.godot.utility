@@ -1,10 +1,10 @@
-using Cobilas.Collections;
-using Cobilas.GodotEngine.Utility.IO;
-using Cobilas.GodotEngine.Utility.IO.Interfaces;
-using Cobilas.GodotEngine.Utility.Runtime;
 using Godot;
 using System;
-using System.IO;
+using System.Collections;
+using Cobilas.Collections;
+using Cobilas.GodotEngine.Utility.IO;
+using Cobilas.GodotEngine.Utility.Runtime;
+using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEngine.Utility.Scene;
 /// <summary>This class can be used to manage scene switching.</summary>
@@ -42,7 +42,9 @@ internal class InternalSceneManager : Node {
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
                 scenes[I] = new(archives[I].FullName, I, NullNode.Null);
-        }
+
+            _ = Coroutine.StartCoroutine(CallLoadedSceneEvent(CurrentSceneNode));
+		}
     }
     
     private void nodeaddedevent(Node node) {
@@ -56,9 +58,15 @@ internal class InternalSceneManager : Node {
         if (scn != Scene.Empty)
             UnloadedScene?.Invoke(scn);
     }
-    /// <summary>Prevents an object from being destroyed when switching scenes.</summary>
-    /// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
-    internal static void DontDestroyOnLoad(Node obj) {
+
+    private IEnumerator CallLoadedSceneEvent(Node node) {
+        yield return new LastRunTimeSecond(0f);
+        nodeaddedevent(node);
+    }
+
+	/// <summary>Prevents an object from being destroyed when switching scenes.</summary>
+	/// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
+	internal static void DontDestroyOnLoad(Node obj) {
         obj.RemoveAndSkip();
         manager?.int_root?.AddChild(obj);
     }
