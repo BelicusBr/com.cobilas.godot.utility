@@ -1,7 +1,14 @@
-﻿using Godot;
+﻿﻿using Godot;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
-
+/// <summary>
+/// Represents a collection of Godot engine notification identifiers mapped to numeric values.
+/// This enumeration provides a typed reference to various Godot notification constants for use in C# scripts.
+/// </summary>
+/// <remarks>
+/// Notifications are used by the Godot engine to signal specific events to nodes and objects.
+/// Each value corresponds to a built‑in Godot notification constant.
+/// </remarks>
 public enum NotificationList : ushort {
 	/// <inheritdoc cref="Object.NotificationPostinitialize"/>
 	Postinitialize = 0,
@@ -113,5 +120,7 @@ public enum NotificationList : ushort {
 	AppPaused = 1015,
 	/// <inheritdoc cref="CanvasItem.NotificationTransformChanged"/>
 	TransformChanged = 2000,
+	/// <summary>Notification sent when the application is requested to quit.</summary>
+	/// <remarks>This notification is typically triggered by the window manager or system events.</remarks>
 	Quit = 6000
 }

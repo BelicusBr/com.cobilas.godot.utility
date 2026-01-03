@@ -2,7 +2,6 @@ using Godot;
 using System.Runtime.InteropServices;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
-
 /// <summary>Provides RunTime values ​​and functions.</summary>
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct RunTime {
@@ -28,6 +27,8 @@ public readonly struct RunTime {
     /// class and add it to AutoLoad.</remarks>
     /// <returns>Returns the state of the editor.</returns>
     public static ExecutionMode ExecutionMode { get; internal set; } = ExecutionMode.EditorMode;
-    
-    public static void Quit(int exitCode = -1) => RunTimeInitialization.Quit(exitCode);
+	/// <summary>Quits the application with the specified exit code.</summary>
+	/// <param name="exitCode">The exit code to return. Default is -1.</param>
+	/// <remarks>This method triggers the quit notification and terminates the application.</remarks>
+	public static void Quit(int exitCode = -1) => RunTimeInitialization.Quit(exitCode);
 }

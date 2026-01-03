@@ -17,15 +17,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/ScrollContainer"]
-margin_right = 826.0
-margin_bottom = 82.0
+margin_bottom = 14.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 826.0
-margin_bottom = 82.0
-text = "System.InvalidCastException: Specified cast is not valid.
-  at (wrapper castclass) System.Object.__castclass_with_cache(object,intptr,intptr)
-  at Godot.NodePath_GD_CB_Extension.GetNode[T] (Godot.NodePath np) [0x00006] in <c0299807a65d4b61ba1dcc0aa1390ab7>:0 
-  at Node_Test._Ready () [0x0000e] in <790cca68ceb74778ac71199bd8e4fb93>:0 
-"
+margin_bottom = 14.0

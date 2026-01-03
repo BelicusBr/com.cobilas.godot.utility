@@ -16,6 +16,7 @@ public class Node_Test : Node2D {
 
     public override void _Ready()
     {
+        if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return;
 		string name = "Global";
 		string path = "res://Scripts/Global.cs";
         //GD.Print(ProjectSettings.get("autoload"));

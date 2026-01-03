@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 
 namespace Cobilas.GodotEngine.Utility.Runtime; 
-
 /// <summary>Responsible for initializing other classes marked with the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</summary>
 /// <example>
 /// The <c>RunTimeInitialization</c> class allows you to automate the <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd> option.
@@ -56,7 +55,6 @@ public class RunTimeInitialization : Node {
 		_closePlayModeStateChanged = false;
 		RunTime.ExecutionMode = ExecutionMode.PlayerMode;
 	}
-
 	/// <inheritdoc/>
 	public override void _ExitTree() {
         _playModeStateChanged?.Invoke(PlayModeStateChange.ExitingPlayMode);

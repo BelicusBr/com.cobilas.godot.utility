@@ -43,6 +43,10 @@ internal class InternalSceneManager : Node {
                 scenes[I] = new(archives[I].FullName, I, NullNode.Null);
         }
     }
+
+    private void tree_entered() {
+        GD.Print(nameof(tree_entered));
+    }
     
     private void nodeaddedevent(Node node) {
         Scene scn = GetCurrentScene(node);
@@ -55,6 +59,10 @@ internal class InternalSceneManager : Node {
         if (scn != Scene.Empty)
             UnloadedScene?.Invoke(scn);
     }
+	/// <inheritdoc/>
+	public override void _EnterTree() {
+		GetTree().CurrentScene.Connect(nameof(tree_entered), this, nameof(tree_entered));
+	}
     /// <summary>Prevents an object from being destroyed when switching scenes.</summary>
     /// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
     internal static void DontDestroyOnLoad(Node obj) {
