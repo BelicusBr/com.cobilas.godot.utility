@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.8.0] - (03/01/2026)
+
+### Added
+- **Safe signal connection/disconnection extensions:** Added `SafeConnect` and `SafeDisconnect` extension methods to the `Godot.Object` class to safely manage signal connections with validation and duplicate prevention.
+- **Notification enumeration:** Introduced `NotificationList` enum, providing typed references to Godot engine notification constants for improved code clarity and IntelliSense support.
+- **Exit code support:** Added `ExitCode` property to `RunTime` struct, wrapping `OS.ExitCode` for easier access and modification.
+
+### Changed
+- **Package version:** Updated all references and documentation from version `7.7.1` to `7.8.0`.
+- **RunTimeInitialization:** Modified execution mode assignment to occur in `_EnterTree` instead of `_Ready` for more reliable initialization timing.
+- **InternalCoroutineManager:** Added `subPriority: -1` to `RunTimeInitializationClass` attribute to adjust initialization order.
+- **InternalSceneManager:** Replaced direct signal connection with a coroutine-based approach (`CallLoadedSceneEvent`) to ensure the `LoadedScene` event is triggered reliably after scene setup.
+- **Gizmos drawing:** Refactored `DrawGizmos` method to use expression-bodied syntax and updated canvas item positioning logic for improved reliability.
+- **Dependency update:** Upgraded `Cobilas.Core.Net4x` package dependency from version `2.9.0` to `2.10.0`.
+
+### Fixed
+- **Scene loading event timing:** Fixed an issue where the `LoadedScene` event in `InternalSceneManager` could fire before the scene tree was fully ready by introducing a one-frame delay via coroutine.
+
+### Technical Notes
+- The `SafeConnect` and `SafeDisconnect` methods include null and empty string validation, preventing common connection errors.
+- The `NotificationList.Quit` enum member (value 6000) has been added to represent the custom quit notification.
+- `RunTime.Quit` now triggers the quit notification in addition to calling the tree's quit method.
+
+## [7.7.1] - (03/01/2026)
+
+### Changed
+- **Method optimization**: Refactored the `Equals(string? other)` method in an unspecified class to use a more concise expression-bodied syntax and modified its comparison logic.
+  - **Before**: Sequential null checks and comparisons for `ScenePath`, `Name`, and `NameWithoutExtension` properties
+  - **After**: Consolidated logic that requires `ScenePath` to be non-null and then compares `other` against `ScenePath`, `Name`, or `NameWithoutExtension` using logical OR operations
+
+### Technical Notes
+- The new implementation returns `false` immediately if `ScenePath` is `null`
+- When `ScenePath` is not `null`, the method now checks if `other` equals any of the three properties (`ScenePath`, `Name`, or `NameWithoutExtension`)
+- This change may affect behavior in edge cases where `ScenePath` is `null` but `Name` or `NameWithoutExtension` would have matched `other` in the previous implementation
+- The refactoring improves code readability and reduces branching complexity
+
 ## [7.7.0] - (13/12/2025)
 
 ### Added

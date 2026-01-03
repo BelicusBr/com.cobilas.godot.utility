@@ -1,0 +1,126 @@
+﻿﻿using Godot;
+
+namespace Cobilas.GodotEngine.Utility.Runtime;
+/// <summary>
+/// Represents a collection of Godot engine notification identifiers mapped to numeric values.
+/// This enumeration provides a typed reference to various Godot notification constants for use in C# scripts.
+/// </summary>
+/// <remarks>
+/// Notifications are used by the Godot engine to signal specific events to nodes and objects.
+/// Each value corresponds to a built‑in Godot notification constant.
+/// </remarks>
+public enum NotificationList : ushort {
+	/// <inheritdoc cref="Object.NotificationPostinitialize"/>
+	Postinitialize = 0,
+	/// <inheritdoc cref="Object.NotificationPredelete"/>
+	Predelete = 1,
+	/// <inheritdoc cref="Node.NotificationEnterTree"/>
+	EnterTree = 10,
+	/// <inheritdoc cref="Node.NotificationExitTree"/>
+	ExitTree = 11,
+	/// <inheritdoc cref="Node.NotificationMovedInParent"/>
+	MovedInParent = 12,
+	/// <inheritdoc cref="Node.NotificationReady"/>
+	Ready = 13,
+	/// <inheritdoc cref="Node.NotificationPaused"/>
+	Paused = 14,
+	/// <inheritdoc cref="Node.NotificationUnpaused"/>
+	Unpaused = 15,
+	/// <inheritdoc cref="Node.NotificationPhysicsProcess"/>
+	PhysicsProcess = 16,
+	/// <inheritdoc cref="Node.NotificationProcess"/>
+	Process = 17,
+	/// <inheritdoc cref="Node.NotificationParented"/>
+	Parented = 18,
+	/// <inheritdoc cref="Node.NotificationUnparented"/>
+	Unparented = 19,
+	/// <inheritdoc cref="Node.NotificationInstanced"/>
+	Instanced = 20,
+	/// <inheritdoc cref="Node.NotificationDragBegin"/>
+	DragBegin = 21,
+	/// <inheritdoc cref="Node.NotificationDragEnd"/>
+	DragEnd = 22,
+	/// <inheritdoc cref="Node.NotificationPathChanged"/>
+	PathChanged = 23,
+	/// <inheritdoc cref="Node.NotificationChildOrderChanged"/>
+	ChildOrderChanged = 24,
+	/// <inheritdoc cref="Node.NotificationInternalProcess"/>
+	InternalProcess = 25,
+	/// <inheritdoc cref="Node.NotificationInternalPhysicsProcess"/>
+	InternalPhysicsProcess = 26,
+	/// <inheritdoc cref="Node.NotificationPostEnterTree"/>
+	PostEnterTree = 27,
+	/// <inheritdoc cref="Node.NotificationResetPhysicsInterpolation"/>
+	ResetPhysicsInterpolation = 28,
+	/// <inheritdoc cref="CanvasItem.NotificationDraw"/>
+	Draw = 30,
+	/// <inheritdoc cref="CanvasItem.NotificationVisibilityChanged"/>
+	VisibilityChanged = 31,
+	/// <inheritdoc cref="CanvasItem.NotificationEnterCanvas"/>
+	EnterCanvas = 32,
+	/// <inheritdoc cref="CanvasItem.NotificationExitCanvas"/>
+	ExitCanvas = 33,
+	/// <inheritdoc cref="CanvasItem.NotificationLocalTransformChanged"/>
+	LocalTransformChanged = 35,
+	/// <inheritdoc cref="Control.NotificationResized"/>
+	Resized = 40,
+	/// <inheritdoc cref="Control.NotificationMouseEnter"/>
+	MouseEnter = 41,
+	/// <inheritdoc cref="Control.NotificationMouseExit"/>
+	MouseExit = 42,
+	/// <inheritdoc cref="Control.NotificationFocusEnter"/>
+	FocusEnter = 43,
+	/// <inheritdoc cref="Control.NotificationFocusExit"/>
+	FocusExit = 44,
+	/// <inheritdoc cref="Control.NotificationThemeChanged"/>
+	ThemeChanged = 45,
+	/// <inheritdoc cref="Control.NotificationModalClose"/>
+	ModalClose = 46,
+	/// <inheritdoc cref="Control.NotificationScrollBegin"/>
+	ScrollBegin = 47,
+	/// <inheritdoc cref="Control.NotificationScrollEnd"/>
+	ScrollEnd = 48,
+	/// <inheritdoc cref="Spatial.NotificationEnterWorld"/>
+	Spatial_EnterWorld = MouseEnter,
+	/// <inheritdoc cref="Spatial.NotificationExitWorld"/>
+	Spatial_ExitWorld = MouseExit,
+	/// <inheritdoc cref="Spatial.NotificationVisibilityChanged"/>
+	SpatialVisibilityChanged = FocusEnter,
+	/// <inheritdoc cref="Spatial.NotificationEnterGameplay"/>
+	Spatial_EnterGameplay = ThemeChanged,
+	/// <inheritdoc cref="Spatial.NotificationExitGameplay"/>
+	Spatial_ExitGameplay = ModalClose,
+	/// <inheritdoc cref="Node.NotificationWmMouseEnter"/>
+	WmMouseEnter = 1002,
+	/// <inheritdoc cref="Node.NotificationWmMouseExit"/>
+	WmMouseExit = 1003,
+	/// <inheritdoc cref="Node.NotificationWmFocusIn"/>
+	WmFocusIn = 1004,
+	/// <inheritdoc cref="Node.NotificationWmFocusOut"/>
+	WmFocusOut = 1005,
+	/// <inheritdoc cref="Node.NotificationWmQuitRequest"/>
+	WmQuitRequest = 1006,
+	/// <inheritdoc cref="Node.NotificationWmGoBackRequest"/>
+	WmGoBackRequest = 1007,
+	/// <inheritdoc cref="Node.NotificationWmUnfocusRequest"/>
+	WmUnfocusRequest = 1008,
+	/// <inheritdoc cref="Node.NotificationOsMemoryWarning"/>
+	OsMemoryWarning = 1009,
+	/// <inheritdoc cref="Node.NotificationTranslationChanged"/>
+	TranslationChanged = 1010,
+	/// <inheritdoc cref="Node.NotificationWmAbout"/>
+	WmAbout = 1011,
+	/// <inheritdoc cref="Node.NotificationCrash"/>
+	Crash = 1012,
+	/// <inheritdoc cref="Node.NotificationOsImeUpdate"/>
+	OsImeUpdate = 1013,
+	/// <inheritdoc cref="Node.NotificationAppResumed"/>
+	AppResumed = 1014,
+	/// <inheritdoc cref="Node.NotificationAppPaused"/>
+	AppPaused = 1015,
+	/// <inheritdoc cref="CanvasItem.NotificationTransformChanged"/>
+	TransformChanged = 2000,
+	/// <summary>Notification sent when the application is requested to quit.</summary>
+	/// <remarks>This notification is typically triggered by the window manager or system events.</remarks>
+	Quit = 6000
+}

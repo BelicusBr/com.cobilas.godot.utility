@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="ExportDebug" />
+    <BuildType Name="ExportRelease" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="../src/com.cobilas.godot.utility.tasks/com.cobilas.godot.utility.tasks.csproj">
+    <BuildType Solution="ExportDebug|*" Project="Release" />
+    <BuildType Solution="ExportRelease|*" Project="Release" />
+  </Project>
+  <Project Path="../src/com.cobilas.godot.utility/com.cobilas.godot.utility.csproj">
+    <BuildType Solution="ExportDebug|*" Project="Release" />
+    <BuildType Solution="ExportRelease|*" Project="Release" />
+  </Project>
+  <Project Path="godot.test.csproj" />
+</Solution>
