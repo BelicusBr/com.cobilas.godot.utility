@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.7.1] - (03/01/2026)
+
+### Changed
+- **Method optimization**: Refactored the `Equals(string? other)` method in an unspecified class to use a more concise expression-bodied syntax and modified its comparison logic.
+  - **Before**: Sequential null checks and comparisons for `ScenePath`, `Name`, and `NameWithoutExtension` properties
+  - **After**: Consolidated logic that requires `ScenePath` to be non-null and then compares `other` against `ScenePath`, `Name`, or `NameWithoutExtension` using logical OR operations
+
+### Technical Notes
+- The new implementation returns `false` immediately if `ScenePath` is `null`
+- When `ScenePath` is not `null`, the method now checks if `other` equals any of the three properties (`ScenePath`, `Name`, or `NameWithoutExtension`)
+- This change may affect behavior in edge cases where `ScenePath` is `null` but `Name` or `NameWithoutExtension` would have matched `other` in the previous implementation
+- The refactoring improves code readability and reduces branching complexity
+
 ## [7.7.0] - (13/12/2025)
 
 ### Added

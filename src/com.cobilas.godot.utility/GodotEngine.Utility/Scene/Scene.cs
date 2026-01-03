@@ -37,12 +37,8 @@ public struct Scene : IEquatable<Scene>, IEquatable<int>, IEquatable<string?> {
     /// <inheritdoc/>
     public readonly bool Equals(Scene other) => Equals(other.ScenePath) && Equals(other.Index);
     /// <inheritdoc/>
-    public readonly bool Equals(string? other) {
-        if (ScenePath is not null) return ScenePath.Equals(other);
-        else if (Name is not null) return Name.Equals(other);
-        else if (NameWithoutExtension is not null) return NameWithoutExtension.Equals(other);
-        return false;
-    }
+    public readonly bool Equals(string? other)
+        => ScenePath is not null && (ScenePath.Equals(other) || Name.Equals(other) || NameWithoutExtension.Equals(other));
     /// <inheritdoc/>
     public override readonly bool Equals(object obj)
         => obj switch {
