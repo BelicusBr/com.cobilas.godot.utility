@@ -20,4 +20,5 @@ anchor_bottom = 1.0
 margin_bottom = 14.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
+self_modulate = Color( 1, 0, 0, 1 )
 margin_bottom = 14.0
