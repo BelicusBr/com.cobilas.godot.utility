@@ -25,6 +25,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// </example>
 public class RunTimeInitialization : Node {
     internal static bool _closePlayModeStateChanged;
+    private static RunTimeInitialization? runTime = null;
     private static event Action<PlayModeStateChange>? _playModeStateChanged;
     /// <summary>Event that is raised whenever the Editor's play mode state changes.</summary>
     public static event Action<PlayModeStateChange>? PlayModeStateChanged {
@@ -39,22 +40,33 @@ public class RunTimeInitialization : Node {
     }
     /// <inheritdoc/>
     public override void _Ready() {
-        RunTime.ExecutionMode = ExecutionMode.PlayerMode;
+        //RunTime.ExecutionMode = ExecutionMode.PlayerMode;
         LastRunTimeInitialization lastRunTime = new() {
             Name = nameof(LastRunTimeInitialization)
         };
         GetTree().Root.CallDeferred("add_child", lastRunTime);
+        runTime ??= this;
 
         Type[] components = TypeUtilitarian.GetTypes();
         StartRunTimeInitializationClass(this, components, false);
     }
-    /// <inheritdoc/>
-    public override void _EnterTree() => _closePlayModeStateChanged = false;
-    /// <inheritdoc/>
-    public override void _ExitTree() {
+	/// <inheritdoc/>
+	public override void _EnterTree()
+	{
+		_closePlayModeStateChanged = false;
+		RunTime.ExecutionMode = ExecutionMode.PlayerMode;
+	}
+
+	/// <inheritdoc/>
+	public override void _ExitTree() {
         _playModeStateChanged?.Invoke(PlayModeStateChange.ExitingPlayMode);
         if (GDFeature.HasEditor) _playModeStateChanged?.Invoke(PlayModeStateChange.EnteredEditMode);
     }
+
+    internal static void Quit(int exitCode = -1) {
+        runTime?.GetTree().Quit(exitCode);
+		runTime?.GetTree().Notification((ushort)NotificationList.Quit);
+	}
     /// <summary>Initializes all classes that are marked with the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</summary>
     /// <param name="taget">The node that will receive the components.</param>
     /// <param name="components">The list of all types that will be checked to see if they contain the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</param>

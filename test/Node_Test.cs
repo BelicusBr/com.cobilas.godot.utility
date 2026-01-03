@@ -3,12 +3,13 @@ using Cobilas.GodotEditor.Utility.Serialization.RenderObjects;
 using Cobilas.GodotEngine.Utility;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.IO.Interfaces;
+using Cobilas.GodotEngine.Utility.Runtime;
 using Godot;
 using Godot.Collections;
 using System;
 using System.IO;
 using System.Xml.Linq;
-
+[Tool]
 public class Node_Test : Node2D {
 
     [Export] private NodePath nodePath;
@@ -33,6 +34,7 @@ public class Node_Test : Node2D {
             label.SelfModulate = Color.Color8(255, 255, 255);
 
             label.AppendLine(stg);
+            label.AppendLine(RunTime.ExecutionMode);
         }
         catch (Exception ex) {
             label = GetNode<Label>(nodePath);
@@ -41,4 +43,9 @@ public class Node_Test : Node2D {
 		}
 
     }
+
+	public override void _Process(float delta) {
+        //GD.Print(GetTree().Root.GetType());
+		//GD.Print(GetTree().EditedSceneRoot.GetType());
+	}
 }

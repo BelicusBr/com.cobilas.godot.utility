@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<ProjectVersion>7.7.0</ProjectVersion>
+		<ProjectVersion>7.8.0-rc.1</ProjectVersion>
 		<PackageFolderPath>$(NuGetPackageRoot)cobilas.godot.utility</PackageFolderPath>
 		<CurrentPathPackageFolder>$(PackageFolderPath)\$(ProjectVersion)</CurrentPathPackageFolder>
 	</PropertyGroup>
