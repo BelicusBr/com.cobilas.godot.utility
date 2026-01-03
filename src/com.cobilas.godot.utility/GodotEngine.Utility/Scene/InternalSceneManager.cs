@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.Runtime;
@@ -41,11 +42,9 @@ internal class InternalSceneManager : Node {
             scenes = new Scene[ArrayManipulation.ArrayLength(archives)];
             for (int I = 0; I < ArrayManipulation.ArrayLength(archives); I++)
                 scenes[I] = new(archives[I].FullName, I, NullNode.Null);
-        }
-    }
 
-    private void tree_entered() {
-        GD.Print(nameof(tree_entered));
+            _ = Coroutine.StartCoroutine(CallLoadedSceneEvent(CurrentSceneNode));
+		}
     }
     
     private void nodeaddedevent(Node node) {
@@ -59,13 +58,15 @@ internal class InternalSceneManager : Node {
         if (scn != Scene.Empty)
             UnloadedScene?.Invoke(scn);
     }
-	/// <inheritdoc/>
-	public override void _EnterTree() {
-		GetTree().CurrentScene.Connect(nameof(tree_entered), this, nameof(tree_entered));
-	}
-    /// <summary>Prevents an object from being destroyed when switching scenes.</summary>
-    /// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
-    internal static void DontDestroyOnLoad(Node obj) {
+
+    private IEnumerator CallLoadedSceneEvent(Node node) {
+        yield return new LastRunTimeSecond(0f);
+        nodeaddedevent(node);
+    }
+
+	/// <summary>Prevents an object from being destroyed when switching scenes.</summary>
+	/// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
+	internal static void DontDestroyOnLoad(Node obj) {
         obj.RemoveAndSkip();
         manager?.int_root?.AddChild(obj);
     }

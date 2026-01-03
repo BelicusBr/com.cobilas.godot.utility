@@ -30,7 +30,7 @@ internal class InternalGizmos : CanvasLayer {
                 Name = "GizmosItem"
             };
             Color = Colors.Black;
-            canvasItem.Connect("draw", this, "DrawGizmos");
+            canvasItem.Connect("draw", this, nameof(DrawGizmos));
             SceneManager.CurrentSceneNode!.AddChild(canvasItem);
 
             SceneManager.UnloadedScene += (s) => {
@@ -52,25 +52,23 @@ internal class InternalGizmos : CanvasLayer {
     public override void _Process(float delta) {
         if (movingToNextScene || canvasItem is null) return;
         canvasItem!.Update();
-        if (canvasItem.GetIndex() != SceneManager.CurrentSceneNode!.GetChildCount() - 1)
-            SceneManager.CurrentSceneNode.MoveChild(canvasItem, SceneManager.CurrentSceneNode.GetChildCount() - 1);
+        Node parent = canvasItem.GetParent();
+        if (canvasItem.GetIndex() != parent.GetChildCount() - 1)
+			parent.MoveChild(canvasItem, parent.GetChildCount() - 1);
     }
 
-    private void DrawGizmos() {
-        drawFunc?.Invoke();
-        //drawFunc = null;
-    }
-    /// <summary>
-    /// Draws a line from a 2D point to another, with a given color and width. It can
-    /// be optionally antialiased. See also <seealso cref="CanvasItem.DrawMultiline(Vector2[], Color, float, bool)"/>
-    /// and <seealso cref="CanvasItem.DrawPolyline(Vector2[], Color, float, bool)"/>.
-    /// <para>Note: Line drawing is not accelerated by batching if <c>antialiased</c> is <c>true</c>.</para>
-    /// <para>Note: Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.</para>
-    /// </summary>
-    /// <param name="start">The beginning of the line.</param>
-    /// <param name="end">The end of the line.</param>
-    /// <param name="width">The thickness of the line.</param>
-    internal static void DrawLine(Vector2 start, Vector2 end, float width)
+    private void DrawGizmos() => drawFunc?.Invoke();
+	/// <summary>
+	/// Draws a line from a 2D point to another, with a given color and width. It can
+	/// be optionally antialiased. See also <seealso cref="CanvasItem.DrawMultiline(Vector2[], Color, float, bool)"/>
+	/// and <seealso cref="CanvasItem.DrawPolyline(Vector2[], Color, float, bool)"/>.
+	/// <para>Note: Line drawing is not accelerated by batching if <c>antialiased</c> is <c>true</c>.</para>
+	/// <para>Note: Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the <a href="https://github.com/godot-extended-libraries/godot-antialiased-line2d">Antialiased Line2D</a> add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.</para>
+	/// </summary>
+	/// <param name="start">The beginning of the line.</param>
+	/// <param name="end">The end of the line.</param>
+	/// <param name="width">The thickness of the line.</param>
+	internal static void DrawLine(Vector2 start, Vector2 end, float width)
         => SetDrawFunc(Color, (c) => gizmos!.canvasItem!.DrawLine(start, end, c, width));
     /// <summary>
     /// Draws a line from a 2D point to another, with a given color and width. It can
