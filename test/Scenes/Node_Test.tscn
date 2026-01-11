@@ -1,10 +1,17 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Node_Test.cs" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
 [node name="Node_Test" type="Node2D"]
 script = ExtResource( 1 )
 nodePath = NodePath("CanvasLayer/Panel/ScrollContainer/HBoxContainer/Label")
+n_camera = NodePath("Camera2D")
+n_sprite = [ NodePath("CanvasLayer/Sprite"), NodePath("CanvasLayer/Sprite2"), NodePath("CanvasLayer/TextureRect"), NodePath("CanvasLayer/TextureRect2") ]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 512, 300 )
+current = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -17,8 +24,40 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/ScrollContainer"]
-margin_bottom = 14.0
+margin_right = 810.0
+margin_bottom = 82.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_bottom = 14.0
+margin_right = 810.0
+margin_bottom = 82.0
+text = "System.ArgumentNullException: Value cannot be null.
+Parameter name: ctl
+  at Godot.Sprite_CB_GB_Extension.GetGlobalRect2D (Godot.Sprite ctl) [0x00009] in <f850e422c51049828bee0df3c2e9a60e>:0 
+  at Node_Test._Process (System.Single delta) [0x00020] in <163306c45a0c45aa809117faaf8c7155>:0 
+"
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer"]
+position = Vector2( 907, 337 )
+scale = Vector2( 1, 2 )
+texture = ExtResource( 2 )
+
+[node name="Sprite2" type="Sprite" parent="CanvasLayer"]
+position = Vector2( 806, 310 )
+texture = ExtResource( 2 )
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+margin_left = 760.0
+margin_top = 436.0
+margin_right = 824.0
+margin_bottom = 500.0
+rect_pivot_offset = Vector2( 490, -117 )
+texture = ExtResource( 2 )
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer"]
+margin_left = 885.0
+margin_top = 443.0
+margin_right = 949.0
+margin_bottom = 507.0
+rect_scale = Vector2( 1, 2 )
+texture = ExtResource( 2 )
