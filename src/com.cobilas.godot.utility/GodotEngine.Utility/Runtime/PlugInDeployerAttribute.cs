@@ -1,7 +1,6 @@
-﻿using Godot;
-using System;
+﻿using System;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
 
-[AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
-public sealed class PlugInDeployerAttribute : ToolAttribute { }
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+public sealed class PlugInDeployerAttribute : Attribute { }

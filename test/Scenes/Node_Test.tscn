@@ -24,18 +24,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/ScrollContainer"]
-margin_right = 810.0
-margin_bottom = 82.0
+margin_bottom = 14.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/HBoxContainer"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 810.0
-margin_bottom = 82.0
-text = "System.ArgumentNullException: Value cannot be null.
-Parameter name: ctl
-  at Godot.Sprite_CB_GB_Extension.GetGlobalRect2D (Godot.Sprite ctl) [0x00009] in <f850e422c51049828bee0df3c2e9a60e>:0 
-  at Node_Test._Process (System.Single delta) [0x00020] in <163306c45a0c45aa809117faaf8c7155>:0 
-"
+margin_bottom = 14.0
 
 [node name="Sprite" type="Sprite" parent="CanvasLayer"]
 position = Vector2( 907, 337 )

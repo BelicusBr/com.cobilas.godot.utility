@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Godot.NET.Sdk/3.3.0">
-	<Import Project="..\src\com.cobilas.godot.utility\build\Cobilas.Godot.Utility.props"/>
+	<Import Project="..\src\com.cobilas.godot.utility\build\Cobilas.Godot.Utility.props" />
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;ExportDebug;ExportRelease;Release</Configurations>

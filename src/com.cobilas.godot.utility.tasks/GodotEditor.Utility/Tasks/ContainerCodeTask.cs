@@ -6,6 +6,7 @@ public static class ContainerCodeTask {
 #pragma warning disable IDE0130
 namespace Godot.Runtime {
 #pragma warning restore IDE0130
+	/// <inheritdoc/>
 	public class GameRuntime : RunTimeInitialization { }
 }";
 
@@ -25,6 +26,7 @@ using Cobilas.GodotEngine.Utility.Runtime;
 #pragma warning disable IDE0130
 namespace Godot.PlugIn {
 #pragma warning restore IDE0130
+	/// <inheritdoc/>
 	[Tool]
 	public class GamePlugInDeployer : PlugInDeployer {}
 }

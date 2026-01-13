@@ -9,7 +9,13 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 
 public class PlugInDeployer : EditorPlugin {
 
+	private DateTime time;
+	private FolderInfo? dataInfo = null;
+	private readonly string[] args = { "build" };
+
 	private const string addonsPath = "res://addons";
+	private const string debugPath = "res://.mono/temp/bin/Debug";
+	private const BindingFlags staticMethodFlag = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 	private const string plugInCFG =
 @"[plugin]
 
@@ -24,14 +30,42 @@ script=""{4}""
 #pragma warning disable IDE0130
 namespace Godot.PlugIn {{
 #pragma warning restore IDE0130
+	[Tool]
 	public class PlugIn_{0} : {1} {{ }}
 }}
 #endif
 ";
-
 	/// <inheritdoc/>
-	public override void EnablePlugin() {
-		//addons
+	public override void DisablePlugin() {
+		if (dataInfo is null) return;
+		dataInfo.Dispose();
+		dataInfo = null;
+	}
+	/// <inheritdoc/>
+	public override void _Process(float delta) {
+		if (dataInfo is null) {
+			if (!Folder.Exists(debugPath)) return;
+			dataInfo = new(debugPath, false);
+			time = DateTime.MinValue;
+		}
+		if (time == (time = dataInfo.GetLastWriteTime)) return;
+
+		Deploy();
+
+		int ExecuteCode = OS.Execute("dotnet", args);
+		switch (ExecuteCode) {
+			case 1:
+				GD.Print($"[{nameof(PlugInDeployer)}]");
+				GD.Print("\tdotnet build executed successfully!");
+				break;
+			default:
+				GD.Print($"[{nameof(PlugInDeployer)}]");
+				GD.Print($"\tdotnet build failed!({nameof(ExecuteCode)}:{ExecuteCode})");
+				break;
+		}
+	}
+
+	private void Deploy() {
 		if (!Folder.Exists(addonsPath))
 			Folder.Create(addonsPath).Dispose();
 		Type[] types = TypeUtilitarian.GetTypes();
@@ -39,7 +73,7 @@ namespace Godot.PlugIn {{
 			PlugInDeployerAttribute? plugIn = type.GetAttribute<PlugInDeployerAttribute>(true);
 			if (plugIn is null) continue;
 			PluginManifest description = PluginManifest.Empty;
-			foreach (MethodInfo? item in type.GetMethods(BindingFlags.Static)) {
+			foreach (MethodInfo? item in type.GetMethods(staticMethodFlag)) {
 				PlugInDeployerDescriptionAttribute plugIn1 = item.GetCustomAttribute<PlugInDeployerDescriptionAttribute>();
 				if (plugIn1 is null) continue;
 				description = (PluginManifest)item.Invoke(null, null);
@@ -66,8 +100,8 @@ namespace Godot.PlugIn {{
 					description.PlugInScript
 					));
 				using ArchiveInfo archive2 = (ArchiveInfo)folder.CreateArchive(description.PlugInScript);
-				using IArchiveStream stream2 = (IArchiveStream)archive.Open(FileAccess.Write, StreamType.IOStream);
-				stream.Write(string.Format(PlugInCode, type.Name, type.FullName));
+				using IArchiveStream stream2 = (IArchiveStream)archive2.Open(FileAccess.Write, StreamType.IOStream);
+				stream2.Write(string.Format(PlugInCode, type.Name, type.FullName));
 			}
 		}
 	}
