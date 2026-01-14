@@ -7,6 +7,10 @@ using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
 
+/// <summary>
+/// An editor plugin that automatically deploys and builds custom plugins for the Godot engine.
+/// Monitors the debug directory for changes and generates plugin configuration and script files.
+/// </summary>
 public class PlugInDeployer : EditorPlugin {
 
 	private DateTime time;
@@ -30,6 +34,7 @@ script=""{4}""
 #pragma warning disable IDE0130
 namespace Godot.PlugIn {{
 #pragma warning restore IDE0130
+	/// <inheritdoc/>
 	[Tool]
 	public class PlugIn_{0} : {1} {{ }}
 }}
@@ -72,15 +77,15 @@ namespace Godot.PlugIn {{
 		foreach (Type type in types) {
 			PlugInDeployerAttribute? plugIn = type.GetAttribute<PlugInDeployerAttribute>(true);
 			if (plugIn is null) continue;
-			PluginManifest description = PluginManifest.Empty;
+			PlugInManifest description = PlugInManifest.Empty;
 			foreach (MethodInfo? item in type.GetMethods(staticMethodFlag)) {
 				PlugInDeployerDescriptionAttribute plugIn1 = item.GetCustomAttribute<PlugInDeployerDescriptionAttribute>();
 				if (plugIn1 is null) continue;
-				description = (PluginManifest)item.Invoke(null, null);
+				description = (PlugInManifest)item.Invoke(null, null);
 				break;
 			}
 
-			if (description == PluginManifest.Empty)
+			if (description == PlugInManifest.Empty)
 				description = new(type.Name, string.Empty, string.Empty, "1.0", $"PlugIn_{type.Name}.cs");
 
 			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInName);
