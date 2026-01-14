@@ -57,15 +57,34 @@ public static class Sprite_CB_GB_Extension {
         SetNoRect2DPosition(ctl, rect);
     }
 	/// <summary>
-	/// Gets the scaled texture size of the <see cref="Sprite"/>.
+	/// Gets the size of the sprite's texture, optionally scaled by the sprite's scale.
 	/// </summary>
-	/// <param name="ctl"><see cref="Sprite"/> target (can be null)</param>
-	/// <returns>A <see cref="Vector2D"/> representing the scaled texture size, or <see cref="Vector2D.Zero"/> if texture is null</returns>
-	/// <exception cref="ArgumentNullException">Thrown when <see cref="Sprite"/> is null</exception>
-	public static Vector2D GetTextureSize(this Sprite? ctl) {
+	/// <param name="ctl">The sprite to get the texture size from.</param>
+	/// <returns>A <see cref="Vector2D"/> representing the texture size, scaled by the sprite's scale.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="ctl"/> is null.</exception>
+	/// <remarks>
+	/// This method returns the base texture size multiplied by the sprite's scale.
+	/// If the sprite's texture is null, returns <see cref="Vector2D.Zero"/>.
+	/// </remarks>
+	public static Vector2D GetTextureSize(this Sprite? ctl) => GetTextureSize(ctl, true);
+	/// <summary>
+	/// Gets the size of the sprite's texture, with an option to apply the sprite's scale.
+	/// </summary>
+	/// <param name="ctl">The sprite to get the texture size from.</param>
+	/// <param name="useScale">If true, the texture size is multiplied by the sprite's scale; otherwise, returns the base texture size.</param>
+	/// <returns>A <see cref="Vector2D"/> representing the texture size, optionally scaled.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="ctl"/> is null.</exception>
+	/// <remarks>
+	/// When <paramref name="useScale"/> is true, the returned size is the base texture size multiplied by the sprite's scale.
+	/// When false, the base texture size is returned without scaling.
+	/// If the sprite's texture is null, returns <see cref="Vector2D.Zero"/>.
+	/// </remarks>
+	public static Vector2D GetTextureSize(this Sprite? ctl, bool useScale) {
 		if (ctl is null) throw new ArgumentNullException(nameof(ctl));
 		else if (ctl.Texture is null) return Vector2D.Zero;
-		return ctl.Texture.GetSize() * ctl.Scale;
+		if (useScale)
+			return ctl.Texture.GetSize() * ctl.Scale;
+		return ctl.Texture.GetSize();
 	}
 	/// <summary>
 	/// Sets the texture size of the <see cref="Sprite"/> by adjusting its scale.

@@ -1,32 +1,24 @@
 ﻿using System.IO;
 using System.Text;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 namespace Cobilas.GodotEditor.Utility.Tasks;
 
-public class GodotUtilityTask : Task {
+public class GodotUtilityTask : UtilityTask {
 
 	private const string ProjectPathIsNull = "The 'ProjectPath' property is null!";
 	private const string InitCopyTask = "Running the GameRuntime class copy task!";
 	private const string ProjectFileNotExist = "The Godot project file could not be found!";
-	private const string GameRuntimeNotDefined = "The GameRuntime class is already defined in the Godot project file!";
 	private const string GameRuntimeAlreadyExists = "The GameRuntime.cs file already exists in the godot project!";
+	private const string GameRuntimeNotDefined = "The GameRuntime class is already defined in the Godot project file!";
 	private const string CopyingTaskCompleted = "The process of copying the GameRuntime class was completed successfully!";
 
 	private const string gameRuntime = "GameRuntime=\"*res://Godot.Runtime/GameRuntime.cs\"";
-	private const string code =
-@"using Cobilas.GodotEngine.Utility.Runtime;
-
-namespace Godot.Runtime {
-	public class GameRuntime : RunTimeInitialization { }
-}";
 
 	[Required]
 	public string? ProjectPath { get; set; }
 
 	public override bool Execute() {
-
 		if (ProjectPath is null)
 			return LogError(ProjectPathIsNull);
 		try {
@@ -51,7 +43,7 @@ namespace Godot.Runtime {
 				return LogMessage(GameRuntimeAlreadyExists);
 
 			using FileStream stream = File.OpenWrite(rt_file);
-			byte[] bytes = Encoding.UTF8.GetBytes(code);
+			byte[] bytes = Encoding.UTF8.GetBytes(ContainerCodeTask.GodotUtilityTaskCode);
 			stream.Write(bytes, 0, bytes.Length);
 
 			using StreamWriter writer = new(projectPath, true);
@@ -66,20 +58,5 @@ namespace Godot.Runtime {
 		} catch (System.Exception ex) {
 			return LogError(ex);
 		}
-	}
-
-	private bool LogError(System.Exception ex) {
-		Log.LogErrorFromException(ex);
-		return !Log.HasLoggedErrors;
-	}
-
-	private bool LogError(string message) {
-		Log.LogError(message);
-		return !Log.HasLoggedErrors;
-	}
-
-	private bool LogMessage(string message) {
-		Log.LogMessage(MessageImportance.High, message);
-		return !Log.HasLoggedErrors;
 	}
 }

@@ -17,6 +17,10 @@ run/main_scene="res://Scenes/Node_Test.tscn"
 
 GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/PlugInDeployer/plugin.cfg" )
+
 [mono]
 
 project/assembly_name="godot.test"

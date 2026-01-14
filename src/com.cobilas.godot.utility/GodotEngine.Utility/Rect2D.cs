@@ -248,8 +248,8 @@ public struct Rect2D(float x,
 		Quaternion quaternion = Quaternion.ToQuaternion(Vector3D.Forward * RadianRotation);
 		Vector2D dirx = quaternion.GenerateDirectionRight() * SizeScale.x;
 		Vector2D diry = quaternion.GenerateDirectionDown() * SizeScale.y;
-		Vector2D pivx = quaternion.GenerateDirectionLeft() * PivotScale.x;
-		Vector2D pivy = quaternion.GenerateDirectionUp() * PivotScale.y;
+		Vector2D pivx = quaternion.GenerateDirectionLeft() * Pivot.x;
+		Vector2D pivy = quaternion.GenerateDirectionUp() * Pivot.y;
 		position += pivx + pivy;
 		Vector2D px = position + dirx;
 		Vector2D py = position + diry;
