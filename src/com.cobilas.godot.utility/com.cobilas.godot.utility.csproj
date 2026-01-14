@@ -43,6 +43,7 @@
 		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\CHANGELOG.md" Pack="true" PackagePath="\" />
+		<None Include="..\..\PlugInDeployer.md" Pack="true" PackagePath="\" />
 		<None Include="build\Cobilas.Godot.Utility.props" Pack="true" PackagePath="build\" />
 		<None Include="build\Cobilas.Godot.Utility.targets" Pack="true" PackagePath="build\" />
 
