@@ -5,6 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.9.1] - (10/01/2026)
+
+### Added
+- **PlugInDeployer**: A new system to create and load plugins via code, enabling plugin creation for NuGet packages.
+- **PlugInDeployerAttribute**: Attribute to mark a class for automatic deployment as a Godot editor plugin.
+- **PlugInDeployerDescriptionAttribute**: Attribute to mark a method that returns a `PlugInManifest` containing plugin metadata.
+- **PlugInManifest**: Structure to hold plugin metadata (name, description, author, version, script filename).
+- **GodotPluginTask**: MSBuild task to automatically set up the plugin deployment system in the Godot project.
+- **ContainerCodeTask**: Centralized container for code snippets used in build tasks.
+- **UtilityTask**: Base task class with logging utilities for MSBuild tasks.
+- New documentation file `PlugInDeployer.md` with usage examples.
+- Added XML documentation for `PlugInDeployer`, `PlugInDeployerAttribute`, `PlugInDeployerDescriptionAttribute`, and `PlugInManifest`.
+
+### Changed
+- Renamed `PluginManifest` to `PlugInManifest` for naming consistency.
+- Updated `PlugInDeployer` to monitor the debug directory and automatically deploy plugins when changes are detected.
+- Enhanced `PlugInDeployer` to run `dotnet build` automatically after deployment.
+- Modified `PlugInDeployerAttribute` to inherit from `Attribute` instead of `ToolAttribute`.
+- Updated `Sprite_CB_GB_Extension.GetTextureSize` to optionally apply sprite scale via a new `useScale` parameter.
+- Fixed `Rect2D` rotation calculation to use correct pivot scaling.
+- Updated build tasks (`Cobilas.Godot.Utility.targets`) to include the new `GodotPluginTask`.
+- Bumped package version to `7.9.1` in `Cobilas.Godot.Utility.props`.
+- Updated `README.md` to reference new `PlugInDeployer` and version `7.9.1`.
+- Improved error handling and code readability in `PlugInDeployer`.
+
+### Fixed
+- Fixed incorrect stream usage in `PlugInDeployer` when creating plugin script files.
+- Fixed a bug in `Rect2D` where pivot scaling was incorrectly applied during rotation.
+- Fixed a typo in the documentation of `PlugInDeployerDescriptionAttribute`.
+
+### Removed
+- Removed old test plugins (`tds_plugin`, `tds_plugin2`) and their configuration files from the test project.
+- Removed `PlugInDeployerDescription.cs` (merged into `PlugInDeployerDescriptionAttribute.cs`).
+
+## [7.9.1-ch.1] - (13/01/2026)
+
+### Changed
+- Improved `PlugInDeployer` to run `dotnet build` automatically when changes are detected in the debug directory.
+- Updated `PlugInDeployerAttribute` to inherit from `Attribute` instead of `ToolAttribute`.
+- Enhanced the test plugin `GamePlugInDeployer` with a sample window and menu item.
+
+### Fixed
+- Fixed a bug in `PlugInDeployer` that caused incorrect stream usage when creating plugin files.
+
+## [7.9.1-ch.2] - (13/01/2026)
+
+### Added
+- Added comprehensive XML documentation for `PlugInDeployer`, `PlugInDeployerAttribute`, `PlugInDeployerDescriptionAttribute`, and `PlugInManifest`.
+- Added example code in the documentation for better clarity.
+
+### Changed
+- Renamed `PluginManifest` to `PlugInManifest` (final consistency update) and updated all references.
+- Updated `PlugInDeployer` to use `PlugInManifest` instead of `PluginManifest`.
+
+### Fixed
+- Fixed a typo in the documentation of `PlugInDeployerDescriptionAttribute`.
+
 ## [7.8.0] - (03/01/2026)
 
 ### Added
