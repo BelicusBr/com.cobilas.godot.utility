@@ -15,11 +15,11 @@ run/main_scene="res://Scenes/Node_Test.tscn"
 
 [autoload]
 
-GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
+Auto_RunTimeInitialization="*res://Godot.Runtime/Auto_RunTimeInitialization.cs"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/PlugInDeployer/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AutoLoadScript/plugin.cfg", "res://addons/PlugInDeployer/plugin.cfg", "res://addons/PlugInDeployerStart/plugin.cfg" )
 
 [mono]
 

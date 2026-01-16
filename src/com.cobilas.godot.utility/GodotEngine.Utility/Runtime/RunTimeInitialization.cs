@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace Cobilas.GodotEngine.Utility.Runtime; 
+namespace Cobilas.GodotEngine.Utility.Runtime;
 /// <summary>Responsible for initializing other classes marked with the <seealso cref="RunTimeInitializationClassAttribute"/> attribute.</summary>
 /// <example>
 /// The <c>RunTimeInitialization</c> class allows you to automate the <kbd>Project&gt;Project Settings&gt;AutoLoad</kbd> option.
@@ -22,6 +22,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// public class ClassTest : Node {}
 /// </code>
 /// </example>
+[AutoLoadScript]
 public class RunTimeInitialization : Node {
     internal static bool _closePlayModeStateChanged;
     private static RunTimeInitialization? runTime = null;

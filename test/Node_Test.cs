@@ -20,8 +20,7 @@ public class Node_Test : Node2D {
 	Label label;
     StringBuilder builder_Ready = new StringBuilder();
 
-	public override void _Ready()
-    {
+	public override void _Ready() {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return;
 		string name = "Global";
 		string path = "res://Scripts/Global.cs";

@@ -11,7 +11,6 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>1701;1702;IDE0290;IDE0300;IDE0301;IDE0130;IDE1006;IDE0056;IDE0057</NoWarn>
 		<!--<NoWarn>CS0618;CS0612</NoWarn>-->
-		<TaskOutDir>..\com.cobilas.godot.utility.tasks\</TaskOutDir>
     </PropertyGroup>
 	<!--Nuget-->
 	<PropertyGroup>
@@ -47,7 +46,7 @@
 		<None Include="build\Cobilas.Godot.Utility.props" Pack="true" PackagePath="build\" />
 		<None Include="build\Cobilas.Godot.Utility.targets" Pack="true" PackagePath="build\" />
 
-		<None Include="$(TaskOutDir)\build\runtime\**\*" Pack="true" PackagePath="build\runtime\" />
+        <None Include="build\runtime\**\*" Pack="true" PackagePath="build\runtime\" />
 
 		<ProjectReference Include="..\com.cobilas.godot.utility.tasks\com.cobilas.godot.utility.tasks.csproj" Private="false" ReferenceOutputAssembly="false" />
 		
