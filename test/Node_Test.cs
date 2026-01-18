@@ -58,6 +58,8 @@ public class Node_Test : Node2D {
 
 	public override void _Process(float delta) {
         try {
+			//GD.Print("autoload/Auto_InternalInputKeyBoard", ":", ProjectSettings.HasSetting("autoload/Auto_InternalInputKeyBoard"));
+			//GD.Print("Auto_InternalInputKeyBoard", ":", ProjectSettings.HasSetting("Auto_InternalInputKeyBoard"));
 			label.ClearText();
 			label.Append(builder_Ready);
 

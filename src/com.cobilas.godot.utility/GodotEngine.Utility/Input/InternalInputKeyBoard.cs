@@ -5,8 +5,8 @@ using Cobilas.GodotEngine.Utility.Numerics;
 
 namespace Cobilas.GodotEngine.Utility.Input;
 /// <summary>This class has methods and properties that get information from keyboard and mouse inputs.</summary>
-[RunTimeInitializationClass(nameof(InternalInputKeyBoard))]
-internal class InternalInputKeyBoard : Node {
+[AutoLoadScript(0)]
+public class InternalInputKeyBoard : Node {
 
     private readonly List<PeripheralItem> periferics = [];
     private static MouseInfo mouseInfo = new();

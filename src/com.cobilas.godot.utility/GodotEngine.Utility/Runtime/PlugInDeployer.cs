@@ -1,11 +1,11 @@
 ﻿using Godot;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.IO.Interfaces;
-using Cobilas.Collections;
-using System.Linq;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
 
@@ -17,6 +17,9 @@ public class PlugInDeployer : EditorPlugin {
 
 	private byte statusBuild = 0;
 	private string[]? pluginList = null;
+	private FolderInfo? debugFolder = null;
+	private DateTime lastWriteTime = DateTime.MinValue;
+	private const string debugPath = "res://.mono/temp/bin/Debug";
 
 	private const string addonsPath = "res://addons";
 	private const BindingFlags staticMethodFlag = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -47,6 +50,11 @@ namespace Godot.PlugIn {{
 	}
 	/// <inheritdoc/>
 	public override void _Process(float delta) {
+
+		if (Folder.Exists(debugPath))
+			if (lastWriteTime != (lastWriteTime = (debugFolder ??= new(debugPath, true)).GetLastWriteTime))
+				statusBuild = 0;
+
 		switch (statusBuild) {
 			case 0:
 				statusBuild++;

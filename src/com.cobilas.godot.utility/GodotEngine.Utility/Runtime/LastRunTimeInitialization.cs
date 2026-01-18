@@ -2,8 +2,8 @@ using Godot;
 using System;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
-
-internal class LastRunTimeInitialization : Node {
+[AutoLoadScript(7)]
+public class LastRunTimeInitialization : Node {
     //Standby = 0,
     //Process = 1,
     //PhyProcess = 2

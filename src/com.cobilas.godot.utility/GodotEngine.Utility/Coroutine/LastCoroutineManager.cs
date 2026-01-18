@@ -4,13 +4,13 @@ using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility;
-[RunTimeInitializationClass(nameof(LastCoroutineManager), lastBoot:true)]
-internal class LastCoroutineManager : Node {
+[AutoLoadScript(8)]
+public class LastCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 
     private static event Action? delayAction = null;
     private static LastCoroutineManager? lastCoroutine = null;
-
+    /// <inheritdoc/>
     public override void _Ready() {
         lastCoroutine ??= this;
         if (delayAction is not null) {
@@ -18,8 +18,8 @@ internal class LastCoroutineManager : Node {
             delayAction = null;
         }
     }
-
-    public override void _Process(float delta) {
+	/// <inheritdoc/>
+	public override void _Process(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
             CoroutineItem? coroutine = waits![I];
             if (!coroutine.IsPhysicsProcess)
@@ -29,8 +29,8 @@ internal class LastCoroutineManager : Node {
                 }
         }
     }
-
-    public override void _PhysicsProcess(float delta) {
+	/// <inheritdoc/>
+	public override void _PhysicsProcess(float delta) {
         for (int I = 0; I < ArrayManipulation.ArrayLength(waits); I++) {
             CoroutineItem? coroutine = waits![I];
             if (coroutine.IsPhysicsProcess)

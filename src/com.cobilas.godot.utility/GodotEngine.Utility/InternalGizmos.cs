@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Cobilas.GodotEngine.Utility.Scene;
 using Cobilas.GodotEngine.Utility.Runtime;
 
-namespace Cobilas.GodotEngine.Utility; 
+namespace Cobilas.GodotEngine.Utility;
 
 /// <summary>Gizmos are used to give visual debugging or setup aids in the Scene view.</summary>
-[RunTimeInitializationClass(nameof(InternalGizmos), Priority.StartLater)]
-internal class InternalGizmos : CanvasLayer {
+[AutoLoadScript(6)]
+public class InternalGizmos : CanvasLayer {
     private Node2D? canvasItem = null;
     private bool movingToNextScene;
 
@@ -31,20 +31,21 @@ internal class InternalGizmos : CanvasLayer {
             };
             Color = Colors.Black;
             canvasItem.Connect("draw", this, nameof(DrawGizmos));
-            SceneManager.CurrentSceneNode!.AddChild(canvasItem);
+            SceneManager.SetSceneUtilities(canvasItem);
+            //SceneManager.CurrentSceneNode!.AddChild(canvasItem);
 
-            SceneManager.UnloadedScene += (s) => {
-                if (s.SceneNode is null)
-                    throw new NullReferenceException("Scene.SceneNode was passed null in the UnloadedScene event.");
-                movingToNextScene = true;
-                canvasItem.SetParent(this);
-            };
-            SceneManager.LoadedScene += (s) => {
-                if (s.SceneNode is null)
-                    throw new NullReferenceException("Scene.SceneNode was passed null in LoadedScene event.");
-                canvasItem.SetParent(s.SceneNode);
-                movingToNextScene = false;
-            };
+            //SceneManager.UnloadedScene += (s) => {
+            //    if (s.SceneNode is null)
+            //        throw new NullReferenceException("Scene.SceneNode was passed null in the UnloadedScene event.");
+            //    movingToNextScene = true;
+            //    canvasItem.SetParent(this);
+            //};
+            //SceneManager.LoadedScene += (s) => {
+            //    if (s.SceneNode is null)
+            //        throw new NullReferenceException("Scene.SceneNode was passed null in LoadedScene event.");
+            //    canvasItem.SetParent(s.SceneNode);
+            //    movingToNextScene = false;
+            //};
         }
     }
 

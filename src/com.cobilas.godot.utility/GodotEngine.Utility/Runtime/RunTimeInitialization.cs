@@ -22,7 +22,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// public class ClassTest : Node {}
 /// </code>
 /// </example>
-[AutoLoadScript]
+[AutoLoadScript(4)]
 public class RunTimeInitialization : Node {
     internal static bool _closePlayModeStateChanged;
     private static RunTimeInitialization? runTime = null;
@@ -41,10 +41,10 @@ public class RunTimeInitialization : Node {
     /// <inheritdoc/>
     public override void _Ready() {
         //RunTime.ExecutionMode = ExecutionMode.PlayerMode;
-        LastRunTimeInitialization lastRunTime = new() {
-            Name = nameof(LastRunTimeInitialization)
-        };
-        GetTree().Root.CallDeferred("add_child", lastRunTime);
+        //LastRunTimeInitialization lastRunTime = new() {
+        //    Name = nameof(LastRunTimeInitialization)
+        //};
+        //GetTree().Root.CallDeferred("add_child", lastRunTime);
         runTime ??= this;
 
         Type[] components = TypeUtilitarian.GetTypes();

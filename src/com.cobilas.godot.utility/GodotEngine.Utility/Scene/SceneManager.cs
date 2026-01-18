@@ -29,10 +29,13 @@ public static class SceneManager {
     /// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
     public static void DontDestroyOnLoad(Node obj)
         => InternalSceneManager.DontDestroyOnLoad(obj);
-    /// <summary>Allows you to load a specific scene.</summary>
-    /// <param name="index">The specific scene index.</param>
-    /// <returns>Returns <c>true</c> if the scene loaded correctly.</returns>
-    public static bool LoadScene(int index)
+
+	public static void SetSceneUtilities(Node obj)
+        => InternalSceneManager.SetSceneUtilities(obj);
+	/// <summary>Allows you to load a specific scene.</summary>
+	/// <param name="index">The specific scene index.</param>
+	/// <returns>Returns <c>true</c> if the scene loaded correctly.</returns>
+	public static bool LoadScene(int index)
         => InternalSceneManager.LoadScene(index);
     /// <summary>Allows you to load a specific scene.</summary>
     /// <param name="name">The specific scene name.</param>
