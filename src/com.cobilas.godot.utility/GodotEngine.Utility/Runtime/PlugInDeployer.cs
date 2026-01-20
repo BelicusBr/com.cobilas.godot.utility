@@ -95,15 +95,15 @@ namespace Godot.PlugIn {{
 			if (description == PlugInManifest.Empty)
 				description = new(type.Name, string.Empty, string.Empty, "1.0", $"PlugIn_{type.Name}.cs");
 
+			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInName);
+			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInScript);
+
 			if (plugIn.InternalPlugIn) {
 				EditorPlugin eplugin = type.Activator<EditorPlugin>();
 				eplugin.Name = description.PlugInName;
 				AddChild(eplugin);
 				continue;
 			}
-
-			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInName);
-			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInScript);
 
 			string plugInPath = GodotPath.Combine(addonsPath, description.PlugInName);
 
