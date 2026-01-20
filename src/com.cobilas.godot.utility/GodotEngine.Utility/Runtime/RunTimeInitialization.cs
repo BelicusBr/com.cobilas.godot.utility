@@ -22,7 +22,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// public class ClassTest : Node {}
 /// </code>
 /// </example>
-[AutoLoadScript(4)]
+[AutoLoadScript(priority:4, autoLoadName:"GameRuntime")]
 public class RunTimeInitialization : Node {
     internal static bool _closePlayModeStateChanged;
     private static RunTimeInitialization? runTime = null;

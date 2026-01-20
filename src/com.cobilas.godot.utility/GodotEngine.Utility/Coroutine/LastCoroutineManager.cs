@@ -4,6 +4,14 @@ using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility;
+/// <summary>Manages coroutine execution with priority 8 in the autoload order.</summary>
+/// <remarks>
+/// This class handles the execution of coroutines during both regular process and physics process frames.
+/// It ensures that coroutines are properly started, stopped, and managed throughout the application lifecycle.
+/// </remarks>
+/// <seealso cref="AutoLoadScriptAttribute"/>
+/// <seealso cref="CoroutineItem"/>
+/// <seealso cref="Coroutine"/>
 [AutoLoadScript(8)]
 public class LastCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();

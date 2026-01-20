@@ -8,6 +8,8 @@ func _enter_tree():
 		return
 	initPlugInDeployer = true
 	dotnetBuild()
+	dotnetBuild()
+	dotnetBuild()
 	pass
 	
 func _process(delta):

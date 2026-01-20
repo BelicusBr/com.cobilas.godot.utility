@@ -8,7 +8,6 @@ using Cobilas.GodotEngine.Utility.IO;
 using Cobilas.GodotEngine.Utility.IO.Interfaces;
 
 namespace Cobilas.GodotEngine.Utility.Runtime;
-
 /// <summary>
 /// An editor plugin that automatically deploys and builds custom plugins for the Godot engine.
 /// Monitors the debug directory for changes and generates plugin configuration and script files.
@@ -96,6 +95,13 @@ namespace Godot.PlugIn {{
 			if (description == PlugInManifest.Empty)
 				description = new(type.Name, string.Empty, string.Empty, "1.0", $"PlugIn_{type.Name}.cs");
 
+			if (plugIn.InternalPlugIn) {
+				EditorPlugin eplugin = type.Activator<EditorPlugin>();
+				eplugin.Name = description.PlugInName;
+				AddChild(eplugin);
+				continue;
+			}
+
 			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInName);
 			ExceptionMessages.ThrowIfNullOrEmpty(description.PlugInScript);
 
@@ -122,7 +128,16 @@ namespace Godot.PlugIn {{
 		pluginList = _pluginList;
 		return result;
 	}
-
+	/// <summary>Executes a .NET build command and captures the output.</summary>
+	/// <param name="output">An array that will contain the output lines from the build command.</param>
+	/// <returns>
+	/// Returns 0 if the build was successful; otherwise, returns the exit code from the build process.
+	/// </returns>
+	/// <remarks>
+	/// This method runs the "dotnet build" command and captures its standard output.
+	/// The output is returned as an array of strings (boxed as objects).
+	/// Successful execution returns 0, while any other exit code indicates failure.
+	/// </remarks>
 	public static int DotNetBuild(out object[] output) {
 		string[] args1 = { "build" };
 		Godot.Collections.Array _output = [];

@@ -10,7 +10,6 @@ namespace Cobilas.GodotEngine.Utility;
 [AutoLoadScript(6)]
 public class InternalGizmos : CanvasLayer {
     private Node2D? canvasItem = null;
-    private bool movingToNextScene;
 
     private static InternalGizmos? gizmos = null;
     private static event Action? drawFunc = null;
@@ -24,7 +23,6 @@ public class InternalGizmos : CanvasLayer {
     public override void _Ready() {
         if (gizmos == null) {
             gizmos = this;
-            movingToNextScene = false;
             Layer = -1;
             canvasItem = new Node2D {
                 Name = "GizmosItem"
@@ -32,26 +30,12 @@ public class InternalGizmos : CanvasLayer {
             Color = Colors.Black;
             canvasItem.Connect("draw", this, nameof(DrawGizmos));
             SceneManager.SetSceneUtilities(canvasItem);
-            //SceneManager.CurrentSceneNode!.AddChild(canvasItem);
-
-            //SceneManager.UnloadedScene += (s) => {
-            //    if (s.SceneNode is null)
-            //        throw new NullReferenceException("Scene.SceneNode was passed null in the UnloadedScene event.");
-            //    movingToNextScene = true;
-            //    canvasItem.SetParent(this);
-            //};
-            //SceneManager.LoadedScene += (s) => {
-            //    if (s.SceneNode is null)
-            //        throw new NullReferenceException("Scene.SceneNode was passed null in LoadedScene event.");
-            //    canvasItem.SetParent(s.SceneNode);
-            //    movingToNextScene = false;
-            //};
         }
     }
 
     /// <inheritdoc/>
     public override void _Process(float delta) {
-        if (movingToNextScene || canvasItem is null) return;
+        if (canvasItem is null) return;
         canvasItem!.Update();
         Node parent = canvasItem.GetParent();
         if (canvasItem.GetIndex() != parent.GetChildCount() - 1)

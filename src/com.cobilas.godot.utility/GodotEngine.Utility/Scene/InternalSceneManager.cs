@@ -67,8 +67,10 @@ public class InternalSceneManager : Node {
         if (scn != Scene.Empty)
             UnloadedScene?.Invoke(scn);
     }
-
-    internal static void SetSceneUtilities(Node obj)
+	/// <summary>Sets up the scene utilities on the specified node.</summary>
+	/// <param name="obj">The node to configure with scene utilities.</param>
+	/// <remarks>This method initializes the necessary components on the node to enable scene management functionality.</remarks>
+	internal static void SetSceneUtilities(Node obj)
         => obj.SetParent(manager?.sceneUtilities);
 	/// <summary>Prevents an object from being destroyed when switching scenes.</summary>
 	/// <param name="obj">The object that will be marked so as not to be destroyed when changing scenes.</param>
