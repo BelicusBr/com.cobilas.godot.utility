@@ -3,5 +3,5 @@
 namespace Godot.Runtime {
 #pragma warning restore IDE0130
 	/// <inheritdoc/>
-	internal class InternalInputKeyBoard : Cobilas.GodotEngine.Utility.Input.InternalInputKeyBoard { }
+	internal class Auto_InternalInputKeyBoard : Cobilas.GodotEngine.Utility.Input.InternalInputKeyBoard { }
 }

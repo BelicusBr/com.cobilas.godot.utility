@@ -1,14 +1,6 @@
 ﻿namespace Cobilas.GodotEditor.Utility.Tasks;
 
 public static class ContainerCodeTask {
-	public const string GodotUtilityTaskCode =
-@"using Cobilas.GodotEngine.Utility.Runtime;
-#pragma warning disable IDE0130
-namespace Godot.Runtime {
-#pragma warning restore IDE0130
-	/// <inheritdoc/>
-	public class GameRuntime : RunTimeInitialization { }
-}";
 
 	public const string PlugInDeployer_CFG =
 @"[plugin]
@@ -72,6 +64,7 @@ func setPluginEnabled(pluginName:String, status:bool, build:bool = false):
 	if build:
 		dotnetBuild()
 	get_editor_interface().set_plugin_enabled(pluginName, status)
+	ProjectSettings.save()
 	pass
 
 func dotnetBuild():

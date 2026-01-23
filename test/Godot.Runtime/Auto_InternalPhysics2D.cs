@@ -3,5 +3,5 @@
 namespace Godot.Runtime {
 #pragma warning restore IDE0130
 	/// <inheritdoc/>
-	internal class InternalPhysics2D : Cobilas.GodotEngine.Utility.Physics.InternalPhysics2D { }
+	internal class Auto_InternalPhysics2D : Cobilas.GodotEngine.Utility.Physics.InternalPhysics2D { }
 }

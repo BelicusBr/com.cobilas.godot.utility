@@ -8,8 +8,6 @@ func _enter_tree():
 		return
 	initPlugInDeployer = true
 	dotnetBuild()
-	dotnetBuild()
-	dotnetBuild()
 	pass
 	
 func _process(delta):
@@ -28,6 +26,7 @@ func setPluginEnabled(pluginName:String, status:bool, build:bool = false):
 	if build:
 		dotnetBuild()
 	get_editor_interface().set_plugin_enabled(pluginName, status)
+	ProjectSettings.save()
 	pass
 
 func dotnetBuild():

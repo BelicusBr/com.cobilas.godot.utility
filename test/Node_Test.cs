@@ -19,7 +19,17 @@ public class Node_Test : Node2D {
     Camera2D camera;
 	Label label;
     StringBuilder builder_Ready = new StringBuilder();
-
+	/*
+Auto_InternalInputKeyBoard="*res://Godot.Runtime/Auto_InternalInputKeyBoard.cs"
+Auto_InternalCoroutineManager="*res://Godot.Runtime/Auto_InternalCoroutineManager.cs"
+Auto_InternalPhysics2D="*res://Godot.Runtime/Auto_InternalPhysics2D.cs"
+GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
+Auto_InternalSceneManager="*res://Godot.Runtime/Auto_InternalSceneManager.cs"
+Auto_InternalGizmos="*res://Godot.Runtime/Auto_InternalGizmos.cs"
+Auto_LastRunTimeInitialization="*res://Godot.Runtime/Auto_LastRunTimeInitialization.cs"
+Auto_LastCoroutineManager="*res://Godot.Runtime/Auto_LastCoroutineManager.cs"
+Auto_GCInputKeyBoard="*res://Godot.Runtime/Auto_GCInputKeyBoard.cs"
+     */
 	public override void _Ready() {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return;
 		string name = "Global";
@@ -43,7 +53,13 @@ public class Node_Test : Node2D {
 
             //_ = Coroutine.StartCoroutine(GPO());
             label.Append(builder_Ready);
-        }
+			foreach (Godot.Collections.Dictionary item in ProjectSettings.Singleton.GetPropertyList())
+			{
+				if (((string)item["name"]).Contains("autoload/") ||
+					((string)item["name"]).Contains("editor_plugins/"))
+				label.AppendLine(item);
+			}
+		}
         catch (Exception ex) {
             label = GetNode<Label>(nodePath);
 			label.SelfModulate = Color.Color8(255, 0, 0);
@@ -60,16 +76,16 @@ public class Node_Test : Node2D {
         try {
 			//GD.Print("autoload/Auto_InternalInputKeyBoard", ":", ProjectSettings.HasSetting("autoload/Auto_InternalInputKeyBoard"));
 			//GD.Print("Auto_InternalInputKeyBoard", ":", ProjectSettings.HasSetting("Auto_InternalInputKeyBoard"));
-			label.ClearText();
-			label.Append(builder_Ready);
+			//label.ClearText();
+			//label.Append(builder_Ready);
 
-			foreach (NodePath item in n_sprite) {
-                Node node = item.GetNode();
-                if (node is Sprite spt)
-			        label.AppendLine(spt.GetGlobalRect2D().HasPoint(camera.ScreenToWorldPoint(InputKeyBoard.MousePosition)));
-                else if (node is Control ctl)
-					label.AppendLine(ctl.GetGlobalRect2D().HasPoint(camera.ScreenToWorldPoint(InputKeyBoard.MousePosition)));
-			}
+			//foreach (NodePath item in n_sprite) {
+   //             Node node = item.GetNode();
+   //             if (node is Sprite spt)
+			//        label.AppendLine(spt.GetGlobalRect2D().HasPoint(camera.ScreenToWorldPoint(InputKeyBoard.MousePosition)));
+   //             else if (node is Control ctl)
+			//		label.AppendLine(ctl.GetGlobalRect2D().HasPoint(camera.ScreenToWorldPoint(InputKeyBoard.MousePosition)));
+			//}
 
         } catch (Exception ex) {
 			label = GetNode<Label>(nodePath);
