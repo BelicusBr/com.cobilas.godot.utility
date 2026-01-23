@@ -8,7 +8,7 @@ namespace Cobilas.GodotEngine.Utility.Runtime;
 /// It performs runtime initialization and ensures it remains at the bottom of the scene tree hierarchy.
 /// </remarks>
 /// <seealso cref="AutoLoadScriptAttribute"/>
-[AutoLoadScript(7)]
+[AutoLoadScript(7, autoLoadName:"LastGameRuntime")]
 public class LastRunTimeInitialization : Node {
 	/// <summary>
 	/// Standby = 0,<br/>

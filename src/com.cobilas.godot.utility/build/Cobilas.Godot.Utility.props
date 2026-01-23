@@ -3,7 +3,6 @@
 		<ProjectVersion>8.0.0</ProjectVersion>
 		<PackageFolderPath>$(NuGetPackageRoot)cobilas.godot.utility</PackageFolderPath>
 		<CurrentPathPackageFolder>$(PackageFolderPath)\$(ProjectVersion)</CurrentPathPackageFolder>
-        <_GodotUtilityExecuted>false</_GodotUtilityExecuted>
         <CurrentPathTaskFolder></CurrentPathTaskFolder>
 	</PropertyGroup>
 </Project>

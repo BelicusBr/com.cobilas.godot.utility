@@ -12,7 +12,7 @@ public class GodotPluginTask : UtilityTask {
 	private const string PlugInCFGFileExist = "The PlugInDeployer.config file was not created because it already exists!";
 	private const string CopyingTaskCompleted = "The process of copying the GamePlugInDeployer class was completed successfully!";
 
-	private const string PlugInGD = "res://addons/PlugInDeployer/PlugInDeployerStart/plugin.cfg";
+	private const string PlugInGD = "res://addons/PlugInDeployerStart/plugin.cfg";
 
 	[Required]
 	public string? ProjectPath { get; set; }
@@ -27,11 +27,11 @@ public class GodotPluginTask : UtilityTask {
 
 			string projectPath = Path.Combine(ProjectPath, "project.godot");
 			string dir_addons = Path.Combine(ProjectPath, "addons");
-			string dir_path = Path.Combine(ProjectPath, "addons\\PlugInDeployer\\PlugInDeployer");
+			string dir_path = Path.Combine(ProjectPath, "addons\\PlugInDeployer");
 			string file_cfg = Path.Combine(dir_path, "plugin.cfg");
 			string file_cs = Path.Combine(dir_path, "GamePlugInDeployer.cs");
 
-			string dir_gd_path = Path.Combine(ProjectPath, "addons\\PlugInDeployer\\PlugInDeployerStart");
+			string dir_gd_path = Path.Combine(ProjectPath, "addons\\PlugInDeployerStart");
 			string file_gd_cfg = Path.Combine(dir_gd_path, "plugin.cfg");
 			string file_gd = Path.Combine(dir_gd_path, "GamePlugInDeployer.gd");
 
