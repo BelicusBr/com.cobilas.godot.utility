@@ -5,10 +5,10 @@ using System.Collections;
 using Cobilas.Collections;
 using Cobilas.GodotEngine.Utility.Runtime;
 
-namespace Cobilas.GodotEngine.Utility; 
+namespace Cobilas.GodotEngine.Utility;
 /// <summary>This class is responsible for managing all coroutines.</summary>
-[RunTimeInitializationClass(nameof(InternalCoroutineManager), subPriority:-1)]
-internal class InternalCoroutineManager : Node {
+[AutoLoadScript(1)]
+public class InternalCoroutineManager : Node {
     private CoroutineItem[]? waits = System.Array.Empty<CoroutineItem>();
 
     private static InternalCoroutineManager? _Coroutine = null;

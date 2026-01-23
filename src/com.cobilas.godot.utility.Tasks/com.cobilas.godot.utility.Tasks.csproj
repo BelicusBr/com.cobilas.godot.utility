@@ -6,6 +6,7 @@
 		<RootNamespace>Cobilas</RootNamespace>
 		<AssemblyName>com.cobilas.godot.utility.tasks</AssemblyName>
 		<OutDir>bin\$(TargetFramework)\</OutDir>
+        <TaskOutDir>..\com.cobilas.godot.utility</TaskOutDir>
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Build.Framework" Version="18.0.2" />
@@ -16,23 +17,17 @@
 	<PropertyGroup>
 		<nets2dir>$(MSBuildProjectDirectory)\bin\netstandard2.0\</nets2dir>
 		<net472dir>$(MSBuildProjectDirectory)\bin\net472\</net472dir>
-		<nets2Dis>$(MSBuildProjectDirectory)\build\runtime\netstandard2.0\</nets2Dis>
-		<net472Dis>$(MSBuildProjectDirectory)\build\runtime\net472\</net472Dis>
+		<nets2Dis>$(TaskOutDir)\build\runtime\netstandard2.0\</nets2Dis>
+		<net472Dis>$(TaskOutDir)\build\runtime\net472\</net472Dis>
 	</PropertyGroup>
 	<ItemGroup>
-		<nets2dll Include="$(nets2dir)$(AssemblyName).dll"/>
-		<net472dll Include="$(net472dir)$(AssemblyName).dll"/>
+		<nets2dll Include="$(nets2dir)$(AssemblyName).dll" />
+		<net472dll Include="$(net472dir)$(AssemblyName).dll" />
 	</ItemGroup>
 	<Target Name="CopyDlls" AfterTargets="Build">
 		
-		<Copy SourceFiles="@(nets2dll)"
-			  DestinationFiles="@(nets2dll->'$(nets2Dis)$(AssemblyName).dll')"
-			  SkipUnchangedFiles="true" 
-			  Condition="'$(TargetFramework)'=='netstandard2.0'"/>
+		<Copy SourceFiles="@(nets2dll)" DestinationFiles="@(nets2dll->'$(nets2Dis)$(AssemblyName).dll')" SkipUnchangedFiles="true" Condition="'$(TargetFramework)'=='netstandard2.0'" />
 
-		<Copy SourceFiles="@(net472dll)"
-			  DestinationFiles="@(net472dll->'$(net472Dis)$(AssemblyName).dll')"
-			  SkipUnchangedFiles="true"
-			  Condition="'$(TargetFramework)'=='net472'"/>
+		<Copy SourceFiles="@(net472dll)" DestinationFiles="@(net472dll->'$(net472Dis)$(AssemblyName).dll')" SkipUnchangedFiles="true" Condition="'$(TargetFramework)'=='net472'" />
 	</Target>
 </Project>
