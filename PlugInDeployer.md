@@ -47,3 +47,20 @@ public class PlugInTest : EditorPlugin {
 		);
 }
 ```
+
+## Internal Plugin
+
+Internal plugins are plugins that are loaded and executed through the `PlugInDeployer` class
+without the need to create a separate directory for the specific plugin. \
+This can be done using the `internalPlugIn` parameter.
+
+```csharp
+using Godot;
+using Cobilas.GodotEngine.Utility.Runtime;
+
+namespace Godot.PlugIn.Test;
+[PlugInDeployer(internalPlugIn:true)]
+public class PlugInTest : EditorPlugin {
+	// Here you can put any code you want.
+}
+```

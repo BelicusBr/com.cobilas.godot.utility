@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.0.0] - (22/01/2026)
+### Added
+- **AutoLoadScript plugin**: A powerful C# plugin for Godot that enables dynamic script loading via the `AutoLoadScript` attribute, automating the conversion of C# classes into Godot auto‑load singletons.
+- **SceneManager documentation**: Detailed documentation (`SceneManager.md`) explaining the scene lifecycle management system implemented as an `AutoLoadScript`.
+- **AutoLoadOrderReplace class**: A new base class for overriding the auto‑load order of classes marked with `AutoLoadScriptAttribute`, providing custom priority mapping.
+- **Internal plugin support**: `PlugInDeployer` now supports internal plugins that run directly inside the `PlugInDeployer` class without a separate directory.
+
+### Changed
+- **AutoLoadScript**:
+  - Now supports custom auto‑load names via the `autoLoadName` parameter in the attribute.
+  - Improved generation logic to respect priority overrides defined by `AutoLoadOrderReplace`.
+  - The plugin now uses `ApplyChanges()` and an internal `Deploy()` method for more reliable updates.
+- **PlugInDeployer**:
+  - Enhanced validation: throws exceptions if plugin name or script is null/empty.
+  - Internal plugins are now instantiated and added as children of the `PlugInDeployer` node.
+- **Updated documentation**: `README.md`, `AutoLoadScript.md`, `PlugInDeployer.md` and `SceneManager.md` have been updated with new features and usage examples.
+- **Renamed test autoload classes**: All test auto‑load classes have been renamed from `Auto_*` to their original class names (e.g., `Auto_InternalInputKeyBoard` → `InternalInputKeyBoard`).
+
+### Removed
+- **GodotUtilityTask.cs**: The MSBuild task responsible for copying the `GameRuntime` class has been removed; its functionality is now integrated into the `AutoLoadScript` plugin.
+
+### Fixed
+- **AutoLoadScript generation**: Fixed an issue where auto‑load scripts were not correctly removed and re‑added when the project configuration changed.
+- **PlugInDeployer path handling**: Corrected the paths for generated plugin files (now under `addons/PlugInDeployer/PlugInDeployer` and `addons/PlugInDeployer/PlugInDeployerStart`).
+
+## [8.0.0-ch.4] - (19/01/2026)
+### Changed
+- **PlugInDeployer validation**: Added validation for plugin name and script fields, ensuring they are not null or empty.
+- **Internal plugin support**: The `internalPlugIn` parameter is now respected; internal plugins are instantiated and added as children of the `PlugInDeployer` node.
+
+## [8.0.0-ch.3] - (19/01/2026)
+### Changed
+- **Updated README.md**: Changed package version references from 7.9.1 to 8.0.0.
+- **Removed obsolete serialization code**: Removed deprecated classes and methods from `BuildSerialization` and related serialization modules (`NoSerializedProperty`, `SONull`, `SerializedNode`, etc.) in favor of the new `PropertyRender` system.
+
+## [8.0.0-ch.2] - (17/01/2026)
+### Changed
+- **Replaced RunTimeInitializationClass with AutoLoadScript**: Several core classes (`InternalCoroutineManager`, `LastCoroutineManager`, `GCInputKeyBoard`, `InternalInputKeyBoard`, `InternalGizmos`, `InternalPhysics2D`, `InternalSceneManager`, `LastRunTimeInitialization`) now use the `AutoLoadScript` attribute instead of `RunTimeInitializationClass`.
+- **AutoLoadScript plugin**: The `AutoLoadScript` editor plugin now monitors the debug directory and generates auto‑load scripts dynamically.
+- **SceneManager architecture**: `InternalSceneManager` now uses a structured hierarchy with `SceneContainer`, `DontDestroyOnLoad`, and `SceneUtilities` nodes for better scene management.
+
+### Added
+- **AutoLoadScript attribute**: Introduced the `AutoLoadScriptAttribute` to mark classes for automatic generation as Godot auto‑load singletons.
+- **Auto‑load script generation**: The plugin now generates C# scripts in `res://Godot.Runtime/` for each marked class.
+
+## [8.0.0-ch.1] - (16/01/2026)
+### Changed
+- **Build tasks**: Updated MSBuild tasks (`GodotPluginTask`) to generate a GDScript‑based plugin launcher (`PlugInDeployerStart`) that ensures the C# `PlugInDeployer` plugin is enabled after compilation.
+- **AutoLoadScript plugin**: Added the initial version of the `AutoLoadScript` editor plugin for automatic generation of auto‑load scripts.
+
+### Added
+- **PlugInDeployerStart**: A GDScript plugin that triggers a .NET build and enables the C# `PlugInDeployer` plugin on editor startup.
+
 ## [7.9.1] - (10/01/2026)
 
 ### Added

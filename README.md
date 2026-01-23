@@ -47,9 +47,9 @@ using Cobilas.GodotEngine.Utility;
 public class ClassTest : Node {
 	private Coroutine coroutine;
 	public override void _Ready() {
-		coroutine = CoroutineManager.StartCoroutine(Corroutine1());
-		coroutine = CoroutineManager.StartCoroutine(Corroutine2());
-		coroutine = CoroutineManager.StartCoroutine(Corroutine3());
+		coroutine = Coroutine.StartCoroutine(Corroutine1());
+		coroutine = Coroutine.StartCoroutine(Corroutine2());
+		coroutine = Coroutine.StartCoroutine(Corroutine3());
 	}
 
 	private IEnumerator Corroutine1() {
@@ -112,15 +112,29 @@ public struct vec2d {
 ```
 
 ## The [PlugIn Deployer](PlugInDeployer.md) has been added to the package!
+Once the package is installed, it will be necessary to compile and then reload the editor. \
+To reload the editor, simply go to <kbd>Project>Reload Current Project</kbd> or
+go to <kbd>Project>Project Settings>Plugins</kbd> and activate the `PlugInDeployerStart` plugin. \
+PlugInDeployer will show some false alarms.
+
+## [AutoLoadScript](AutoLoadScript.md) has been added.
+**AutoLoadScript** is a powerful C# plugin for the Godot engine that enables dynamic script loading through code using the `AutoLoadScript` attribute. \
+This plugin automates the process of converting C# classes into Godot's auto-load singletons, streamlining project organization and initialization workflows.
+
+## Details about [SceneManager](SceneManager.md)
+The **SceneManager** is a sophisticated auto-load management system implemented as \
+an `AutoLoadScript` within the Godot engine. This core component provides comprehensive \
+scene lifecycle management, including scene loading, unloading, and persistent object handling \
+across scene transitions.
 
 ## The [Cobilas Godot Utility](https://www.nuget.org/packages/Cobilas.Godot.Utility/) is on nuget.org
 To include the package, open the `.csproj` file and add it.
 ```xml
 <ItemGroup>
-	<PackageReference Include="Cobilas.Godot.Utility" Version="7.9.1" />
+	<PackageReference Include="Cobilas.Godot.Utility" Version="8.0.0" />
 </ItemGroup>
 ```
 Or use command line.
 ```
-dotnet add package Cobilas.Godot.Utility --version 7.9.1
+dotnet add package Cobilas.Godot.Utility --version 8.0.0
 ```
