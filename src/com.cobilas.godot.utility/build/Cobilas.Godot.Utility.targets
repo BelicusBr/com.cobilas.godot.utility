@@ -1,23 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!--<Import Project="Cobilas.Godot.Utility.props"/>-->
 	<UsingTask
-		TaskName="Cobilas.GodotEditor.Utility.Tasks.GodotUtilityTask"
-		AssemblyFile="$(CurrentPathPackageFolder)\build\runtime\$(TargetFramework)\com.cobilas.godot.utility.tasks.dll"/>
-	<UsingTask
 		TaskName="Cobilas.GodotEditor.Utility.Tasks.GodotPluginTask"
 		AssemblyFile="$(CurrentPathPackageFolder)\build\runtime\$(TargetFramework)\com.cobilas.godot.utility.tasks.dll"/>
 
-	<!-- Executar automaticamente depois do build -->
-	<Target Name="RunCobilasUtilityTask" AfterTargets="Build">
-
-		<GodotUtilityTask ProjectPath="$(MSBuildProjectDirectory)"/>
-
-	</Target>
-
-	<Target Name="RunCobilasPluginTask" AfterTargets="RunCobilasUtilityTask">
+	<!--AfterTargets="RunCobilasUtilityTask"-->
+	<Target Name="RunCobilasPluginTask" BeforeTargets="BeforeCompile">
 		
 		<GodotPluginTask ProjectPath="$(MSBuildProjectDirectory)"/>
-		
 	</Target>
 
 </Project>

@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.IO;
-using System.Text;
 using Cobilas.Collections;
 using System.Collections.Generic;
 using Cobilas.IO.Serialization.Json;

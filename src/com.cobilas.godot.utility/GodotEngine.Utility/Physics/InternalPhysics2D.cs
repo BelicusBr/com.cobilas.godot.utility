@@ -7,8 +7,8 @@ using Cobilas.GodotEngine.Utility.Runtime;
 
 namespace Cobilas.GodotEngine.Utility.Physics;
 /// <summary>This class provides methods for detecting 2D physics bodies.</summary>
-[RunTimeInitializationClass(nameof(InternalPhysics2D))]
-internal class InternalPhysics2D : Node2D {
+[AutoLoadScript(3)]
+public class InternalPhysics2D : Node2D {
 
     private CircleShape2D? circleShape2D = null;
     private RectangleShape2D? rectangleShape2D = null;
