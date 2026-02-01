@@ -105,7 +105,7 @@ public static class Object_CB_GD_Extension {
 		ThrowIfNull(target, nameof(target));
 		ThrowIfNullOrEmpty(signal, nameof(signal));
 		ThrowIfNullOrEmpty(method, nameof(method));
-		if (!obj.IsConnected(signal, target, method)) {
+		if (obj.IsConnected(signal, target, method)) {
 			obj.Disconnect(signal, target, method);
 			return true;
 		}
