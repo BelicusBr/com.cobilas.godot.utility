@@ -15,13 +15,14 @@ run/main_scene="res://Scenes/Node_Test.tscn"
 
 [autoload]
 
+Auto_LastRunTimeInitialization="*res://Godot.Runtime/Auto_LastRunTimeInitialization.cs"
 Auto_InternalInputKeyBoard="*res://Godot.Runtime/Auto_InternalInputKeyBoard.cs"
 Auto_InternalCoroutineManager="*res://Godot.Runtime/Auto_InternalCoroutineManager.cs"
 Auto_InternalPhysics2D="*res://Godot.Runtime/Auto_InternalPhysics2D.cs"
 GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
 Auto_InternalSceneManager="*res://Godot.Runtime/Auto_InternalSceneManager.cs"
 Auto_InternalGizmos="*res://Godot.Runtime/Auto_InternalGizmos.cs"
-Auto_LastRunTimeInitialization="*res://Godot.Runtime/Auto_LastRunTimeInitialization.cs"
+LastGameRuntime="*res://Godot.Runtime/LastGameRuntime.cs"
 Auto_LastCoroutineManager="*res://Godot.Runtime/Auto_LastCoroutineManager.cs"
 Auto_GCInputKeyBoard="*res://Godot.Runtime/Auto_GCInputKeyBoard.cs"
 

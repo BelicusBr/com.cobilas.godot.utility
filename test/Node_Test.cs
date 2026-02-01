@@ -19,17 +19,7 @@ public class Node_Test : Node2D {
     Camera2D camera;
 	Label label;
     StringBuilder builder_Ready = new StringBuilder();
-	/*
-Auto_InternalInputKeyBoard="*res://Godot.Runtime/Auto_InternalInputKeyBoard.cs"
-Auto_InternalCoroutineManager="*res://Godot.Runtime/Auto_InternalCoroutineManager.cs"
-Auto_InternalPhysics2D="*res://Godot.Runtime/Auto_InternalPhysics2D.cs"
-GameRuntime="*res://Godot.Runtime/GameRuntime.cs"
-Auto_InternalSceneManager="*res://Godot.Runtime/Auto_InternalSceneManager.cs"
-Auto_InternalGizmos="*res://Godot.Runtime/Auto_InternalGizmos.cs"
-Auto_LastRunTimeInitialization="*res://Godot.Runtime/Auto_LastRunTimeInitialization.cs"
-Auto_LastCoroutineManager="*res://Godot.Runtime/Auto_LastCoroutineManager.cs"
-Auto_GCInputKeyBoard="*res://Godot.Runtime/Auto_GCInputKeyBoard.cs"
-     */
+
 	public override void _Ready() {
         if (RunTime.ExecutionMode == ExecutionMode.EditorMode) return;
 		string name = "Global";
