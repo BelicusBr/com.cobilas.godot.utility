@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.0.1] - (31/01/2026)
+### Fixed
+- **SafeDisconnect method**: Fixed a bug in the `SafeDisconnect(this Object?, string?, Object?, string?)` extension method where it incorrectly checked if a signal was *not* connected before attempting to disconnect. The method now correctly checks if the signal *is* connected before calling `Disconnect()`.
+
+### Changed
+- **Updated version references**: Updated all version references in documentation and build files from 8.0.0 to 8.0.1.
+- **Build configuration**: Updated `ProjectVersion` property in `Cobilas.Godot.Utility.props` from 8.0.0 to 8.0.1.
+
+### Notes
+The fix ensures that `SafeDisconnect` properly disconnects signals only when they are actually connected, preventing potential errors in signal handling.
+
 ## [8.0.0] - (22/01/2026)
 ### Added
 - **AutoLoadScript plugin**: A powerful C# plugin for Godot that enables dynamic script loading via the `AutoLoadScript` attribute, automating the conversion of C# classes into Godot auto‑load singletons.
