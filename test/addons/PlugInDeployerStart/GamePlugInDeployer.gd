@@ -14,6 +14,7 @@ func _process(delta):
 	if plugInEnabled("PlugInDeployer"):
 		return
 	setPluginEnabled("PlugInDeployer", true, false)
+	
 	pass
 	
 func _exit_tree():
