@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+---
+
+## [8.1.0] - (22/04/2026)
+
+### Changed
+- Updated dependency `Cobilas.Core.Net4x` from version `2.10.0` to `2.12.0`.
+- Refactored project file (`com.cobilas.godot.utility.csproj`):
+  - Moved `WarningLevel` and `CheckForOverflowUnderflow` to the main property group (applies to all configurations).
+  - Set `GeneratePackageOnBuild` to only run in `Release` configuration (implicitly via existing property).
+  - Added `project-git-funcs.ps1` to the project as a content file.
+- Bumped package version from `8.0.1` to `8.1.0`.
+- Updated `ProjectVersion` in `Cobilas.Godot.Utility.props` from `8.0.1` to `8.1.0`.
+
+---
+
 ## [8.0.1] - (31/01/2026)
 ### Fixed
 - **SafeDisconnect method**: Fixed a bug in the `SafeDisconnect(this Object?, string?, Object?, string?)` extension method where it incorrectly checked if a signal was *not* connected before attempting to disconnect. The method now correctly checks if the signal *is* connected before calling `Disconnect()`.
